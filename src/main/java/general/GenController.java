@@ -1,5 +1,7 @@
 package general;
+import general.entities.Teacher;
 import general.entities.User;
+import general.reposes.TeacherRepos;
 import general.reposes.UserRepos;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -13,6 +15,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class GenController {
     @Autowired
     UserRepos userRepos;
+    @Autowired
+    TeacherRepos teacherRepos;
     @GetMapping("/greeting")
     public String greeting(@RequestParam(name="name", required=false, defaultValue="World") String name, Model model) {
         model.addAttribute("name", name);
@@ -23,16 +27,27 @@ public class GenController {
         return "adduser";
     }
     @PostMapping
-    public @ResponseBody String addUserPOST(@RequestParam(name = "name") String name, @RequestParam(name = "school") String  school){
-        User user = new User();
-        user.setName(name);
-        user.setSchool(school);
-        userRepos.save(user);
+    public @ResponseBody String addUser(@RequestParam(name = "name") String name, @RequestParam(name = "school") String  school, @RequestParam(name = "typeOfUser") String type){
+        switch (type){
+            case "user":
+                User user = new User();
+                user.setName(name);
+                user.setSchool(school);
+                userRepos.save(user);
+            case "teacher":
+                Teacher teacher = new Teacher();
+                teacher.setName(name);
+                teacherRepos.save(teacher);
+        }
         return "New user succesfully created";
     }
     @GetMapping(path="/all")
     public @ResponseBody Iterable<User> getAllUsers() {
         // This returns a JSON or XML with the users
         return userRepos.findAll();
+    }
+    @GetMapping("/addteacher")
+    public  String addTeacher(){
+        return "adduser";
     }
 }
