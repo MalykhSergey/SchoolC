@@ -16,7 +16,9 @@ public class School {
     private long id;
     private String name;
     @OneToMany(targetEntity = Teacher.class, mappedBy = "school")
-     Set<Teacher> teachers;
+    private Set<Teacher> teachers;
+    @OneToMany(targetEntity = Teacher.class, mappedBy = "school")
+    private Set<SchoolClass> schoolClasses;
     public long getId() {
         return id;
     }

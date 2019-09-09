@@ -3,25 +3,19 @@ package general.entities;
 import javax.persistence.*;
 
 @Entity
-@Table(name="students")
-public class Student {
+public class SchoolClass {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
+    private Long id;
     private String name;
-    private String password;
-
     @ManyToOne
-    private School school;
+    School school;
 
-    @ManyToOne
-    private  SchoolClass schoolClass;
-
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -31,14 +25,6 @@ public class Student {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 
     public School getSchool() {

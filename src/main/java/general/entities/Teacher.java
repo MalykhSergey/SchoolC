@@ -1,6 +1,7 @@
 package general.entities;
 
 import javax.persistence.*;
+import java.util.Set;
 
 @Entity
 @Table(name = "teachers")
@@ -12,6 +13,9 @@ public class Teacher {
     private String password;
     @ManyToOne
     School school;
+
+    @ManyToMany
+    private Set<SchoolClass> schoolClassSet;
 
     public void setId(long id) {
         this.id = id;
@@ -47,5 +51,14 @@ public class Teacher {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+
+    public Set<SchoolClass> getSchoolClassSet() {
+        return schoolClassSet;
+    }
+
+    public void addSchoolClassSet(SchoolClass schoolClass) {
+        schoolClassSet.add(schoolClass);
     }
 }
