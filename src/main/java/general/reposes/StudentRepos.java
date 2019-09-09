@@ -1,9 +1,9 @@
 package general.reposes;
 
-import general.entities.User;
+import general.entities.Student;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface UserRepos  extends CrudRepository <User, Long> {
+public interface StudentRepos extends CrudRepository <Student, Long> {
 }

@@ -9,6 +9,21 @@ public class Teacher {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
     private String name;
+    private String password;
+    @ManyToOne
+    School school;
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public School getSchool() {
+        return school;
+    }
+
+    public void setSchool(School school) {
+        this.school = school;
+    }
 
     public Long getId() {
         return id;
@@ -24,5 +39,13 @@ public class Teacher {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 }
