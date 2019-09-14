@@ -1,11 +1,6 @@
 package general.entities;
 
-import general.reposes.TeacherRepos;
-import org.springframework.beans.factory.annotation.Autowired;
-
 import javax.persistence.*;
-import java.util.Collection;
-import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -15,9 +10,11 @@ public class School {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
     private String name;
-    @OneToMany(targetEntity = Teacher.class, mappedBy = "school")
+    @ElementCollection(targetClass = Teacher.class)
+    @CollectionTable
     private Set<Teacher> teachers;
-    @OneToMany(targetEntity = Teacher.class, mappedBy = "school")
+    @ElementCollection(targetClass = SchoolClass.class)
+    @CollectionTable
     private Set<SchoolClass> schoolClasses;
     public long getId() {
         return id;

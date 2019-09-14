@@ -1,26 +1,19 @@
 package general;
 
-import general.entities.School;
-import general.entities.SchoolClass;
-import general.entities.Student;
-import general.entities.Teacher;
+import general.entities.*;
 import general.reposes.SchoolClassRepos;
 import general.reposes.SchoolRepos;
-import general.reposes.StudentRepos;
-import general.reposes.TeacherRepos;
+import general.reposes.UserRepos;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
 public class GenController {
     @Autowired
-    StudentRepos studentRepos;
+    UserRepos userRepos;
     @Autowired
     SchoolRepos schoolRepos;
-    @Autowired
-    TeacherRepos teacherRepos;
     @Autowired
     SchoolClassRepos schoolClassRepos;
         @RequestMapping(value = "/adduser", method = RequestMethod.GET)
@@ -40,14 +33,14 @@ public class GenController {
                     student.setName(name);
                     student.setPassword(password);
                     student.setSchool(school);
-                    studentRepos.save(student);
+                    userRepos.save(student);
                     break;
                 case "teacher":
                     Teacher teacher = new Teacher();
                     teacher.setName(name);
                     teacher.setPassword(password);
                     teacher.setSchool(school);
-                    teacherRepos.save(teacher);
+                    userRepos.save(teacher);
             }
             return "User succesfully created";
         }
@@ -85,12 +78,14 @@ public class GenController {
         }
         @RequestMapping(value = "/adft", method = RequestMethod.POST)
         public @ResponseBody String addClassForTeacherPost(
-                @RequestParam(name = "name") String name,
-                @RequestParam(name = "teachername") String teachername){
-            Teacher teacher = teacherRepos.findTeacherByName(teachername);
-            SchoolClass schoolClass = schoolClassRepos.findSchoolClassByName(name);
+                @RequestParam(name = "className") String className,
+                @RequestParam(name = "teachername") String teachername,
+                @RequestParam(name = "schoolName") String schoolName){
+            School school = schoolRepos.findSchoolByName(schoolName);
+            Teacher teacher = (Teacher) userRepos.findUserByNameAndSchool(teachername, school);
+            SchoolClass schoolClass = schoolClassRepos.findSchoolClassByName(className);
             teacher.addSchoolClassSet(schoolClass);
-            teacherRepos.save(teacher);
+            userRepos.save(teacher);
             return "class added for teacher";
         }
     }
