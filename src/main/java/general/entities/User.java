@@ -1,11 +1,12 @@
 package general.entities;
 
 import javax.persistence.*;
+import java.util.Collection;
+import java.util.Set;
 
 @Entity
 @Table(name = "users")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn(name = "role")
 public abstract class User {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -14,6 +15,22 @@ public abstract class User {
     private String password;
     @ManyToOne
     private School school;
+    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @JoinTable(
+            name = "users_roles",
+            joinColumns = @JoinColumn(
+                    name = "user_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(
+                    name = "role_id", referencedColumnName = "id"))
+    private Collection<Role> roles;
+
+    public Collection<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Collection<Role> roles) {
+        this.roles = roles;
+    }
 
     public School getSchool() {
         return school;

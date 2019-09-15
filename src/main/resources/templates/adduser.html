@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
@@ -9,6 +9,7 @@
 <form method="post">
     <input type="text" name="name" placeholder="enter your name">
     <input type="text" name="password" placeholder="enter your password">
+    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />`
     <input type="text" name="school">
     <select name="typeOfUser" >
         <option value="teacher">Учитель</option>

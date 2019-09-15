@@ -5,8 +5,15 @@ import general.reposes.SchoolClassRepos;
 import general.reposes.SchoolRepos;
 import general.reposes.UserRepos;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.util.Arrays;
+import java.util.Collection;
 
 @Controller
 public class GenController {
@@ -16,6 +23,8 @@ public class GenController {
     SchoolRepos schoolRepos;
     @Autowired
     SchoolClassRepos schoolClassRepos;
+    @Autowired
+    private BCryptPasswordEncoder passwordEncoder;
         @RequestMapping(value = "/adduser", method = RequestMethod.GET)
         public String addUserGet(){
             return "adduser";
@@ -29,17 +38,15 @@ public class GenController {
             School school = schoolRepos.findSchoolByName(nameOfSchool);
             switch (type){
                 case "student":
-                    Student student = new Student();
-                    student.setName(name);
-                    student.setPassword(password);
-                    student.setSchool(school);
+                    Collection<Role> roles = Arrays.asList(
+                            new Role("ROLE_Student"));
+                    Student student = new Student(name, passwordEncoder.encode(password), roles, schoolRepos.findSchoolByName(nameOfSchool));
                     userRepos.save(student);
                     break;
                 case "teacher":
-                    Teacher teacher = new Teacher();
-                    teacher.setName(name);
-                    teacher.setPassword(password);
-                    teacher.setSchool(school);
+                    roles = Arrays.asList(
+                            new Role("ROLE_Teacher"));
+                    Teacher teacher = new Teacher(name, passwordEncoder.encode(password), roles, schoolRepos.findSchoolByName(nameOfSchool));
                     userRepos.save(teacher);
             }
             return "User succesfully created";

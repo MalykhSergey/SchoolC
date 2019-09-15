@@ -1,12 +1,21 @@
 package general.entities;
 
 import javax.persistence.*;
+import java.util.Collection;
 
 @Entity
-@DiscriminatorValue("student")
 public class Student extends User{
 
     @ManyToOne
     private  SchoolClass schoolClass;
+    public Student() {
+    }
 
+
+    public Student(String user, String password, Collection<Role> roles , School school) {
+        this.setName(user);
+        this.setPassword(password);
+        this.setRoles(roles);
+        this.setSchool(school);
+    }
 }
