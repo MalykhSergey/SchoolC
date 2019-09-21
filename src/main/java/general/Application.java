@@ -1,8 +1,5 @@
 package general;
-import general.entities.Role;
-import general.entities.Student;
-import general.entities.Teacher;
-import general.entities.User;
+import general.entities.*;
 import general.reposes.UserRepos;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
@@ -15,7 +12,21 @@ import java.util.Collection;
 
 @SpringBootApplication
 public class Application {
-
+    @Autowired
+    private UserRepos  userRepos;
+    @Autowired
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
+    @PostConstruct
+    public void initAdmin(){
+        if (userRepos.findUserByName("GeneralDirector") == null){
+            User admin = new Admin("GeneralDirector",
+                    bCryptPasswordEncoder.encode("AmudeFx"),
+                    Arrays.asList(
+                            new Role("ROLE_ADMIN")
+                    ));
+            userRepos.save(admin);
+        }
+    }
     public static void main(String[] args) {
         SpringApplication.run(Application.class, args);
     }

@@ -14,7 +14,7 @@ public class Teacher extends User{
         return schoolClassSet;
     }
 
-    public void addSchoolClassSet(SchoolClass schoolClass) {
+    public void addSchoolClass(SchoolClass schoolClass) {
         schoolClassSet.add(schoolClass);
     }
 

@@ -16,6 +16,7 @@ public class School {
     @ElementCollection(targetClass = SchoolClass.class)
     @CollectionTable
     private Set<SchoolClass> schoolClasses;
+
     public long getId() {
         return id;
     }
@@ -31,5 +32,28 @@ public class School {
         this.name = name;
     }
 
+    public Set<Teacher> getTeachers() {
+        return teachers;
+    }
 
+    public void setSchoolClasses(Set<SchoolClass> schoolClasses) {
+        this.schoolClasses = schoolClasses;
+    }
+
+    public Set<SchoolClass> getSchoolClasses() {
+        return schoolClasses;
+
+    }
+    public void addClass(SchoolClass schoolClass){
+        schoolClasses.add(schoolClass);
+    }
+
+    public void addTeacher(Teacher teacher){teachers.add(teacher);}
+
+    public School() {
+    }
+
+    public School(String name) {
+        this.name = name;
+    }
 }
