@@ -1,6 +1,6 @@
 package general.configs;
 
-import general.services.UserService;
+import general.services.AuthorizeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -22,7 +22,7 @@ import javax.sql.DataSource;
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
-    UserService userService;
+    AuthorizeService userService;
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
