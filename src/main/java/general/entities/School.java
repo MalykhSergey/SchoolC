@@ -13,6 +13,9 @@ public class School {
     @ElementCollection(targetClass = Teacher.class)
     @CollectionTable
     private Set<Teacher> teachers;
+    @ElementCollection(targetClass = Operator.class)
+    @CollectionTable
+    private Set<Operator> operators;
     @ElementCollection(targetClass = SchoolClass.class)
     @CollectionTable
     private Set<SchoolClass> schoolClasses;
@@ -55,5 +58,16 @@ public class School {
 
     public School(String name) {
         this.name = name;
+    }
+
+    public Set<Operator> getOperators() {
+        return operators;
+    }
+
+    public void setOperators(Set<Operator> operators) {
+        this.operators = operators;
+    }
+    public void addOperator(Operator operator){
+    this.operators.add(operator);
     }
 }

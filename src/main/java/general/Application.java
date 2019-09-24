@@ -22,7 +22,8 @@ public class Application {
             User admin = new Admin("GeneralDirector",
                     bCryptPasswordEncoder.encode("AmudeFx"),
                     Arrays.asList(
-                            new Role("ROLE_ADMIN")
+                            new Role("ROLE_ADMIN"),
+                            new Role("ROLE_OPERATOR")
                     ));
             userRepos.save(admin);
         }

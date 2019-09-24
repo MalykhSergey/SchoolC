@@ -5,6 +5,7 @@
  */
 package general.services;
 
+import general.entities.Operator;
 import general.entities.Role;
 import general.entities.School;
 import general.entities.Student;
@@ -37,12 +38,22 @@ public class UserService{
     private BCryptPasswordEncoder passwordEncoder;
     
     public String addUser(String name, String type, String nameOfSchool, String password, Model model){
-        School school;
+        School school = null;
+        User user = userRepos.findUserByName(SecurityContextHolder.getContext().getAuthentication().getName());
         if (nameOfSchool != null){
+            for (Role role:user.getRoles()){
+                if ("ROLE_ADMIN".equals(role.getName())){
+                    school = schoolRepos.findSchoolByName(nameOfSchool);
+                    if (school == null){
+                        model.addAttribute("error", "Неверно указана школа");
+
+                    }
+                    break;
+                }
+            }
             school = schoolRepos.findSchoolByName(nameOfSchool);
         }
-        else {
-            User user = userRepos.findUserByName(SecurityContextHolder.getContext().getAuthentication().getName());
+        if (school == null) {
             school = user.getSchool();
         }
         
@@ -92,6 +103,10 @@ public class UserService{
                 roles = Arrays.asList(
                         new Role("ROLE_OPERATOR")
                 );
+                Operator operator = new Operator(name, passwordEncoder.encode(password), roles, school);
+                school.addOperator(operator);
+                userRepos.save(operator);
+                schoolRepos.save(school);
         }
         model.addAttribute("completed", "Пользователь с именем: "+ name +" был успешно добавлен");
         return "adduser";

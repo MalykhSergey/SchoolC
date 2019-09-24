@@ -1,16 +1,19 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+* To change this license header, choose License Headers in Project Properties.
+* To change this template file, choose Tools | Templates
+* and open the template in the editor.
  */
 package general.services;
 
+import general.entities.Role;
 import general.entities.School;
 import general.entities.SchoolClass;
+import general.entities.User;
 import general.reposes.SchoolClassRepos;
 import general.reposes.SchoolRepos;
 import general.reposes.UserRepos;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
@@ -20,33 +23,49 @@ import org.springframework.ui.Model;
  */
 @Service
 public class SchoolClassService {
+
     @Autowired
     UserRepos userRepos;
     @Autowired
     SchoolRepos schoolRepos;
     @Autowired
     SchoolClassRepos schoolClassRepos;
-    public String addClass(String name, String schoolName, Model model){
-    if (name == null){
+
+    public String addClass(String name, String schoolName, Model model) {
+        School school = null;
+        User user = userRepos.findUserByName(SecurityContextHolder.getContext().getAuthentication().getName());
+        if (schoolName != null) {
+            for (Role role : user.getRoles()) {
+                System.out.println(role.getName());
+                if ("ROLE_ADMIN".equals(role.getName())) {
+                    school = schoolRepos.findSchoolByName(schoolName);
+                    if (school == null) {
+                        model.addAttribute("error", "Вы неверно указали школу");
+                        return "addclass";
+                    }
+                    break;
+                }
+            }
+        } 
+        if (school == null){
+            school = user.getSchool();
+        }
+        if (name == null) {
             model.addAttribute("error", "Введите имя!");
             return "addclass";
         }
-        if (schoolClassRepos.findSchoolClassByName(name) != null){
-            model.addAttribute("error", "Такой класс уже существует");
-            return "addclass";
-        }
-        if (name.length() < 6){
+        if (name.length() < 6) {
             model.addAttribute("error", "Введите полное название");
             return "addclass";
         }
         SchoolClass schoolClass = new SchoolClass();
-        School school = schoolRepos.findSchoolByName(schoolName);
         schoolClass.setName(name);
         schoolClass.setSchool(school);
         school.addClass(schoolClass);
         schoolClassRepos.save(schoolClass);
         schoolRepos.save(school);
-        model.addAttribute("completed",  "Класс "+ name + " был добавлен");
-        return "addclass";}
-    
+        model.addAttribute("completed", "Класс " + name + " был добавлен");
+        return "addclass";
+    }
+
 }

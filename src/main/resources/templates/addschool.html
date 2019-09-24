@@ -9,7 +9,7 @@
 <div class="container-fluid">
     <div th:replace="fragments/navbar :: body"></div>
     <form method="post">
-        <input type="text" name="name" placeholder="enter your school">
+        <input type="text" name="name" placeholder="Добавить школу">
         <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
         <input type="submit" value="Send">
     </form>
