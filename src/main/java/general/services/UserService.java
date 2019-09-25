@@ -97,16 +97,23 @@ public class UserService{
                         new Role("ROLE_TEACHER"));
                 Teacher teacher = new Teacher(name, passwordEncoder.encode(password), roles, school);
                 school.addTeacher(teacher);
-                userRepos.save(teacher);
                 schoolRepos.save(school);
+                userRepos.save(teacher);
+                break;
             case "operator":
                 roles = Arrays.asList(
                         new Role("ROLE_OPERATOR")
                 );
                 Operator operator = new Operator(name, passwordEncoder.encode(password), roles, school);
                 school.addOperator(operator);
-                userRepos.save(operator);
                 schoolRepos.save(school);
+                userRepos.save(operator);
+                System.out.println("fasafsaasfsafsafsafsaf2134124214sadfsa");
+                break;
+            default:{
+                model.addAttribute("error", "Не жульничай!");
+                return "adduser";
+            }
         }
         model.addAttribute("completed", "Пользователь с именем: "+ name +" был успешно добавлен");
         return "adduser";

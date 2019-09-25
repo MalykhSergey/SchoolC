@@ -5,7 +5,6 @@ import java.util.Collection;
 
 @Entity
 public class Student extends User{
-
     @ManyToOne
     private  SchoolClass schoolClass;
     public Student() {
@@ -18,4 +17,13 @@ public class Student extends User{
         this.setRoles(roles);
         this.setSchool(school);
     }
+
+    public SchoolClass getSchoolClass() {
+        return schoolClass;
+    }
+
+    public void setSchoolClass(SchoolClass schoolClass) {
+        this.schoolClass = schoolClass;
+    }
+    
 }

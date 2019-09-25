@@ -31,8 +31,7 @@ public class AddClassController {
     @RequestMapping(value = "/adft", method = RequestMethod.POST)
     public String addClassForTeacherPost(
             @RequestParam(name = "className") String className,
-            @RequestParam(name = "teacherName") String teacherName,
-            @RequestParam(name = "schoolName", required = false) String schoolName, Model model){
-        return teacherService.addClassForTeacher(teacherName, className, schoolName, model);
+            @RequestParam(name = "teacherName") String teacherName, Model model){
+        return teacherService.addClassForTeacher(teacherName, className, model);
     }
 }

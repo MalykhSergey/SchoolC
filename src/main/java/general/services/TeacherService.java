@@ -5,8 +5,6 @@
  */
 package general.services;
 
-import general.entities.Role;
-import general.entities.School;
 import general.entities.SchoolClass;
 import general.entities.Teacher;
 import general.entities.User;
@@ -32,25 +30,8 @@ public class TeacherService {
     @Autowired
     SchoolClassRepos schoolClassRepos;
 
-    public String addClassForTeacher(String teacherName, String className, String schoolName, Model model) {
+    public String addClassForTeacher(String teacherName, String className, Model model) {
         User user = userRepos.findUserByName(SecurityContextHolder.getContext().getAuthentication().getName());
-        School school = null;
-        if (schoolName != null) {
-            for (Role role : user.getRoles()) {
-                System.out.println(role.getName());
-                if ("ROLE_ADMIN".equals(role.getName())) {
-                    school = schoolRepos.findSchoolByName(schoolName);
-                    if (school == null) {
-                        model.addAttribute("error", "Вы неверно указали школу");
-                        return "addclassforteacher";
-                    }
-                    break;
-                }
-            }
-        }
-        if (school == null){
-            school = user.getSchool();
-        }
         if (className == null | teacherName == null) {
             model.addAttribute("error", "Введите имя!");
             return "addclassforteacher";
@@ -63,7 +44,7 @@ public class TeacherService {
             model.addAttribute("error", "Такого учителя не существует");
             return "addclassforteacher";
         }
-        Teacher teacher = (Teacher) userRepos.findUserByNameAndSchool(teacherName, school);
+        Teacher teacher = (Teacher) userRepos.findUserByName(teacherName);
         SchoolClass schoolClass = schoolClassRepos.findSchoolClassByName(className);
         teacher.addSchoolClass(schoolClass);
         userRepos.save(teacher);

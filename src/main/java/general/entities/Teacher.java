@@ -6,10 +6,8 @@ import java.util.Set;
 
 @Entity
 public class Teacher extends User{
-
     @ManyToMany
     private Set<SchoolClass> schoolClassSet;
-
     public Set<SchoolClass> getSchoolClassSet() {
         return schoolClassSet;
     }

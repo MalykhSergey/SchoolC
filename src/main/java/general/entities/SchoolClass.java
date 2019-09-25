@@ -1,5 +1,6 @@
 package general.entities;
 
+import java.util.List;
 import javax.persistence.*;
 
 @Entity
@@ -10,6 +11,8 @@ public class SchoolClass {
     private String name;
     @ManyToOne
     School school;
+    @OneToMany(targetEntity = Task.class, cascade = CascadeType.ALL)
+    List<Task> tasks;
 
     public Long getId() {
         return id;
@@ -33,5 +36,8 @@ public class SchoolClass {
 
     public void setSchool(School school) {
         this.school = school;
+    }
+    public void addTask(Task task){
+        this.tasks.add(task);
     }
 }

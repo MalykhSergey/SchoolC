@@ -10,14 +10,11 @@ public class School {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
     private String name;
-    @ElementCollection(targetClass = Teacher.class)
-    @CollectionTable
+    @OneToMany(targetEntity = Teacher.class, cascade = CascadeType.ALL)
     private Set<Teacher> teachers;
-    @ElementCollection(targetClass = Operator.class)
-    @CollectionTable
+    @OneToMany(targetEntity = Operator.class, cascade = CascadeType.ALL)
     private Set<Operator> operators;
-    @ElementCollection(targetClass = SchoolClass.class)
-    @CollectionTable
+    @OneToMany(targetEntity = SchoolClass.class, cascade = CascadeType.ALL)
     private Set<SchoolClass> schoolClasses;
 
     public long getId() {
