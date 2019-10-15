@@ -36,7 +36,6 @@ public class SchoolClassService {
         User user = userRepos.findUserByName(SecurityContextHolder.getContext().getAuthentication().getName());
         if (schoolName != null) {
             for (Role role : user.getRoles()) {
-                System.out.println(role.getName());
                 if ("ROLE_ADMIN".equals(role.getName())) {
                     school = schoolRepos.findSchoolByName(schoolName);
                     if (school == null) {
@@ -57,6 +56,12 @@ public class SchoolClassService {
         if (name.length() < 6) {
             model.addAttribute("error", "Введите полное название");
             return "addclass";
+        }
+        if (schoolClassRepos.findSchoolClassByName(name) != null){
+
+            model.addAttribute("error", "Такой класс уже есть");
+            return "addclass";
+
         }
         SchoolClass schoolClass = new SchoolClass();
         schoolClass.setName(name);

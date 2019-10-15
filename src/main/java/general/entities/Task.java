@@ -5,11 +5,11 @@
  */
 package general.entities;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.List;
 
 /**
  *
@@ -20,41 +20,48 @@ public class Task {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
+
+    @OneToMany(targetEntity = Answer.class, cascade = CascadeType.ALL)
+    private List<Answer> answers;
     private String name;
-    private String bodyString;
+    private String body;
+    private String status;
+    private Calendar date;
     @ManyToOne
-    SchoolClass schoolClass;
+    private SchoolClass schoolClass;
 
     public Task() {
     }
 
-    public Task(String nameString,String bodyString, SchoolClass schoolClass) {
+    public Task(String nameString,String body, SchoolClass schoolClass, Calendar date) {
         this.name = nameString;
         this.schoolClass = schoolClass;
-        this.bodyString = bodyString;
+        this.body = body;
+        this.date =date;
+        this.status = "Не решено!";
     }
 
     public long getId() {
         return id;
     }
 
-    public String getBodyString() {
-        return bodyString;
+    public String getBody() {
+        return body;
     }
 
-    public void setBodyString(String bodyString) {
-        this.bodyString = bodyString;
+    public void setBody(String body) {
+        this.body = body;
     }
 
     public void setId(long id) {
         this.id = id;
     }
 
-    public String getNameString() {
+    public String getName() {
         return name;
     }
 
-    public void setNameString(String nameString) {
+    public void setName(String nameString) {
         this.name = nameString;
     }
 
@@ -65,5 +72,32 @@ public class Task {
     public void setSchoolClass(SchoolClass schoolClass) {
         this.schoolClass = schoolClass;
     }
-    
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getDateTemplate() {
+        return Integer.toString(date.get(Calendar.DAY_OF_MONTH))+":"+Integer.toString(date.get(Calendar.MONTH) + 1)+":"+Integer.toString(date.get(Calendar.YEAR));
+    }
+
+    public Calendar getDate() {
+        return date;
+    }
+
+    public void setDate(Calendar date) {
+        this.date = date;
+    }
+
+    public List<Answer> getAnswers() {
+        return answers;
+    }
+
+    public void addAnswer(Answer answer) {
+        this.answers.add(answer);
+    }
 }

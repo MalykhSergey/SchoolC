@@ -10,9 +10,9 @@ public class SchoolClass {
     private Long id;
     private String name;
     @ManyToOne
-    School school;
+    private School school;
     @OneToMany(targetEntity = Task.class, cascade = CascadeType.ALL)
-    List<Task> tasks;
+    private List<Task> tasks;
 
     public Long getId() {
         return id;
@@ -32,6 +32,14 @@ public class SchoolClass {
 
     public School getSchool() {
         return school;
+    }
+
+    public List<Task> getTasks() {
+        return tasks;
+    }
+
+    public void setTasks(List<Task> tasks) {
+        this.tasks = tasks;
     }
 
     public void setSchool(School school) {

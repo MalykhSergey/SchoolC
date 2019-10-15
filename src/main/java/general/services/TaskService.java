@@ -14,6 +14,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+
 /**
  *
  * @author dmali
@@ -28,8 +34,8 @@ public class TaskService {
     @Autowired
             UserRepos userRepos;
     
-    public String addTask(String name, String body, String nameOfSchoolClass, Model model) {
-        if (name == null | body == null | nameOfSchoolClass == null){
+    public String addTask(String name, String body, String nameOfSchoolClass, Model model, String dateString) {
+        if (name == null | body == null | nameOfSchoolClass == null | dateString == null){
             model.addAttribute("error","Введите все значения");
             return "addtask";
         }
@@ -38,11 +44,19 @@ public class TaskService {
             model.addAttribute("error", "Неверный класс");
             return "addtask";
         }
-        if (name.length() > 25 | name.length() < 5 | body.length() > 150 | body.length() < 25){
+        if (name.length() > 25 | name.length() < 5 | body.length() < 25){
             model.addAttribute("error", "Введите более полное описание задания");
             return "addtask";
         }
-        Task task = new Task(name, body, schoolClass);
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        Calendar date1 = Calendar.getInstance();
+        try {
+            date1.setTime(simpleDateFormat.parse(dateString));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        Task task = null;
+        task = new Task(name, body, schoolClass, date1);
         schoolClass.addTask(task);
         taskRepos.save(task);
         schoolClassRepos.save(schoolClass);

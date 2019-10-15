@@ -5,9 +5,10 @@
  */
 package general.controllers;
 
+import general.entities.Role;
 import general.entities.Student;
+import general.entities.Task;
 import general.entities.User;
-import general.reposes.TaskRepos;
 import general.reposes.UserRepos;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -15,7 +16,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+
+import java.util.*;
 
 /**
  *
@@ -25,13 +27,28 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class HomeController {
 @Autowired
 UserRepos userRepos;
-@Autowired
-TaskRepos taskRepos;
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public String home(Model model) {
-        Student user = (Student) (userRepos.findUserByName(SecurityContextHolder.getContext().getAuthentication().getName()));
-        System.out.println(taskRepos.findAllBySchoolClass(user.getSchoolClass()));
-        model.addAttribute("tasks",taskRepos.findAllBySchoolClass(user.getSchoolClass()));
+        User user = userRepos.findUserByName(SecurityContextHolder.getContext().getAuthentication().getName());
+        for (Role role : user.getRoles()){
+            if ("ROLE_STUDENT".equals(role.getName())){
+                Student student = (Student) (user);
+                List<Task> tasks = student.getSchoolClass().getTasks();
+                List<Task> oldtasks = new ArrayList<>();
+                List<Task> newtasks = new ArrayList<>();
+                Calendar now = new GregorianCalendar();
+                for (Task task : tasks){
+                    if (now.get(Calendar.DAY_OF_YEAR) <= task.getDate().get(Calendar.DAY_OF_YEAR) && task.getStatus().equals("Не решено!")){
+                        newtasks.add(task);
+                    }
+                    else{
+                        oldtasks.add(task);
+                    }
+                }
+                model.addAttribute("oldtasks", oldtasks);
+                model.addAttribute("newtasks", newtasks);
+            }
+        }
         return "home";
     }
 
