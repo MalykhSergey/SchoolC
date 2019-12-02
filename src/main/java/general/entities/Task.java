@@ -19,7 +19,7 @@ import java.util.List;
 public class Task {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
+    private Long id;
 
     @OneToMany(targetEntity = Answer.class, cascade = CascadeType.ALL)
     private List<Answer> answers;
@@ -41,7 +41,7 @@ public class Task {
         this.status = "Не решено!";
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
@@ -53,7 +53,7 @@ public class Task {
         this.body = body;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

@@ -4,11 +4,13 @@
 <head>
         <meta charset="UTF-8">
             <title>Title</title>
-            <link href="/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link href="/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
     </head>
     <body>
-        <div class="container-fluid">
-            <div th:replace="fragments/navbar :: body"></div>
+    <div th:replace="fragments/navbar :: body"></div>
+    <div class="container-fluid">
             <form method="post">
                 <input type="text" name="name" placeholder="Введите класс">
                     <div sec:authorize="hasRole('ROLE_ADMIN')">

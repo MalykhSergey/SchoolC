@@ -15,6 +15,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import javax.sql.DataSource;
 
@@ -30,8 +31,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/addschool").access("hasRole('ROLE_ADMIN')")
                 .antMatchers("/adduser", "/addclass", "/adft", "/scfs").access("hasAnyRole('ROLE_ADMIN', 'ROLE_OPERATOR')")
                 .antMatchers("/addtask").access("hasRole('ROLE_TEACHER')")
+                .antMatchers("/addanswer").access("hasRole('ROLE_STUDENT')")
                 .antMatchers("/").authenticated()
                 .antMatchers("/js/**", "/css/**").permitAll()
+                .antMatchers("/files").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .formLogin()

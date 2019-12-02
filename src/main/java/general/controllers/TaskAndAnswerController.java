@@ -5,16 +5,16 @@
  */
 package general.controllers;
 
-import general.entities.Answer;
-import general.entities.Student;
-import general.entities.Task;
-import general.entities.User;
+import general.entities.*;
 import general.reposes.AnswerRepos;
 import general.reposes.TaskRepos;
 import general.reposes.UserRepos;
+import general.services.AnswerService;
 import general.services.TaskService;
+import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.MediaType;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -23,8 +23,14 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletResponse;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.FileSystem;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Map;
 import java.util.UUID;
 
@@ -39,13 +45,17 @@ public class TaskAndAnswerController {
     @Autowired
     TaskService taskService;
     @Autowired
+    AnswerService answerService;
+    @Autowired
     TaskRepos taskRepos;
     @Autowired
     UserRepos userRepos;
     @Autowired
     AnswerRepos answerRepos;
     @RequestMapping(value = "/addtask", method = RequestMethod.GET)
-    public String addTaskGet() {
+    public String addTaskGet(Model model) {
+        Teacher teacher = (Teacher) (userRepos.findUserByName(SecurityContextHolder.getContext().getAuthentication().getName()));
+        model.addAttribute("schoolClasses", teacher.getSchoolClassSet());
         return "addtask";
     }
 
@@ -60,56 +70,62 @@ public class TaskAndAnswerController {
     }
     @RequestMapping(value = "/addanswer", method = RequestMethod.GET)
     public String addAnswerGet(@RequestParam(name = "id")String id, Model model){
-        Task task = taskRepos.findTasksById(Long.parseLong(id));
-        Student student = (Student) userRepos.findUserByName(SecurityContextHolder.getContext().getAuthentication().getName());
-        Boolean bool = false;
-        for (Task studentTask : student.getSchoolClass().getTasks()){
-            if (studentTask == task){
-                bool = true;
-                break;
-            }
-        }
-        if (task.getStatus().equals("Решено!"))bool = false;
-        if (bool) {
-            model.addAttribute("task", taskRepos.findTasksById(Long.parseLong(id)));
-        }
-        else return "redirect:/";
-        return "addanswer";
+                Task task = taskRepos.findTasksById(Long.parseLong(id));
+                Student student = (Student) (userRepos.findUserByName(SecurityContextHolder.getContext().getAuthentication().getName()));
+                Boolean bool = false;
+                for (Task studentTask : student.getSchoolClass().getTasks()) {
+                    if (studentTask == task) {
+                        bool = true;
+                        break;
+                    }
+                }
+                if (task.getStatus().equals("Решено!")) bool = false;
+                if (bool) {
+                    model.addAttribute("task", taskRepos.findTasksById(Long.parseLong(id)));
+                    return "addanswer";
+                }
+        return "redirect:/";
     }
     @RequestMapping(value = "/addanswer", method = RequestMethod.POST)
     public String addAnswerPost(@RequestParam (name = "id") String id,
                                 @RequestParam (name = "body") String body,
                                 @RequestParam MultipartFile[] files,
                                 Model model) throws IOException {
-        Task task = taskRepos.findTasksById(Long.parseLong(id));
-        Student student = (Student) userRepos.findUserByName(SecurityContextHolder.getContext().getAuthentication().getName());
-        Boolean bool = false;
-        for (Task studentTask : student.getSchoolClass().getTasks()){
-            if (studentTask == task){
-                bool = true;
-                break;
+        return answerService.addAnswer(id, body, files, model);
+    }
+    @RequestMapping(value = "/tasksOfClass", method = RequestMethod.GET)
+    public String taskOfClass(
+            @RequestParam(name = "id") String id,
+            Model model
+    ){
+        return taskService.getTaskByClass(id, model);
+    }
+    @RequestMapping(value = "/answersOfTask", method = RequestMethod.GET)
+    public String answerOfTask(
+            @RequestParam(name = "taskId")String taskId,
+            @RequestParam(name = "classId")String classId,
+            Model model
+    ){
+    return taskService.getAnswerByTask(taskId, classId, model);
+    }
+    @RequestMapping(value = "/checkAnswer", method = RequestMethod.GET)
+    public String checkAnswerGet(
+            @RequestParam(name = "id") String answerId,
+            Model model){
+      return answerService.checkAnswer(answerId, model);
+    }
+    @RequestMapping(value = "/files", method = RequestMethod.GET, produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+    public void getFile(@RequestParam("fileName") String fileName, HttpServletResponse response) {
+            try {
+                response.setContentType("image/jpg");
+                response.setHeader("Content-Disposition", "attachment; filename=\'somefile.jpg\'");
+                InputStream is = new FileInputStream(uploadPath+fileName);
+                // copy it to response's OutputStream
+                IOUtils.copy(is, response.getOutputStream());
+                response.flushBuffer();
+                is.close();
+            } catch (IOException ex) {
+                throw new RuntimeException("IOError writing file to output stream");
             }
-        }
-        if (task.getStatus().equals("Решено!"))bool = false;
-        if (bool){
-            Answer answer = new Answer(student, task);
-            answer.setBody(body);
-            for (MultipartFile file : files){
-                if (!file.isEmpty()){
-                    String filePath = uploadPath +"/"+ UUID.randomUUID().toString() +"."+ file.getOriginalFilename();
-                    file.transferTo(new File(filePath));
-                    answer.addFileName(filePath);
-                }
-            }
-            student.addAnswer(answer);
-            task.addAnswer(answer);
-            answerRepos.save(answer);
-            task.setStatus("Решено!");
-            taskRepos.save(task);
-            model.addAttribute("task", task);
-            model.addAttribute("completed", "Ответ успешно добавлен");
-        }
-        else return "redirect:/";
-        return "addanswer";
     }
 }

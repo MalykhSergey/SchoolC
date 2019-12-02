@@ -51,4 +51,7 @@ public class TeacherService {
         model.addAttribute("completed", "Учитель: " + teacherName + " привязан к классу!");
         return "addclassforteacher";
     }
+    public String checkAnswer() {
+    	return "";
+    }
 }

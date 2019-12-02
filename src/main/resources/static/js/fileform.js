@@ -1,13 +1,20 @@
 let form = document.getElementById("form");
 let warningDiv = null;
-let inpForms = [];
-inpForms.push(document.querySelector(".fileForm"));
-inpForms[0].addEventListener("change", checkForm);
+document.querySelector(".fileForm").addEventListener("change",checkForm);
 function checkForm(event) {
     if (warningDiv !=null){
         warningDiv.remove();
     }
+    let inpForms = document.getElementsByClassName("fileForm");
+    inpForms[0].addEventListener("change", checkForm);
+    let allSize = 0;
     for (let k = 0; k<inpForms.length; k++){
+        allSize += inpForms[k].files[0].size
+        if (allSize >= 7340032){
+            alert("Ваши файлы весят более 7 мб.")
+            event.target.value = "";
+            return null;
+        }
         if (inpForms[k] != event.target){
             if (event.target.value == inpForms[k].value){
                 if (warningDiv == null){
@@ -30,7 +37,6 @@ function checkForm(event) {
     newFileForm.type = "file";
     newFileForm.classList.add("fileForm");
     newFileForm.name = "files";
-    inpForms.push(newFileForm);
     newDiv.append(newButton);
     newDiv.insertBefore(newFileForm, newButton);
     form.insertBefore(newDiv, event.target.parentNode.nextSibling)

@@ -137,6 +137,8 @@ public class UserService{
         if (student != null | schoolClass != null){
             student.setSchoolClass(schoolClass);
             userRepos.save(student);
+            schoolClass.addStudent(student);
+            schoolClassRepos.save(schoolClass);
         }
         else{
             model.addAttribute("error", "Введите корректные данные");

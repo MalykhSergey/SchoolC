@@ -7,10 +7,14 @@
         <link href="/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
     </head>
     <body>
-        <div class="container-fluid">
-            <div th:replace="fragments/navbar :: body"></div>
+    <div th:replace="fragments/navbar :: body"></div>
+    <div class="container-fluid">
             <form method="post">
-                <input type="text" name="schoolClassName" placeholder="Введите класс">
+                <select type="text" name="schoolClassName">
+                    <tr th:each="schoolClass : ${schoolClasses}">
+                        <option th:value="${schoolClass.getName()}" th:text="${schoolClass.getName()}"></option>
+                    </tr>
+                </select>
                     <input type="text" name="name" placeholder="Введите name">
                         <input type="text" name="body" placeholder="Введите body">
                 <input type="date" id="start" name="date"

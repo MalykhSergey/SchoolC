@@ -1,16 +1,18 @@
 /*
-* To change this license header, choose License Headers in Project Properties.
-* To change this template file, choose Tools | Templates
-* and open the template in the editor.
-*/
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package general.services;
 
 import general.entities.SchoolClass;
 import general.entities.Task;
+import general.entities.Teacher;
 import general.reposes.SchoolClassRepos;
 import general.reposes.TaskRepos;
 import general.reposes.UserRepos;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
@@ -21,30 +23,36 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 
 /**
- *
  * @author dmali
  */
 @Service
 public class TaskService {
-    
+
     @Autowired
-            TaskRepos taskRepos;
+    TaskRepos taskRepos;
     @Autowired
-            SchoolClassRepos schoolClassRepos;
+    SchoolClassRepos schoolClassRepos;
     @Autowired
-            UserRepos userRepos;
-    
+    UserRepos userRepos;
+
     public String addTask(String name, String body, String nameOfSchoolClass, Model model, String dateString) {
-        if (name == null | body == null | nameOfSchoolClass == null | dateString == null){
-            model.addAttribute("error","Введите все значения");
+        Teacher teacher = (Teacher) (userRepos.findUserByName(SecurityContextHolder.getContext().getAuthentication().getName()));
+        SchoolClass schoolClass = schoolClassRepos.findSchoolClassByName(nameOfSchoolClass);
+        boolean bool = false;
+        if (name == null | body == null | nameOfSchoolClass == null | dateString == null) {
+            model.addAttribute("error", "Введите все значения");
             return "addtask";
         }
-        SchoolClass schoolClass = schoolClassRepos.findSchoolClassByName(nameOfSchoolClass);
-        if (schoolClass == null){
+        for (SchoolClass checkSchoolClass : teacher.getSchoolClassSet()) {
+            if (checkSchoolClass.getName().equals(schoolClass.getName())) {
+                bool = true;
+            }
+        }
+        if (bool = false) {
             model.addAttribute("error", "Неверный класс");
             return "addtask";
         }
-        if (name.length() > 25 | name.length() < 5 | body.length() < 25){
+        if (name.length() > 25 | name.length() < 5 | body.length() < 25) {
             model.addAttribute("error", "Введите более полное описание задания");
             return "addtask";
         }
@@ -60,7 +68,39 @@ public class TaskService {
         schoolClass.addTask(task);
         taskRepos.save(task);
         schoolClassRepos.save(schoolClass);
-        model.addAttribute("completed","Задача для "+schoolClass.getName()+"класса добавлена");
+        model.addAttribute("completed", "Задача для " + schoolClass.getName() + "класса добавлена");
+        model.addAttribute("schoolClasses", teacher.getSchoolClassSet());
         return "addtask";
+    }
+
+    public String getTaskByClass(String id, Model model) {
+        Teacher teacher = (Teacher) userRepos.findUserByName(SecurityContextHolder.getContext().getAuthentication().getName());
+        SchoolClass schoolClass = schoolClassRepos.findSchoolClassById(Long.parseLong(id));
+        for (SchoolClass sc : teacher.getSchoolClassSet()) {
+            if (sc.getId().equals(schoolClass.getId())) {
+                model.addAttribute("tasks", schoolClass.getTasks());
+                model.addAttribute("schoolClass", schoolClass);
+                break;
+            }
+        }
+        return "home";
+    }
+
+    public String getAnswerByTask(String taskId ,String classId, Model model) {
+        Teacher teacher = (Teacher) userRepos.findUserByName(SecurityContextHolder.getContext().getAuthentication().getName());
+        Task task = taskRepos.findTasksById(Long.parseLong(taskId));
+        SchoolClass schoolClass = schoolClassRepos.findSchoolClassById(Long.parseLong(classId));
+        for (SchoolClass sc : teacher.getSchoolClassSet()){
+            if (sc.getId().equals(schoolClass.getId())){
+                for(Task tk:sc.getTasks()){
+                    if (tk.getId().equals(task.getId())){
+                        model.addAttribute("answers", task.getAnswers());
+                        model.addAttribute("task",task);
+                    }
+                }
+                break;
+            }
+        }
+        return "home";
     }
 }

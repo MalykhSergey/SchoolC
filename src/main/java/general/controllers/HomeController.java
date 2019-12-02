@@ -5,10 +5,7 @@
  */
 package general.controllers;
 
-import general.entities.Role;
-import general.entities.Student;
-import general.entities.Task;
-import general.entities.User;
+import general.entities.*;
 import general.reposes.UserRepos;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -47,6 +44,10 @@ UserRepos userRepos;
                 }
                 model.addAttribute("oldtasks", oldtasks);
                 model.addAttribute("newtasks", newtasks);
+            }
+            if ("ROLE_TEACHER".equals(role.getName())){
+                Teacher teacher = (Teacher) (user);
+                model.addAttribute("schoolClasses", teacher.getSchoolClassSet());
             }
         }
         return "home";
