@@ -1,5 +1,6 @@
 package general.entities;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import javax.persistence.*;
@@ -13,7 +14,7 @@ public class SchoolClass {
     @ManyToOne
     private School school;
     @OneToMany(targetEntity = Task.class, cascade = CascadeType.ALL)
-    private List<Task> tasks;
+    private Set<Task> tasks;
     @OneToMany(targetEntity = Student.class, cascade = CascadeType.ALL)
     private Set<Student> students;
 
@@ -46,11 +47,8 @@ public class SchoolClass {
     }
 
     public List<Task> getTasks() {
+        List<Task> tasks = new ArrayList<Task>(this.tasks);
         return tasks;
-    }
-
-    public void setTasks(List<Task> tasks) {
-        this.tasks = tasks;
     }
 
     public void setSchool(School school) {

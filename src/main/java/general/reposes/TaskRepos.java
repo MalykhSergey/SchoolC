@@ -16,5 +16,5 @@ import org.springframework.data.repository.CrudRepository;
  */
 public interface TaskRepos extends CrudRepository<Task, Long>{
     Iterable<Task> findTasksBySchoolClass(SchoolClass schoolClass);
-    Task findTasksById(Long id);
+    public Task findTaskById(Long id);
 }

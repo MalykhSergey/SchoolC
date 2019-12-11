@@ -17,6 +17,16 @@ public class Answer {
     @ElementCollection
     private List<String> fileNames;
     private String body;
+    byte rating;
+
+    public byte getRating() {
+        return rating;
+    }
+
+    public void setRating(byte rating) {
+        this.rating = rating;
+    }
+
     public Answer() {
     }
 

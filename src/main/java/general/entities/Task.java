@@ -40,6 +40,13 @@ public class Task {
         this.date =date;
         this.status = "Не решено!";
     }
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
 
     public Long getId() {
         return id;
@@ -73,13 +80,6 @@ public class Task {
         this.schoolClass = schoolClass;
     }
 
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
 
     public String getDateTemplate() {
         return Integer.toString(date.get(Calendar.DAY_OF_MONTH))+":"+Integer.toString(date.get(Calendar.MONTH) + 1)+":"+Integer.toString(date.get(Calendar.YEAR));

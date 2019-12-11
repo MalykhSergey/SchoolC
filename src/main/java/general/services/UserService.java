@@ -111,7 +111,6 @@ public class UserService{
                     Operator operator = new Operator(name, passwordEncoder.encode(password), roles, school);
                     school.addOperator(operator);
                     schoolRepos.save(school);
-                    System.out.println("fasafsaasfsafsafsafsaf2134124214sadfsa");
                     break;
                 default:{
                     model.addAttribute("error", "Не жульничай!");

@@ -1,11 +1,7 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package general.controllers;
 
 import general.entities.*;
+import general.reposes.TaskStatusOfStudentRepos;
 import general.reposes.UserRepos;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -22,24 +18,26 @@ import java.util.*;
  */
 @Controller
 public class HomeController {
-@Autowired
-UserRepos userRepos;
+    @Autowired
+    UserRepos userRepos;
+    @Autowired
+    TaskStatusOfStudentRepos taskStatusOfStudentRepos;
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public String home(Model model) {
         User user = userRepos.findUserByName(SecurityContextHolder.getContext().getAuthentication().getName());
         for (Role role : user.getRoles()){
             if ("ROLE_STUDENT".equals(role.getName())){
                 Student student = (Student) (user);
-                List<Task> tasks = student.getSchoolClass().getTasks();
-                List<Task> oldtasks = new ArrayList<>();
-                List<Task> newtasks = new ArrayList<>();
+                Iterable<TaskStatusOfStudent> taskStatusOfStudents = taskStatusOfStudentRepos.findAllByStudent(student);
+                List<TaskStatusOfStudent> oldtasks = new ArrayList<>();
+                List<TaskStatusOfStudent> newtasks = new ArrayList<>();
                 Calendar now = new GregorianCalendar();
-                for (Task task : tasks){
-                    if (now.get(Calendar.DAY_OF_YEAR) <= task.getDate().get(Calendar.DAY_OF_YEAR) && task.getStatus().equals("Не решено!")){
-                        newtasks.add(task);
+                for (TaskStatusOfStudent taskStatusOfStudent : taskStatusOfStudents){
+                    if (now.get(Calendar.DAY_OF_YEAR) <= taskStatusOfStudent.getTask().getDate().get(Calendar.DAY_OF_YEAR) && taskStatusOfStudent.getStatus().equals("Не решено!")){
+                        newtasks.add(taskStatusOfStudent);
                     }
                     else{
-                        oldtasks.add(task);
+                        oldtasks.add(taskStatusOfStudent);
                     }
                 }
                 model.addAttribute("oldtasks", oldtasks);
@@ -47,7 +45,7 @@ UserRepos userRepos;
             }
             if ("ROLE_TEACHER".equals(role.getName())){
                 Teacher teacher = (Teacher) (user);
-                model.addAttribute("schoolClasses", teacher.getSchoolClassSet());
+                model.addAttribute("schoolClasses",teacher.getSchoolClassSet());
             }
         }
         return "home";

@@ -70,7 +70,7 @@ public class TaskAndAnswerController {
     }
     @RequestMapping(value = "/addanswer", method = RequestMethod.GET)
     public String addAnswerGet(@RequestParam(name = "id")String id, Model model){
-                Task task = taskRepos.findTasksById(Long.parseLong(id));
+                Task task = taskRepos.findTaskById(Long.parseLong(id));
                 Student student = (Student) (userRepos.findUserByName(SecurityContextHolder.getContext().getAuthentication().getName()));
                 Boolean bool = false;
                 for (Task studentTask : student.getSchoolClass().getTasks()) {
@@ -79,9 +79,8 @@ public class TaskAndAnswerController {
                         break;
                     }
                 }
-                if (task.getStatus().equals("Решено!")) bool = false;
                 if (bool) {
-                    model.addAttribute("task", taskRepos.findTasksById(Long.parseLong(id)));
+                    model.addAttribute("task", taskRepos.findTaskById(Long.parseLong(id)));
                     return "addanswer";
                 }
         return "redirect:/";
@@ -112,15 +111,38 @@ public class TaskAndAnswerController {
     public String checkAnswerGet(
             @RequestParam(name = "id") String answerId,
             Model model){
-      return answerService.checkAnswer(answerId, model);
+        Teacher teacher = (Teacher) (userRepos.findUserByName(SecurityContextHolder.getContext().getAuthentication().getName()));
+        Answer answer = answerRepos.findAnswerById(Long.parseLong(answerId));
+        Task task = answer.getTask();
+        Boolean bool = false;
+        for (SchoolClass sc : teacher.getSchoolClassSet()){
+            for (Student st : sc.getStudents()){
+                if (st.getName().equals(st.getName())){
+                    bool = true;
+                    break;
+                }
+            }
+            if (bool == true){
+                break;
+            }
+        }
+        model.addAttribute("taskName", task.getName());
+        model.addAttribute("taskBody", task.getName());
+        model.addAttribute("answerBody", answer.getBody());
+        model.addAttribute("fileNames", answer.getFilename());
+        model.addAttribute("studentName", answer.getStudent().getName());
+        return "checkAnswer";
+    }
+    @RequestMapping(value = "/checkAnswer", method = RequestMethod.POST)
+    public String checkAnswerPost(@RequestParam(name = "id")String id,
+                                  @RequestParam(name = "mark")String mark){
+        return answerService.checkAnswer(id, mark);
     }
     @RequestMapping(value = "/files", method = RequestMethod.GET, produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     public void getFile(@RequestParam("fileName") String fileName, HttpServletResponse response) {
             try {
-                response.setContentType("image/jpg");
-                response.setHeader("Content-Disposition", "attachment; filename=\'somefile.jpg\'");
+                response.setHeader("Content-Disposition", "attachment; filename="+fileName);
                 InputStream is = new FileInputStream(uploadPath+fileName);
-                // copy it to response's OutputStream
                 IOUtils.copy(is, response.getOutputStream());
                 response.flushBuffer();
                 is.close();

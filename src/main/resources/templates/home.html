@@ -19,12 +19,12 @@
                     <div class="card-header">
                         <h5 th:text="${task.getStatus()}"></h5>
                         <h7>Выполнить до:</h7>
-                        <h7 th:text="${task.getDateTemplate()}"></h7>
+                        <h7 th:text="${task.getTask().getDateTemplate()}"></h7>
                     </div>
                     <div class="card-body">
-                        <h5 th:text="${task.getName()}" class="card-title"></h5>
-                        <p th:text="${task.getBody()}" class="card-text"></p>
-                        <a th:href="@{'/addanswer/?id='}+${task.getId()}" class="btn btn-primary">Выполнить</a>
+                        <h5 th:text="${task.getTask().getName()}" class="card-title"></h5>
+                        <p th:text="${task.getTask().getBody()}" class="card-text"></p>
+                        <a th:href="@{'/addanswer/?id='}+${task.getTask().getId()}" class="btn btn-primary">Выполнить</a>
                     </div>
                 </div>
             </div>
@@ -37,11 +37,11 @@
                     <div class="card-header">
                         <h5 th:text="${task.getStatus()}"></h5>
                         <h7>Выполнить до:</h7>
-                        <h7 th:text="${task.getDateTemplate()}"></h7>
+                        <h7 th:text="${task.getTask().getDateTemplate()}"></h7>
                     </div>
                     <div class="card-body">
-                        <h5 th:text="${task.getName()}" class="card-title"></h5>
-                        <p th:text="${task.getBody()}" class="card-text"></p>
+                        <h5 th:text="${task.getTask().getName()}" class="card-title"></h5>
+                        <p th:text="${task.getTask().getBody()}" class="card-text"></p>
                     </div>
                 </div>
             </div>

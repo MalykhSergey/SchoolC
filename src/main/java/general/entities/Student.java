@@ -1,13 +1,17 @@
 package general.entities;
 
+import general.reposes.TaskStatusOfStudentRepos;
+import org.springframework.beans.factory.annotation.Autowired;
+
 import javax.persistence.*;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 @Entity
-public class Student extends User{
+public class Student extends User {
     @ManyToOne
-    private  SchoolClass schoolClass;
+    private SchoolClass schoolClass;
     @OneToMany(targetEntity = Answer.class, cascade = CascadeType.ALL)
     private List<Answer> answers;
 
@@ -22,8 +26,7 @@ public class Student extends User{
     public Student() {
     }
 
-
-    public Student(String user, String password, Collection<Role> roles , School school, SchoolClass schoolClass) {
+    public Student(String user, String password, Collection<Role> roles, School school, SchoolClass schoolClass) {
         this.setName(user);
         this.setPassword(password);
         this.setRoles(roles);
@@ -38,5 +41,5 @@ public class Student extends User{
     public void setSchoolClass(SchoolClass schoolClass) {
         this.schoolClass = schoolClass;
     }
-    
+
 }

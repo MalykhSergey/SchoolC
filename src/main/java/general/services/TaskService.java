@@ -5,11 +5,10 @@
  */
 package general.services;
 
-import general.entities.SchoolClass;
-import general.entities.Task;
-import general.entities.Teacher;
+import general.entities.*;
 import general.reposes.SchoolClassRepos;
 import general.reposes.TaskRepos;
+import general.reposes.TaskStatusOfStudentRepos;
 import general.reposes.UserRepos;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -18,9 +17,7 @@ import org.springframework.ui.Model;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
+import java.util.*;
 
 /**
  * @author dmali
@@ -34,6 +31,8 @@ public class TaskService {
     SchoolClassRepos schoolClassRepos;
     @Autowired
     UserRepos userRepos;
+    @Autowired
+    TaskStatusOfStudentRepos taskStatusOfStudentRepos;
 
     public String addTask(String name, String body, String nameOfSchoolClass, Model model, String dateString) {
         Teacher teacher = (Teacher) (userRepos.findUserByName(SecurityContextHolder.getContext().getAuthentication().getName()));
@@ -65,8 +64,12 @@ public class TaskService {
         }
         Task task = null;
         task = new Task(name, body, schoolClass, date1);
-        schoolClass.addTask(task);
         taskRepos.save(task);
+        for(Student student:schoolClass.getStudents()){
+            TaskStatusOfStudent taskStatusOfStudent = new TaskStatusOfStudent(student, task, "Не решено!");
+            taskStatusOfStudentRepos.save(taskStatusOfStudent);
+        }
+        schoolClass.addTask(task);
         schoolClassRepos.save(schoolClass);
         model.addAttribute("completed", "Задача для " + schoolClass.getName() + "класса добавлена");
         model.addAttribute("schoolClasses", teacher.getSchoolClassSet());
@@ -78,7 +81,9 @@ public class TaskService {
         SchoolClass schoolClass = schoolClassRepos.findSchoolClassById(Long.parseLong(id));
         for (SchoolClass sc : teacher.getSchoolClassSet()) {
             if (sc.getId().equals(schoolClass.getId())) {
-                model.addAttribute("tasks", schoolClass.getTasks());
+                List<Task> tasks = schoolClass.getTasks();
+                Collections.reverse(tasks);
+                model.addAttribute("tasks", tasks);
                 model.addAttribute("schoolClass", schoolClass);
                 break;
             }
@@ -86,16 +91,16 @@ public class TaskService {
         return "home";
     }
 
-    public String getAnswerByTask(String taskId ,String classId, Model model) {
+    public String getAnswerByTask(String taskId, String classId, Model model) {
         Teacher teacher = (Teacher) userRepos.findUserByName(SecurityContextHolder.getContext().getAuthentication().getName());
-        Task task = taskRepos.findTasksById(Long.parseLong(taskId));
+        Task task = taskRepos.findTaskById(Long.parseLong(taskId));
         SchoolClass schoolClass = schoolClassRepos.findSchoolClassById(Long.parseLong(classId));
-        for (SchoolClass sc : teacher.getSchoolClassSet()){
-            if (sc.getId().equals(schoolClass.getId())){
-                for(Task tk:sc.getTasks()){
-                    if (tk.getId().equals(task.getId())){
+        for (SchoolClass sc : teacher.getSchoolClassSet()) {
+            if (sc.getId().equals(schoolClass.getId())) {
+                for (Task tk : sc.getTasks()) {
+                    if (tk.getId().equals(task.getId())) {
                         model.addAttribute("answers", task.getAnswers());
-                        model.addAttribute("task",task);
+                        model.addAttribute("task", task);
                     }
                 }
                 break;
