@@ -8,6 +8,7 @@ package general.controllers;
 import general.entities.*;
 import general.reposes.AnswerRepos;
 import general.reposes.TaskRepos;
+import general.reposes.TaskStatusOfStudentRepos;
 import general.reposes.UserRepos;
 import general.services.AnswerService;
 import general.services.TaskService;
@@ -43,6 +44,8 @@ public class TaskAndAnswerController {
     @Value("${upload.path}")
     private String uploadPath;
     @Autowired
+    TaskStatusOfStudentRepos taskStatusOfStudentRepos;
+    @Autowired
     TaskService taskService;
     @Autowired
     AnswerService answerService;
@@ -76,6 +79,10 @@ public class TaskAndAnswerController {
                 for (Task studentTask : student.getSchoolClass().getTasks()) {
                     if (studentTask == task) {
                         bool = true;
+                        if (taskStatusOfStudentRepos.findTaskStatusOfStudentByStudentAndTask(student, task).getStatus().equals("Решено!")){
+                            bool = false;
+                            break;
+                        }
                         break;
                     }
                 }

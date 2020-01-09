@@ -22,6 +22,7 @@ public class SchoolClass {
         return students;
     }
 
+
     public void addStudent(Student student) {
         this.students.add(student);
     }

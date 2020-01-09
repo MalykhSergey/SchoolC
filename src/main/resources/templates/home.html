@@ -24,7 +24,8 @@
                     <div class="card-body">
                         <h5 th:text="${task.getTask().getName()}" class="card-title"></h5>
                         <p th:text="${task.getTask().getBody()}" class="card-text"></p>
-                        <a th:href="@{'/addanswer/?id='}+${task.getTask().getId()}" class="btn btn-primary">Выполнить</a>
+                        <a th:href="@{'/addanswer/?id='}+${task.getTask().getId()}"
+                           class="btn btn-primary">Выполнить</a>
                     </div>
                 </div>
             </div>
@@ -70,7 +71,9 @@
                             <h7 th:text="${task.getDateTemplate()}"></h7>
                         </div>
                         <div class="card-body">
-                            <h5 class="card-title"><a th:text="${task.getName()}" th:href="@{'/answersOfTask/?taskId='+${task.getId()}+'&classId='+${schoolClass.getId()}}"></a></h5>
+                            <h5 class="card-title"><a th:text="${task.getName()}"
+                                                      th:href="@{'/answersOfTask/?taskId='+${task.getId()}+'&classId='+${schoolClass.getId()}}"></a>
+                            </h5>
                             <p th:text="${task.getBody()}" class="card-text"></p>
                         </div>
                     </div>
@@ -93,7 +96,8 @@
             <h1>Решения:</h1>
             <tr th:each="answer : ${answers}">
                 <div class="container">
-                    <h3><a th:href="@{'/checkAnswer/?id='+${answer.getId()}}" th:text="${answer.getStudent().getName()}"></a></h3>
+                    <h3><a th:href="@{'/checkAnswer/?id='+${answer.getId()}}"
+                           th:text="${answer.getStudent().getName()}"></a></h3>
                 </div>
             </tr>
         </div>
@@ -105,7 +109,9 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
         integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
         crossorigin="anonymous"></script>
-<script src="/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
         crossorigin="anonymous"></script>
+
 </body>
 </html>

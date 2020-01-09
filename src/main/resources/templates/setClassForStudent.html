@@ -12,7 +12,7 @@
 <div class="container-fluid">
     <form method="post">
         <input type="text" name="class" placeholder="Введите класс">
-        <input type="text" name="name" placeholder="Введите name">
+        <input type="text" name="name" placeholder="Введите имя">
         <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
         <input type="submit" value="Отправить">
     </form>

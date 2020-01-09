@@ -35,6 +35,10 @@ public class AnswerService {
         Boolean bool = false;
         for (Task studentTask : student.getSchoolClass().getTasks()) {
             if (studentTask == task) {
+                if (taskStatusOfStudentRepos.findTaskStatusOfStudentByStudentAndTask(student, task).getStatus().equals("Решено!")) {
+                    bool = false;
+                    break;
+                }
                 taskStatusOfStudentRepos.findTaskStatusOfStudentByStudentAndTask(student, task).setStatus("Решено!");
                 bool = true;
                 break;
@@ -77,8 +81,10 @@ public class AnswerService {
                 }
                 if (bool == true) {
                     answer.setRating(Byte.parseByte(rating));
+                    taskStatusOfStudentRepos.findTaskStatusOfStudentByStudentAndTask
+                            (answer.getStudent(), answer.getTask()).setMark(Integer.parseInt(rating));
                     answerRepos.save(answer);
-                    return "redirect:/answersOfTask/?taskId="+ answer.getTask().getId()+"&classId="+answer.getTask().getSchoolClass().getId();
+                    return "redirect:/answersOfTask/?taskId=" + answer.getTask().getId() + "&classId=" + answer.getTask().getSchoolClass().getId();
                 }
             }
         }

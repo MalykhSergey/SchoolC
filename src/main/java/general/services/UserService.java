@@ -94,7 +94,8 @@ public class UserService{
                     Collection<Role> roles = Arrays.asList(
                             new Role("ROLE_STUDENT"));
                     Student student = new Student(name, passwordEncoder.encode(password), roles, school, schoolClass);
-                    userRepos.save(student);
+                    schoolClass.addStudent(student);
+                    schoolClassRepos.save(schoolClass);
                     break;
                 case "teacher":
                     roles = Arrays.asList(

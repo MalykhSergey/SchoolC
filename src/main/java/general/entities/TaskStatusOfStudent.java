@@ -11,6 +11,16 @@ public class TaskStatusOfStudent {
     private Student student;
     @ManyToOne(targetEntity = Task.class, cascade = CascadeType.ALL)
     private Task task;
+    private int mark;
+
+    public int getMark() {
+        return mark;
+    }
+
+    public void setMark(int mark) {
+        this.mark = mark;
+    }
+
     private String status;
 
     public TaskStatusOfStudent() {
