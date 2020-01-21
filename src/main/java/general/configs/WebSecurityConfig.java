@@ -30,7 +30,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/addschool").access("hasRole('ROLE_ADMIN')")
                 .antMatchers("/adduser", "/addclass", "/adft", "/scfs").access("hasAnyRole('ROLE_ADMIN', 'ROLE_OPERATOR')")
-                .antMatchers("/addtask","/checkAnswer","/files","/tasksOfClass").access("hasRole('ROLE_TEACHER')")
+                .antMatchers("/addtask/**","/checkAnswer/**","/files","/tasksOfClass/**").access("hasRole('ROLE_TEACHER')")
                 .antMatchers("/addanswer").access("hasRole('ROLE_STUDENT')")
                 .antMatchers("/").authenticated()
                 .antMatchers("/js/**", "/css/**").permitAll()

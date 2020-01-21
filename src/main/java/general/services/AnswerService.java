@@ -66,7 +66,7 @@ public class AnswerService {
         return "redirect:/";
     }
 
-    public String checkAnswer(String answerId, String rating) {
+    public String checkAnswer(String answerId, String rating, String comment) {
         if (Byte.parseByte(rating) < 6 && Byte.parseByte(rating) > 1) {
             Teacher teacher = (Teacher) (userRepos.findUserByName(SecurityContextHolder.getContext().getAuthentication().getName()));
             Answer answer = answerRepos.findAnswerById(Long.parseLong(answerId));
@@ -81,8 +81,11 @@ public class AnswerService {
                 }
                 if (bool == true) {
                     answer.setRating(Byte.parseByte(rating));
-                    taskStatusOfStudentRepos.findTaskStatusOfStudentByStudentAndTask
-                            (answer.getStudent(), answer.getTask()).setMark(Integer.parseInt(rating));
+                    TaskStatusOfStudent taskStatusOfStudent = taskStatusOfStudentRepos.findTaskStatusOfStudentByStudentAndTask
+                            (answer.getStudent(), answer.getTask());
+                            taskStatusOfStudent.setMark(Integer.parseInt(rating));
+                            taskStatusOfStudent.setComment(comment);
+                            taskStatusOfStudentRepos.save(taskStatusOfStudent);
                     answerRepos.save(answer);
                     return "redirect:/answersOfTask/?taskId=" + answer.getTask().getId() + "&classId=" + answer.getTask().getSchoolClass().getId();
                 }

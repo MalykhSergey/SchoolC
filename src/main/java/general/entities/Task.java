@@ -25,7 +25,6 @@ public class Task {
     private List<Answer> answers;
     private String name;
     private String body;
-    private String status;
     private Calendar date;
     @ManyToOne
     private SchoolClass schoolClass;
@@ -38,14 +37,6 @@ public class Task {
         this.schoolClass = schoolClass;
         this.body = body;
         this.date =date;
-        this.status = "Не решено!";
-    }
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
     }
 
     public Long getId() {

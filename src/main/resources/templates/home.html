@@ -4,7 +4,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Главная</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link href="/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
 </head>
@@ -37,12 +37,15 @@
                 <div class="card">
                     <div class="card-header">
                         <h5 th:text="${task.getStatus()}"></h5>
+                        <h5 th:text="'Оценка: '+${task.getMark()}"></h5>
                         <h7>Выполнить до:</h7>
                         <h7 th:text="${task.getTask().getDateTemplate()}"></h7>
                     </div>
                     <div class="card-body">
                         <h5 th:text="${task.getTask().getName()}" class="card-title"></h5>
                         <p th:text="${task.getTask().getBody()}" class="card-text"></p>
+                        <h4>Комментарий:</h4>
+                        <p th:text="${task.getComment()}" class="card-text"></p>
                     </div>
                 </div>
             </div>

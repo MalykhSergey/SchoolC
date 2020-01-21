@@ -142,8 +142,9 @@ public class TaskAndAnswerController {
     }
     @RequestMapping(value = "/checkAnswer", method = RequestMethod.POST)
     public String checkAnswerPost(@RequestParam(name = "id")String id,
-                                  @RequestParam(name = "mark")String mark){
-        return answerService.checkAnswer(id, mark);
+                                  @RequestParam(name = "mark")String mark,
+                                  @RequestParam(name = "comment")String comment){
+        return answerService.checkAnswer(id, mark, comment);
     }
     @RequestMapping(value = "/files", method = RequestMethod.GET, produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     public void getFile(@RequestParam("fileName") String fileName, HttpServletResponse response) {

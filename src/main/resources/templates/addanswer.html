@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Добавить ответ</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link href="/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
 </head>
@@ -16,7 +16,6 @@
                 <h5 class="card-header" th:text="${task.getName()}"></h5>
                 <div class="card-body">
                     <p class="card-text" th:text="${task.getBody()}"></p>
-                    <div th:if="${task.getStatus().equals('Не решено!')}" class="mt-2">
                         <form method="post" id="form" enctype="multipart/form-data">
                             <div><textarea style="width: 100%" name="body" placeholder="Введите решение"></textarea>
                             </div>
@@ -28,7 +27,6 @@
                             <input type="submit" value="Отправить">
                             <script src="/js/fileform.js"></script>
                         </form>
-                    </div>
                     <div class="mt-3" id="warning">
                         <div th:if="${error}" th:text="${error}" class="alert alert-danger" role="alert">
                         </div>

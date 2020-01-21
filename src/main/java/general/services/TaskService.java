@@ -40,6 +40,7 @@ public class TaskService {
         boolean bool = false;
         if (name == null | body == null | nameOfSchoolClass == null | dateString == null) {
             model.addAttribute("error", "Введите все значения");
+            model.addAttribute("schoolClasses", teacher.getSchoolClassSet());
             return "addtask";
         }
         for (SchoolClass checkSchoolClass : teacher.getSchoolClassSet()) {
@@ -49,10 +50,12 @@ public class TaskService {
         }
         if (bool = false) {
             model.addAttribute("error", "Неверный класс");
+            model.addAttribute("schoolClasses", teacher.getSchoolClassSet());
             return "addtask";
         }
         if (name.length() > 25 | name.length() < 5 | body.length() < 25) {
             model.addAttribute("error", "Введите более полное описание задания");
+            model.addAttribute("schoolClasses", teacher.getSchoolClassSet());
             return "addtask";
         }
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");

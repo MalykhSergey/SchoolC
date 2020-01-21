@@ -11,6 +11,7 @@ public class TaskStatusOfStudent {
     private Student student;
     @ManyToOne(targetEntity = Task.class, cascade = CascadeType.ALL)
     private Task task;
+    private String comment;
     private int mark;
 
     public int getMark() {
@@ -19,6 +20,14 @@ public class TaskStatusOfStudent {
 
     public void setMark(int mark) {
         this.mark = mark;
+    }
+
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
     }
 
     private String status;

@@ -109,7 +109,7 @@ public class UserService{
                     roles = Arrays.asList(
                             new Role("ROLE_OPERATOR")
                     );
-                    Operator operator = new Operator(name, passwordEncoder.encode(password), roles, school);
+                    Admin operator = new Admin(name, passwordEncoder.encode(password), roles, school);
                     school.addOperator(operator);
                     schoolRepos.save(school);
                     break;
