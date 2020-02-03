@@ -1,5 +1,8 @@
 package general;
-import general.entities.*;
+
+import general.entities.Admin;
+import general.entities.Role;
+import general.entities.User;
 import general.reposes.UserRepos;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -10,7 +13,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import javax.annotation.PostConstruct;
 import java.io.File;
 import java.util.Arrays;
-import java.util.Collection;
 
 @SpringBootApplication
 public class Application {
@@ -24,7 +26,7 @@ public class Application {
     public void init(){
         if (userRepos.findUserByName("GeneralDirector") == null){
             User admin = new Admin("GeneralDirector",
-                    bCryptPasswordEncoder.encode("AmudeFx"),
+                    bCryptPasswordEncoder.encode("144"),
                     Arrays.asList(
                             new Role("ROLE_ADMIN"),
                             new Role("ROLE_OPERATOR")

@@ -11,10 +11,14 @@ import general.reposes.TaskRepos;
 import general.reposes.TaskStatusOfStudentRepos;
 import general.reposes.UserRepos;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -33,31 +37,21 @@ public class TaskService {
     UserRepos userRepos;
     @Autowired
     TaskStatusOfStudentRepos taskStatusOfStudentRepos;
+    @Value("${upload.path}")
+    private String uploadPath;
 
-    public String addTask(String name, String body, String nameOfSchoolClass, Model model, String dateString) {
+    public String addTask(String name, String body, String nameOfSchoolClass, MultipartFile[] files, Model model, String dateString) throws IOException {
         Teacher teacher = (Teacher) (userRepos.findUserByName(SecurityContextHolder.getContext().getAuthentication().getName()));
         SchoolClass schoolClass = schoolClassRepos.findSchoolClassByName(nameOfSchoolClass);
-        boolean bool = false;
-        if (name == null | body == null | nameOfSchoolClass == null | dateString == null) {
-            model.addAttribute("error", "Введите все значения");
-            model.addAttribute("schoolClasses", teacher.getSchoolClassSet());
+        if (checkInputData(name, body, nameOfSchoolClass, model, dateString, teacher, schoolClass, false))
             return "addtask";
-        }
-        for (SchoolClass checkSchoolClass : teacher.getSchoolClassSet()) {
-            if (checkSchoolClass.getName().equals(schoolClass.getName())) {
-                bool = true;
-            }
-        }
-        if (bool = false) {
-            model.addAttribute("error", "Неверный класс");
-            model.addAttribute("schoolClasses", teacher.getSchoolClassSet());
-            return "addtask";
-        }
-        if (name.length() > 25 | name.length() < 5 | body.length() < 25) {
-            model.addAttribute("error", "Введите более полное описание задания");
-            model.addAttribute("schoolClasses", teacher.getSchoolClassSet());
-            return "addtask";
-        }
+        createTask(name, body, dateString, schoolClass, files);
+        model.addAttribute("completed", "Задача для " + schoolClass.getName() + "класса добавлена");
+        model.addAttribute("schoolClasses", teacher.getSchoolClassSet());
+        return "addtask";
+    }
+
+    private void createTask(String name, String body, String dateString, SchoolClass schoolClass,MultipartFile[] files) throws IOException {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
         Calendar date1 = Calendar.getInstance();
         try {
@@ -65,8 +59,15 @@ public class TaskService {
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        Task task = null;
+        Task task;
         task = new Task(name, body, schoolClass, date1);
+        for (MultipartFile file : files) {
+            if (!file.isEmpty()) {
+                String filePath = UUID.randomUUID().toString() + "." + file.getOriginalFilename();
+                file.transferTo(new File(uploadPath + filePath));
+                task.addFileName(filePath);
+            }
+        }
         taskRepos.save(task);
         for(Student student:schoolClass.getStudents()){
             TaskStatusOfStudent taskStatusOfStudent = new TaskStatusOfStudent(student, task, "Не решено!");
@@ -74,9 +75,30 @@ public class TaskService {
         }
         schoolClass.addTask(task);
         schoolClassRepos.save(schoolClass);
-        model.addAttribute("completed", "Задача для " + schoolClass.getName() + "класса добавлена");
-        model.addAttribute("schoolClasses", teacher.getSchoolClassSet());
-        return "addtask";
+    }
+
+    private boolean checkInputData(String name, String body, String nameOfSchoolClass, Model model, String dateString, Teacher teacher, SchoolClass schoolClass, boolean bool) {
+        if (name == null | body == null | nameOfSchoolClass == null | dateString == null) {
+            model.addAttribute("error", "Введите все значения");
+            model.addAttribute("schoolClasses", teacher.getSchoolClassSet());
+            return true;
+        }
+        for (SchoolClass checkSchoolClass : teacher.getSchoolClassSet()) {
+            if (checkSchoolClass.getName().equals(schoolClass.getName())) {
+                bool = true;
+            }
+        }
+        if (bool == false) {
+            model.addAttribute("error", "Неверный класс");
+            model.addAttribute("schoolClasses", teacher.getSchoolClassSet());
+            return true;
+        }
+        if (name.length() > 25 | name.length() < 5 | body.length() < 25) {
+            model.addAttribute("error", "Введите более полное описание задания");
+            model.addAttribute("schoolClasses", teacher.getSchoolClassSet());
+            return true;
+        }
+        return false;
     }
 
     public String getTaskByClass(String id, Model model) {

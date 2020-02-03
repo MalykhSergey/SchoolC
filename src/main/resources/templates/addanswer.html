@@ -12,10 +12,10 @@
     <div class="container mt-2">
         <div class="row">
             <div class="container">
-            <div class="card">
-                <h5 class="card-header" th:text="${task.getName()}"></h5>
-                <div class="card-body">
-                    <p class="card-text" th:text="${task.getBody()}"></p>
+                <div class="card">
+                    <h5 class="card-header" th:text="${task.getName()}"></h5>
+                    <div class="card-body">
+                        <p class="card-text" th:text="${task.getBody()}"></p>
                         <form method="post" id="form" enctype="multipart/form-data">
                             <div><textarea style="width: 100%" name="body" placeholder="Введите решение"></textarea>
                             </div>
@@ -27,13 +27,14 @@
                             <input type="submit" value="Отправить">
                             <script src="/js/fileform.js"></script>
                         </form>
-                    <div class="mt-3" id="warning">
-                        <div th:if="${error}" th:text="${error}" class="alert alert-danger" role="alert">
-                        </div>
-                        <div th:if="${completed}" th:text="${completed}" class="alert alert-success" role="alert">
+                        <div class="mt-3" id="warning">
+                            <div th:if="${error}" th:text="${error}" class="alert alert-danger" role="alert">
+                            </div>
+                            <div th:if="${completed}" th:text="${completed}" class="alert alert-success" role="alert">
+                            </div>
                         </div>
                     </div>
-                </div></div>
+                </div>
             </div>
         </div>
     </div>
