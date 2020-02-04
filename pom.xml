@@ -39,7 +39,8 @@
         <!-- JPA Data (We are going to use Repositories, Entities, Hibernate, etc...) -->
 
 
-        <dependency>
+        
+         
                  <dependency>
       <groupId>com.google.appengine</groupId>
       <artifactId>appengine-api-1.0-sdk</artifactId>
