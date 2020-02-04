@@ -4,8 +4,12 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
          <distributionManagement>
-              <repository>
-
+             <repository>
+             <id>school.c</id>
+             <name>SchoolC</name>
+             <url>file:///home/sergeymalykhdm/deploy/</url>
+         </repository>
+         </distributionManagement>
 
     <groupId>project</groupId>
     <artifactId>springapp</artifactId>
@@ -87,6 +91,4 @@
             </plugin>
         </plugins>
     </build>
-</distributionManagement>
-              </repository>
 </project>
