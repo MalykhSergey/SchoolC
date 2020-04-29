@@ -6,10 +6,7 @@
 package general.entities;
 
 import javax.persistence.*;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.List;
+import java.util.*;
 
 /**
  *
@@ -26,6 +23,8 @@ public class Task {
     private String name;
     private String body;
     private Calendar date;
+    @ElementCollection
+    private List<String> fileNames;
     @ManyToOne
     private SchoolClass schoolClass;
 
@@ -37,6 +36,7 @@ public class Task {
         this.schoolClass = schoolClass;
         this.body = body;
         this.date =date;
+        this.fileNames = new ArrayList<>();
     }
 
     public Long getId() {
@@ -86,6 +86,13 @@ public class Task {
 
     public List<Answer> getAnswers() {
         return answers;
+    }
+
+    public List<String> getFileNames() {
+        return fileNames;
+    }
+    public void addFileName(String fileName){
+        this.fileNames.add(fileName);
     }
 
     public void addAnswer(Answer answer) {

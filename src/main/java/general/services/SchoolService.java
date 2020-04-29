@@ -27,22 +27,31 @@ public class SchoolService{
     @Autowired
     SchoolClassRepos schoolClassRepos;
     public String addSchool(String name, Model model){
+        if (checkSchoolName(name, model)) return "addschool";
+        return createSchool(name, model);
+    }
+
+    private String createSchool(String name, Model model) {
+        School school = new School(name);
+        school.setName(name);
+        model.addAttribute("completed", "Школа успешно добавлена");
+        schoolRepos.save(school);
+        return "addschool";
+    }
+
+    private boolean checkSchoolName(String name, Model model) {
         if (name == null){
                 model.addAttribute("error", "Введите имя!");
-                return "addschool";
+            return true;
             }
-            if (schoolRepos.findSchoolByName(name) != null){
-                model.addAttribute("error", "Такая школа уже существует");
-                return "addschool";
-            }
-            if (name.length() < 6){
-                model.addAttribute("error", "Введите полное название");
-                return "addschool";
-            }
-            School school = new School(name);
-            school.setName(name);
-            model.addAttribute("completed", "Школа успешно добавлена");
-            schoolRepos.save(school);
-            return "addschool";
+        if (schoolRepos.findSchoolByName(name) != null){
+            model.addAttribute("error", "Такая школа уже существует");
+            return true;
+        }
+        if (name.length() < 6){
+            model.addAttribute("error", "Введите полное название");
+            return true;
+        }
+        return false;
     }
 }

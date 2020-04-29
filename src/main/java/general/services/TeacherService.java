@@ -16,10 +16,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
-/**
- *
- * @author dmali
- */
 @Service
 public class TeacherService {
 
@@ -31,19 +27,7 @@ public class TeacherService {
     SchoolClassRepos schoolClassRepos;
 
     public String addClassForTeacher(String teacherName, String className, Model model) {
-        User user = userRepos.findUserByName(SecurityContextHolder.getContext().getAuthentication().getName());
-        if (className == null | teacherName == null) {
-            model.addAttribute("error", "Введите имя!");
-            return "addclassforteacher";
-        }
-        if (schoolClassRepos.findSchoolClassByName(className) == null) {
-            model.addAttribute("error", "Такого класса не существует");
-            return "addclassforteacher";
-        }
-        if (userRepos.findUserByName(teacherName) == null) {
-            model.addAttribute("error", "Такого учителя не существует");
-            return "addclassforteacher";
-        }
+        if (checkInputData(teacherName, className, model)) return "addclassforteacher";
         Teacher teacher = (Teacher) userRepos.findUserByName(teacherName);
         SchoolClass schoolClass = schoolClassRepos.findSchoolClassByName(className);
         teacher.addSchoolClass(schoolClass);
@@ -51,6 +35,23 @@ public class TeacherService {
         model.addAttribute("completed", "Учитель: " + teacherName + " привязан к классу!");
         return "addclassforteacher";
     }
+
+    private boolean checkInputData(String teacherName, String className, Model model) {
+        if (className == null | teacherName == null) {
+            model.addAttribute("error", "Введите имя!");
+            return true;
+        }
+        if (schoolClassRepos.findSchoolClassByName(className) == null) {
+            model.addAttribute("error", "Такого класса не существует");
+            return true;
+        }
+        if (userRepos.findUserByName(teacherName) == null) {
+            model.addAttribute("error", "Такого учителя не существует");
+            return true;
+        }
+        return false;
+    }
+
     public String checkAnswer() {
     	return "";
     }

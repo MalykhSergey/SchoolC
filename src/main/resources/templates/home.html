@@ -24,6 +24,9 @@
                     <div class="card-body">
                         <h5 th:text="${task.getTask().getName()}" class="card-title"></h5>
                         <p th:text="${task.getTask().getBody()}" class="card-text"></p>
+                        <h6 th:each="fileName : ${task.getTask().getFileNames()}">
+                            <a th:href="'/files/?fileName='+${fileName}" th:text="${fileName}"></a>
+                        </h6>
                         <a th:href="@{'/addanswer/?id='}+${task.getTask().getId()}"
                            class="btn btn-primary">Выполнить</a>
                     </div>
@@ -82,6 +85,22 @@
                     </div>
                 </div>
             </tr>
+            <h1>Статистика</h1>
+            <div th:each="student :${students}">
+                <h4 class="row">
+                    <div class="col-1" th:text="${student.getName()}"></div>
+                    <div class="col">
+                        <div class="row">
+                            <a th:each="answer : ${student.getAnswers()}"
+                               th:href="@{'/answersOfTask/?taskId='}+${answer.getTask().getId()}+'&classId='+${student.getSchoolClass().getId()}">
+                                <th:block
+                                        th:text="${answer.getRating()}">
+                                </th:block>
+                            </a>
+                        </div>
+                    </div>
+                </h4>
+            </div>
         </div>
         <div th:if="${answers}">
             <div class="container mt-2 mb-2">

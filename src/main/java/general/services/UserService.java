@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package general.services;
 
 import general.entities.*;
@@ -17,10 +12,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
-/**
- *
- * @author dmali
- */
 @Service
 public class UserService{
     @Autowired
@@ -43,86 +34,83 @@ public class UserService{
                         model.addAttribute("error", "Неверно указана школа");
                         return "adduser";
                     }
-                    break;
                 }
             }
-            school = schoolRepos.findSchoolByName(nameOfSchool);
         }
-        if (type.equals("student")){
-
-        }
+        if (checkInputData(name, password, model)) return "adduser";
         if (school == null) {
             school = user.getSchool();
         }
-        
-        if (school == null){
-            model.addAttribute("error", "Ошибка: Неверно указана школа!");
-            return "adduser";
-        }
-        if (password == null){
-            model.addAttribute("error", "Введите пароль");
-            return "adduser";
-        }
-        if (password.length() < 4){
-            model.addAttribute("error", "Введите пароль длинее 5 символов");
-            return "adduser";
-        }
-        if (password.length() > 12){
-            model.addAttribute("error", "Ваш пароль слишком длинный!");
-            return "adduser";
-        }
-        if (name == null){
-            model.addAttribute("error", "Введите имя");
-            return "adduser";
-        }
-        if (name.length() > 15){
-            model.addAttribute("error", "Введите имя короче 15 символов");
-            return "adduser";
-        }
-        System.out.println(userRepos.findUserByName(name));
-        if (userRepos.findUserByName(name) != null) {
-            model.addAttribute("error", "Введите другое имя");
-            return "adduser";
-        }
-            switch (type){
-                case "student":
-                    SchoolClass schoolClass = schoolClassRepos.findSchoolClassByName(nameOfSchoolClass);
-                    if(nameOfSchoolClass == null | schoolClass == null){
-                        model.addAttribute("error", "Неверно указан класс");
-                        return "adduser";
-                    }
-                    Collection<Role> roles = Arrays.asList(
-                            new Role("ROLE_STUDENT"));
-                    Student student = new Student(name, passwordEncoder.encode(password), roles, school, schoolClass);
-                    schoolClass.addStudent(student);
-                    schoolClassRepos.save(schoolClass);
-                    break;
-                case "teacher":
-                    roles = Arrays.asList(
-                            new Role("ROLE_TEACHER"));
-                    Teacher teacher = new Teacher(name, passwordEncoder.encode(password), roles, school);
-                    school.addTeacher(teacher);
-                    schoolRepos.save(school);
+        return createUser(name, type, nameOfSchoolClass, password, model, school);
+    }
 
-                    break;
-                case "operator":
-                    roles = Arrays.asList(
-                            new Role("ROLE_OPERATOR")
-                    );
-                    Admin operator = new Admin(name, passwordEncoder.encode(password), roles, school);
-                    school.addOperator(operator);
-                    schoolRepos.save(school);
-                    break;
-                default:{
-                    model.addAttribute("error", "Не жульничай!");
+    private String createUser(String name, String type, String nameOfSchoolClass, String password, Model model, School school) {
+        switch (type){
+            case "student":
+                SchoolClass schoolClass = schoolClassRepos.findSchoolClassByName(nameOfSchoolClass);
+                if(nameOfSchoolClass == null | schoolClass == null){
+                    model.addAttribute("error", "Неверно указан класс");
                     return "adduser";
                 }
+                Collection<Role> roles = Arrays.asList(
+                        new Role("ROLE_STUDENT"));
+                Student student = new Student(name, passwordEncoder.encode(password), roles, school, schoolClass);
+                schoolClass.addStudent(student);
+                schoolClassRepos.save(schoolClass);
+                break;
+            case "teacher":
+                roles = Arrays.asList(
+                        new Role("ROLE_TEACHER"));
+                Teacher teacher = new Teacher(name, passwordEncoder.encode(password), roles, school);
+                school.addTeacher(teacher);
+                schoolRepos.save(school);
+
+                break;
+            case "operator":
+                roles = Arrays.asList(
+                        new Role("ROLE_OPERATOR")
+                );
+                Admin operator = new Admin(name, passwordEncoder.encode(password), roles, school);
+                school.addOperator(operator);
+                schoolRepos.save(school);
+                break;
+            default:{
+                model.addAttribute("error", "Не жульничай!");
+                return "adduser";
             }
-
-
+        }
         model.addAttribute("completed", "Пользователь с именем: "+ name +" был успешно добавлен");
         return "adduser";
     }
+
+    private boolean checkInputData(String name, String password, Model model) {
+        if (password == null){
+            model.addAttribute("error", "Введите пароль");
+            return true;
+        }
+        if (password.length() < 4){
+            model.addAttribute("error", "Введите пароль длинее 5 символов");
+            return true;
+        }
+        if (password.length() > 12){
+            model.addAttribute("error", "Ваш пароль слишком длинный!");
+            return true;
+        }
+        if (name == null){
+            model.addAttribute("error", "Введите имя");
+            return true;
+        }
+        if (name.length() > 15){
+            model.addAttribute("error", "Введите имя короче 15 символов");
+            return true;
+        }
+        if (userRepos.findUserByName(name) != null) {
+            model.addAttribute("error", "Введите другое имя");
+            return true;
+        }
+        return false;
+    }
+
     public String setClassForStudent(String name, String className, Model model){
         if (name == null){
             model.addAttribute("error", "Введите имя ученика");

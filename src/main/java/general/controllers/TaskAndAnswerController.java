@@ -6,10 +6,7 @@
 package general.controllers;
 
 import general.entities.*;
-import general.reposes.AnswerRepos;
-import general.reposes.TaskRepos;
-import general.reposes.TaskStatusOfStudentRepos;
-import general.reposes.UserRepos;
+import general.reposes.*;
 import general.services.AnswerService;
 import general.services.TaskService;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
@@ -55,6 +52,8 @@ public class TaskAndAnswerController {
     UserRepos userRepos;
     @Autowired
     AnswerRepos answerRepos;
+    @Autowired
+    SchoolClassRepos schoolClassRepos;
     @RequestMapping(value = "/addtask", method = RequestMethod.GET)
     public String addTaskGet(Model model) {
         Teacher teacher = (Teacher) (userRepos.findUserByName(SecurityContextHolder.getContext().getAuthentication().getName()));
@@ -67,9 +66,11 @@ public class TaskAndAnswerController {
             @RequestParam(name = "name") String name,
             @RequestParam(name = "body") String body,
             @RequestParam(name = "schoolClassName") String nameOfSchoolClass,
-            @RequestParam(name = "date") String date,Model model
-    ) {
-        return taskService.addTask(name, body, nameOfSchoolClass, model, date);
+            @RequestParam(name = "date") String date,
+            @RequestParam MultipartFile[] files,
+            Model model
+    ) throws IOException {
+        return taskService.addTask(name, body, nameOfSchoolClass, files, model, date);
     }
     @RequestMapping(value = "/addanswer", method = RequestMethod.GET)
     public String addAnswerGet(@RequestParam(name = "id")String id, Model model){
@@ -104,6 +105,7 @@ public class TaskAndAnswerController {
             @RequestParam(name = "id") String id,
             Model model
     ){
+        model.addAttribute("students", schoolClassRepos.findSchoolClassById(Long.parseLong(id)).getStudents());
         return taskService.getTaskByClass(id, model);
     }
     @RequestMapping(value = "/answersOfTask", method = RequestMethod.GET)
@@ -121,23 +123,18 @@ public class TaskAndAnswerController {
         Teacher teacher = (Teacher) (userRepos.findUserByName(SecurityContextHolder.getContext().getAuthentication().getName()));
         Answer answer = answerRepos.findAnswerById(Long.parseLong(answerId));
         Task task = answer.getTask();
-        Boolean bool = false;
-        for (SchoolClass sc : teacher.getSchoolClassSet()){
-            for (Student st : sc.getStudents()){
-                if (st.getName().equals(st.getName())){
-                    bool = true;
-                    break;
-                }
-            }
-            if (bool == true){
+        Boolean isStudentInClassOfTeacher = false;
+        for (SchoolClass schoolClass : teacher.getSchoolClassSet()){
+            if (schoolClass.getName().equals(answer.getStudent().getSchoolClass().getName())){
+                isStudentInClassOfTeacher = true;
+                model.addAttribute("taskName", task.getName());
+                model.addAttribute("taskBody", task.getName());
+                model.addAttribute("answerBody", answer.getBody());
+                model.addAttribute("fileNames", answer.getFilename());
+                model.addAttribute("studentName", answer.getStudent().getName());
                 break;
             }
         }
-        model.addAttribute("taskName", task.getName());
-        model.addAttribute("taskBody", task.getName());
-        model.addAttribute("answerBody", answer.getBody());
-        model.addAttribute("fileNames", answer.getFilename());
-        model.addAttribute("studentName", answer.getStudent().getName());
         return "checkAnswer";
     }
     @RequestMapping(value = "/checkAnswer", method = RequestMethod.POST)

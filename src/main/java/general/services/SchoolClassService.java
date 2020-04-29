@@ -45,32 +45,51 @@ public class SchoolClassService {
                     break;
                 }
             }
-        } 
-        if (school == null){
-            school = user.getSchool();
         }
-        if (name == null) {
-            model.addAttribute("error", "Введите имя!");
-            return "addclass";
-        }
-        if (name.length() < 6) {
-            model.addAttribute("error", "Введите полное название");
-            return "addclass";
-        }
-        if (schoolClassRepos.findSchoolClassByName(name) != null){
+        school = getSchoolIfUserIsOperator(school, user);
+        if (checkName(name, model)) return "addclass";
+        if (checkClass(name, model)) return "addclass";
+        createSchoolClass(name, school);
+        model.addAttribute("completed", "Класс " + name + " был добавлен");
+        return "addclass";
+    }
 
-            model.addAttribute("error", "Такой класс уже есть");
-            return "addclass";
-
-        }
+    private void createSchoolClass(String name, School school) {
         SchoolClass schoolClass = new SchoolClass();
         schoolClass.setName(name);
         schoolClass.setSchool(school);
         school.addClass(schoolClass);
         schoolClassRepos.save(schoolClass);
         schoolRepos.save(school);
-        model.addAttribute("completed", "Класс " + name + " был добавлен");
-        return "addclass";
+    }
+
+    private boolean checkClass(String name, Model model) {
+        if (schoolClassRepos.findSchoolClassByName(name) != null){
+
+            model.addAttribute("error", "Такой класс уже есть");
+            return true;
+
+        }
+        return false;
+    }
+
+    private boolean checkName(String name, Model model) {
+        if (name == null) {
+            model.addAttribute("error", "Введите имя!");
+            return true;
+        }
+        if (name.length() < 6) {
+            model.addAttribute("error", "Введите полное название");
+            return true;
+        }
+        return false;
+    }
+
+    private School getSchoolIfUserIsOperator(School school, User user) {
+        if (school == null){
+            school = user.getSchool();
+        }
+        return school;
     }
 
 }
