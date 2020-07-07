@@ -1,0 +1,46 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<nav class="navbar navbar-expand-lg navbar-light bg-light" th:fragment="body">
+    <a class="navbar-brand" href="#">School1C</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+            <li sec:authorize="authenticated" class="nav-item active">
+                <a class="nav-link" th:href="@{'/'}">Главная<span class="sr-only">(current)</span></a>
+            </li>
+
+            <li sec:authorize="authenticated" class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+                   aria-haspopup="true" aria-expanded="false">
+                    Выбрать
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <a sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_OPERATOR')" class="dropdown-item"
+                       th:href="@{'/adduser'}">Добавить пользователя</a>
+                    <a sec:authorize="hasRole('ROLE_ADMIN')" class="dropdown-item" th:href="@{'/addschool'}">Добавить
+                        школу</a>
+                    <a sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_OPERATOR')" th:href="@{'/addclass'}"
+                       class="dropdown-item">Добавить класс</a>
+                    <a sec:authorize="hasRole('ROLE_TEACHER')" class="dropdown-item" th:href="@{'/addtask'}">Добавить
+                        задание</a>
+                    <a sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_OPERATOR')" class="dropdown-item"
+                       th:href="@{'/adcft'}">Привязать учителя к классу</a>
+                    <a sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_OPERATOR')" class="dropdown-item"
+                       th:href="@{'/scfs'}">Переприривязать ученика к классу</a>
+                    <div class="dropdown-divider"></div>
+                </div>
+            </li>
+            <li sec:authorize="authenticated" class="nav-item">
+                <form th:action="@{/logout}" method="post" class="form-inline my-2 my-lg-0">
+                    <input class="btn btn-outline-success my-2 my-sm-0" type="submit" value="Выйти"/>
+                </form>
+            </li>
+        </ul>
+    </div>
+</nav>
+</div>
+</div>
+</html>

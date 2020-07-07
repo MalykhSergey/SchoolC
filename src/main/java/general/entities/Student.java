@@ -1,12 +1,12 @@
 package general.entities;
 
-import general.reposes.TaskStatusOfStudentRepos;
-import org.springframework.beans.factory.annotation.Autowired;
-
-import javax.persistence.*;
 import java.util.Collection;
 import java.util.List;
-import java.util.Map;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 
 @Entity
 public class Student extends User {

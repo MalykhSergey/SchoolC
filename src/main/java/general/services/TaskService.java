@@ -37,21 +37,19 @@ public class TaskService {
     UserRepos userRepos;
     @Autowired
     TaskStatusOfStudentRepos taskStatusOfStudentRepos;
-    @Value("${upload.path}")
-    private String uploadPath;
 
-    public String addTask(String name, String body, String nameOfSchoolClass, MultipartFile[] files, Model model, String dateString) throws IOException {
+    public String addTask(String name, String body, String nameOfSchoolClass, Model model, String dateString) throws IOException {
         Teacher teacher = (Teacher) (userRepos.findUserByName(SecurityContextHolder.getContext().getAuthentication().getName()));
         SchoolClass schoolClass = schoolClassRepos.findSchoolClassByName(nameOfSchoolClass);
         if (checkInputData(name, body, nameOfSchoolClass, model, dateString, teacher, schoolClass, false))
             return "addtask";
-        createTask(name, body, dateString, schoolClass, files);
+        createTask(name, body, dateString, schoolClass);
         model.addAttribute("completed", "Задача для " + schoolClass.getName() + "класса добавлена");
         model.addAttribute("schoolClasses", teacher.getSchoolClassSet());
         return "addtask";
     }
 
-    private void createTask(String name, String body, String dateString, SchoolClass schoolClass,MultipartFile[] files) throws IOException {
+    private void createTask(String name, String body, String dateString, SchoolClass schoolClass) throws IOException {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
         Calendar date1 = Calendar.getInstance();
         try {
@@ -61,13 +59,6 @@ public class TaskService {
         }
         Task task;
         task = new Task(name, body, schoolClass, date1);
-        for (MultipartFile file : files) {
-            if (!file.isEmpty()) {
-                String filePath = UUID.randomUUID().toString() + "." + file.getOriginalFilename();
-                file.transferTo(new File(uploadPath + filePath));
-                task.addFileName(filePath);
-            }
-        }
         taskRepos.save(task);
         for(Student student:schoolClass.getStudents()){
             TaskStatusOfStudent taskStatusOfStudent = new TaskStatusOfStudent(student, task, "Не решено!");
