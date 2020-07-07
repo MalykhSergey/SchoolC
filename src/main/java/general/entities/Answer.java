@@ -14,8 +14,6 @@ public class Answer {
     @ManyToOne
     private Task task;
     @CollectionTable
-    @ElementCollection
-    private List<String> fileNames;
     private String body;
     byte rating;
 
@@ -31,7 +29,6 @@ public class Answer {
     }
 
     public Answer(Student student, Task task) {
-        this.fileNames = new ArrayList<>();
         this.student = student;
         this.task = task;
     }
@@ -58,14 +55,6 @@ public class Answer {
 
     public Task getTask() {
         return task;
-    }
-
-    public List<String> getFilename() {
-        return fileNames;
-    }
-
-    public void addFileName(String filename) {
-        this.fileNames.add(filename);
     }
 
     public String getBody() {

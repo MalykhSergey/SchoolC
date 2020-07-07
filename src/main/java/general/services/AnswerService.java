@@ -26,16 +26,14 @@ public class AnswerService {
     AnswerRepos answerRepos;
     @Autowired
     TaskStatusOfStudentRepos taskStatusOfStudentRepos;
-    @Value("${upload.path}")
-    private String uploadPath;
 
-    public String addAnswer(String id, String body, MultipartFile[] files, Model model) throws IOException {
+    public String addAnswer(String id, String body, Model model) throws IOException {
         Task task = taskRepos.findTaskById(Long.parseLong(id));
         Student student = (Student) (userRepos.findUserByName(SecurityContextHolder.getContext().getAuthentication().getName()));
         Boolean bool;
         bool = checkAndChangeTaskStatus(task, student, false);
         if (bool) {
-            createAnswer(body, files, task, student);
+            createAnswer(body, task, student);
             model.addAttribute("task", task);
             model.addAttribute("completed", "Ответ успешно добавлен");
             return "addanswer";
@@ -43,16 +41,9 @@ public class AnswerService {
         return "redirect:/";
     }
 
-    private void createAnswer(String body, MultipartFile[] files, Task task, Student student) throws IOException {
+    private void createAnswer(String body, Task task, Student student) throws IOException {
         Answer answer = new Answer(student, task);
         answer.setBody(body);
-        for (MultipartFile file : files) {
-            if (!file.isEmpty()) {
-                String filePath = UUID.randomUUID().toString() + "." + file.getOriginalFilename();
-                file.transferTo(new File(uploadPath + filePath));
-                answer.addFileName(filePath);
-            }
-        }
         student.addAnswer(answer);
         task.addAnswer(answer);
         answerRepos.save(answer);

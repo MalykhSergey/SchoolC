@@ -5,16 +5,15 @@
  */
 package general.services;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.ui.Model;
+
 import general.entities.SchoolClass;
 import general.entities.Teacher;
-import general.entities.User;
 import general.reposes.SchoolClassRepos;
 import general.reposes.SchoolRepos;
 import general.reposes.UserRepos;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.stereotype.Service;
-import org.springframework.ui.Model;
 
 @Service
 public class TeacherService {
@@ -27,7 +26,8 @@ public class TeacherService {
     SchoolClassRepos schoolClassRepos;
 
     public String addClassForTeacher(String teacherName, String className, Model model) {
-        if (checkInputData(teacherName, className, model)) return "addclassforteacher";
+        if (checkInputData(teacherName, className, model))
+            return "addclassforteacher";
         Teacher teacher = (Teacher) userRepos.findUserByName(teacherName);
         SchoolClass schoolClass = schoolClassRepos.findSchoolClassByName(className);
         teacher.addSchoolClass(schoolClass);
@@ -53,6 +53,6 @@ public class TeacherService {
     }
 
     public String checkAnswer() {
-    	return "";
+        return "";
     }
 }
