@@ -112,10 +112,8 @@ public class TaskAndAnswerController {
                 .findUserByName(SecurityContextHolder.getContext().getAuthentication().getName()));
         Answer answer = answerRepos.findAnswerById(Long.parseLong(answerId));
         Task task = answer.getTask();
-        Boolean isStudentInClassOfTeacher = false;
         for (SchoolClass schoolClass : teacher.getSchoolClassSet()) {
             if (schoolClass.getName().equals(answer.getStudent().getSchoolClass().getName())) {
-                isStudentInClassOfTeacher = true;
                 model.addAttribute("taskName", task.getName());
                 model.addAttribute("taskBody", task.getName());
                 model.addAttribute("answerBody", answer.getBody());

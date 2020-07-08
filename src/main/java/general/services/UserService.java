@@ -61,7 +61,7 @@ public class UserService{
             case "teacher":
                 roles = Arrays.asList(
                         new Role("ROLE_TEACHER"));
-                Teacher teacher = new Teacher(name, passwordEncoder.encode(password), roles, school);
+                Teacher teacher = new Teacher(name, passwordEncoder.encode(password), school, roles);
                 school.addTeacher(teacher);
                 schoolRepos.save(school);
 
@@ -70,7 +70,7 @@ public class UserService{
                 roles = Arrays.asList(
                         new Role("ROLE_OPERATOR")
                 );
-                Admin operator = new Admin(name, passwordEncoder.encode(password), roles, school);
+                User operator = new User(name, passwordEncoder.encode(password), school, roles);
                 school.addOperator(operator);
                 schoolRepos.save(school);
                 break;
@@ -92,7 +92,7 @@ public class UserService{
             model.addAttribute("error", "Введите пароль длинее 5 символов");
             return true;
         }
-        if (password.length() > 12){
+        if (password.length() > 20){
             model.addAttribute("error", "Ваш пароль слишком длинный!");
             return true;
         }
@@ -100,7 +100,7 @@ public class UserService{
             model.addAttribute("error", "Введите имя");
             return true;
         }
-        if (name.length() > 15){
+        if (name.length() > 25){
             model.addAttribute("error", "Введите имя короче 15 символов");
             return true;
         }

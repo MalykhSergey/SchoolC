@@ -11,22 +11,35 @@
 <body>
     <div th:replace="fragments/navbar :: body"></div>
     <div class="container-fluid">
-        <form method="post" id="form" enctype="multipart/form-data">
-            <select type="text" name="schoolClassName">
-                <tr th:each="schoolClass : ${schoolClasses}">
-                    <option th:value="${schoolClass.getName()}" th:text="${schoolClass.getName()}"></option>
-                </tr>
-            </select>
-            <input type="text" name="name" placeholder="Введите название">
-            <input type="text" name="body" placeholder="Введите задание">
-            <input type="date" id="start" name="date" min="2020-01-01" max="2020-12-31">
-            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
-            <input type="submit" value="Отправить">
-        </form>
-        <div class="col  mt-3">
-            <div th:if="${error}" th:text="${error}" class="alert alert-danger" role="alert">
-            </div>
-            <div th:if="${completed}" th:text="${completed}" class="alert alert-success" role="alert">
+        <div class="row justify-content-center">
+            <div class="col-6">
+                <form method="post" id="form" enctype="multipart/form-data">
+                    <div class="form-group">
+                        <label for="schoolClassName">Класс</label>
+                        <select type="text" class="form-control" name="schoolClassName">
+                            <tr th:each="schoolClass : ${schoolClasses}">
+                                <option th:value="${schoolClass.getName()}" th:text="${schoolClass.getName()}"></option>
+                            </tr>
+                        </select></div>
+                    <div class="form-group">
+                        <label for="name">Заголовок</label>
+                        <input type="text" class="form-control" name="name" placeholder="Введите заголовк">
+                    </div>
+                    <div class="form-group">
+                        <label for="body">Задание</label>
+                        <textarea type="text" class="form-control" name="body" placeholder="Введите задание"></textarea></div>
+                    <div class="form-group">
+                        <label for="date">Выполнить до</label>
+                        <input type="date" class="form-control" id="start" name="date" min="2020-01-01" max="2020-12-31"></div>
+                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                    <input type="submit" class="btn btn-primary" value="Отправить">
+                </form>
+                <div class="col  mt-3">
+                    <div th:if="${error}" th:text="${error}" class="alert alert-danger" role="alert">
+                    </div>
+                    <div th:if="${completed}" th:text="${completed}" class="alert alert-success" role="alert">
+                    </div>
+                </div>
             </div>
         </div>
     </div>

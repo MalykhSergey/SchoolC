@@ -19,7 +19,7 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "users")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-public abstract class User {
+public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -27,13 +27,8 @@ public abstract class User {
     private String password;
     @ManyToOne
     private School school;
-    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
-    @JoinTable(
-            name = "users_roles",
-            joinColumns = @JoinColumn(
-                    name = "user_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(
-                    name = "role_id", referencedColumnName = "id"))
+    @ManyToMany(fetch = FetchType.EAGER, cascade = { CascadeType.MERGE, CascadeType.PERSIST })
+    @JoinTable(name = "users_roles", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
     private Collection<Role> roles;
 
     public Collection<Role> getRoles() {
@@ -74,6 +69,16 @@ public abstract class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public User(String name, String password, School school, Collection<Role> roles) {
+        this.name = name;
+        this.password = password;
+        this.school = school;
+        this.roles = roles;
+    }
+
+    public User() {
     }
 
 }

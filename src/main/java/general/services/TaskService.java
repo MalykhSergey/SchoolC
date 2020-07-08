@@ -5,23 +5,27 @@
  */
 package general.services;
 
-import general.entities.*;
+import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Service;
+import org.springframework.ui.Model;
+
+import general.entities.SchoolClass;
+import general.entities.Student;
+import general.entities.Task;
+import general.entities.TaskStatusOfStudent;
+import general.entities.Teacher;
 import general.reposes.SchoolClassRepos;
 import general.reposes.TaskRepos;
 import general.reposes.TaskStatusOfStudentRepos;
 import general.reposes.UserRepos;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.stereotype.Service;
-import org.springframework.ui.Model;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.io.File;
-import java.io.IOException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.*;
 
 /**
  * @author dmali
@@ -84,8 +88,13 @@ public class TaskService {
             model.addAttribute("schoolClasses", teacher.getSchoolClassSet());
             return true;
         }
-        if (name.length() > 25 | name.length() < 5 | body.length() < 25) {
-            model.addAttribute("error", "Введите более полное описание задания");
+        if (name.length() < 5 | body.length() < 25) {
+            model.addAttribute("error", "Введите более полное описание или название задания");
+            model.addAttribute("schoolClasses", teacher.getSchoolClassSet());
+            return true;
+        }
+        if(name.length() > 40 | body.length()>2000){
+            model.addAttribute("error", "Введите более короткое описание или название задания");
             model.addAttribute("schoolClasses", teacher.getSchoolClassSet());
             return true;
         }
