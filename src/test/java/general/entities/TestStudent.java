@@ -16,7 +16,7 @@ public class TestStudent {
         assertEquals("Student_name", student.getName());
     }
     @Test
-    void testAddAnswer(){
+    void testAnswersAddAndGet(){
         List<Answer> answers  = new ArrayList<>();
         Answer answer = new Answer();
         answers.add(answer);

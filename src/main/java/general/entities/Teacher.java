@@ -8,6 +8,7 @@ import java.util.Set;
 public class Teacher extends User{
     @ManyToMany
     private Set<SchoolClass> schoolClassSet;
+    
     public Set<SchoolClass> getSchoolClassSet() {
         return schoolClassSet;
     }
@@ -16,12 +17,10 @@ public class Teacher extends User{
         schoolClassSet.add(schoolClass);
     }
 
-    public Teacher() {
+    public Teacher(String name, String password, School school, Collection<Role> roles) {
+        super(name, password, school, roles);
     }
-    public Teacher(String user, String password, Collection<Role> roles, School school ) {
-        this.setName(user);
-        this.setPassword(password);
-        this.setRoles(roles);
-        this.setSchool(school);
+
+    public Teacher() {
     }
 }

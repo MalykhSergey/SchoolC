@@ -9,7 +9,6 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-import general.entities.Admin;
 import general.entities.Role;
 import general.entities.User;
 import general.reposes.UserRepos;
@@ -24,7 +23,7 @@ public class Application {
     @PostConstruct
     public void init() {
         if (userRepos.findUserByName("GeneralDirector") == null) {
-            User admin = new Admin("GeneralDirector", bCryptPasswordEncoder.encode("144"),
+            User admin = new User("GeneralDirector", bCryptPasswordEncoder.encode("144"), null, 
                     Arrays.asList(new Role("ROLE_ADMIN"), new Role("ROLE_OPERATOR")));
             userRepos.save(admin);
         }

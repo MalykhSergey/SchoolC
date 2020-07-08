@@ -12,8 +12,8 @@ public class School {
     private String name;
     @OneToMany(targetEntity = Teacher.class, cascade = CascadeType.ALL)
     private Set<Teacher> teachers;
-    @OneToMany(targetEntity = Admin.class, cascade = CascadeType.ALL)
-    private Set<Admin> operators;
+    @OneToMany(targetEntity = User.class, cascade = CascadeType.ALL)
+    private Set<User> operators;
     @OneToMany(targetEntity = SchoolClass.class, cascade = CascadeType.ALL)
     private Set<SchoolClass> schoolClasses;
 
@@ -57,14 +57,14 @@ public class School {
         this.name = name;
     }
 
-    public Set<Admin> getOperators() {
+    public Set<User> getOperators() {
         return operators;
     }
 
-    public void setOperators(Set<Admin> operators) {
+    public void setOperators(Set<User> operators) {
         this.operators = operators;
     }
-    public void addOperator(Admin operator){
+    public void addOperator(User operator){
     this.operators.add(operator);
     }
 }

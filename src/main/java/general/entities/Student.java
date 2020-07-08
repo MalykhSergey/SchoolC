@@ -1,5 +1,6 @@
 package general.entities;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -22,15 +23,10 @@ public class Student extends User {
     public void addAnswer(Answer answer) {
         this.answers.add(answer);
     }
-
-    public Student() {
-    }
-
+    
     public Student(String user, String password, Collection<Role> roles, School school, SchoolClass schoolClass) {
-        this.setName(user);
-        this.setPassword(password);
-        this.setRoles(roles);
-        this.setSchool(school);
+        super(user, password, school, roles);
+        this.answers = new ArrayList<>();
         this.setSchoolClass(schoolClass);
     }
 
@@ -40,6 +36,9 @@ public class Student extends User {
 
     public void setSchoolClass(SchoolClass schoolClass) {
         this.schoolClass = schoolClass;
+    }
+
+    public Student() {
     }
 
 }

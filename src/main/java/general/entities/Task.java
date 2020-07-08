@@ -21,6 +21,7 @@ public class Task {
     @OneToMany(targetEntity = Answer.class, cascade = CascadeType.ALL)
     private List<Answer> answers;
     private String name;
+    @Column(length = 2000)
     private String body;
     private Calendar date;
     @ManyToOne

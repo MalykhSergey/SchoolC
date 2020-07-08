@@ -1,20 +1,22 @@
 package general.services;
 
-import general.entities.*;
+import java.io.IOException;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Service;
+import org.springframework.ui.Model;
+
+import general.entities.Answer;
+import general.entities.SchoolClass;
+import general.entities.Student;
+import general.entities.Task;
+import general.entities.TaskStatusOfStudent;
+import general.entities.Teacher;
 import general.reposes.AnswerRepos;
 import general.reposes.TaskRepos;
 import general.reposes.TaskStatusOfStudentRepos;
 import general.reposes.UserRepos;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.stereotype.Service;
-import org.springframework.ui.Model;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.UUID;
 
 @Service
 public class AnswerService {
