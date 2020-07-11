@@ -67,4 +67,5 @@ public class School {
     public void addOperator(User operator){
     this.operators.add(operator);
     }
+
 }

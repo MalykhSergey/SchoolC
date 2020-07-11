@@ -135,5 +135,8 @@ public class UserService{
         model.addAttribute("completed", "Ученик привязан к классу");
         return "setClassForStudent";
     }
+    public String getUserName(){
+        return SecurityContextHolder.getContext().getAuthentication().getName();
+    }
     
 }

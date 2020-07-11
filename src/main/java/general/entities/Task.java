@@ -28,6 +28,7 @@ public class Task {
     private SchoolClass schoolClass;
 
     public Task() {
+        answers = new ArrayList<>();
     }
 
     public Task(String nameString,String body, SchoolClass schoolClass, Calendar date) {
@@ -35,6 +36,7 @@ public class Task {
         this.schoolClass = schoolClass;
         this.body = body;
         this.date =date;
+        answers = new ArrayList<>();
     }
 
     public Long getId() {
@@ -88,5 +90,11 @@ public class Task {
 
     public void addAnswer(Answer answer) {
         this.answers.add(answer);
+    }
+    public boolean fastEqualsById(Task task){
+        if (this.id.equals(task.getId())){
+            return true;
+        }
+        return false;
     }
 }

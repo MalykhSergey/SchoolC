@@ -27,6 +27,7 @@ import general.reposes.TaskStatusOfStudentRepos;
 import general.reposes.UserRepos;
 import general.services.AnswerService;
 import general.services.TaskService;
+import general.services.UserService;
 
 /**
  *
@@ -48,6 +49,8 @@ public class TaskAndAnswerController {
     AnswerRepos answerRepos;
     @Autowired
     SchoolClassRepos schoolClassRepos;
+    @Autowired
+    UserService userService;
 
     @RequestMapping(value = "/addtask", method = RequestMethod.GET)
     public String addTaskGet(Model model) {
@@ -68,10 +71,10 @@ public class TaskAndAnswerController {
     public String addAnswerGet(@RequestParam(name = "id") String id, Model model) {
         Task task = taskRepos.findTaskById(Long.parseLong(id));
         Student student = (Student) (userRepos
-                .findUserByName(SecurityContextHolder.getContext().getAuthentication().getName()));
+                .findUserByName(userService.getUserName()));
         Boolean bool = false;
         for (Task studentTask : student.getSchoolClass().getTasks()) {
-            if (studentTask == task) {
+            if (studentTask.fastEqualsById(task)) {
                 bool = true;
                 if (taskStatusOfStudentRepos.findTaskStatusOfStudentByStudentAndTask(student, task).getStatus()
                         .equals("Решено!")) {

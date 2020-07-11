@@ -20,7 +20,7 @@
                             <div><textarea class="form-control" name="body" placeholder="Введите решение"></textarea>
                             </div>
                             <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
-                            <input type="submit" class="btn btn-primary" value="Отправить">
+                            <input type="submit" class="btn btn-primary mt-2" value="Отправить">
                         </form>
                         <div class="mt-3" id="warning">
                             <div th:if="${error}" th:text="${error}" class="alert alert-danger" role="alert">
