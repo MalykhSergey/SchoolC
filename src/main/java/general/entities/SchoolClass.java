@@ -58,4 +58,7 @@ public class SchoolClass {
     public void addTask(Task task){
         this.tasks.add(task);
     }
+    public boolean fastEqualsById(SchoolClass schoolClass){
+        return (this.id.equals(schoolClass.getId())) ?  true : false;
+    }
 }

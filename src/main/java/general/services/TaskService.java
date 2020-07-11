@@ -79,7 +79,7 @@ public class TaskService {
             return true;
         }
         for (SchoolClass checkSchoolClass : teacher.getSchoolClassSet()) {
-            if (checkSchoolClass.getName().equals(schoolClass.getName())) {
+            if (checkSchoolClass.fastEqualsById(schoolClass)) {
                 bool = true;
             }
         }
@@ -105,7 +105,7 @@ public class TaskService {
         Teacher teacher = (Teacher) userRepos.findUserByName(SecurityContextHolder.getContext().getAuthentication().getName());
         SchoolClass schoolClass = schoolClassRepos.findSchoolClassById(Long.parseLong(id));
         for (SchoolClass sc : teacher.getSchoolClassSet()) {
-            if (sc.getId().equals(schoolClass.getId())) {
+            if (sc.fastEqualsById(schoolClass)) {
                 List<Task> tasks = schoolClass.getTasks();
                 Collections.reverse(tasks);
                 model.addAttribute("tasks", tasks);
@@ -121,9 +121,9 @@ public class TaskService {
         Task task = taskRepos.findTaskById(Long.parseLong(taskId));
         SchoolClass schoolClass = schoolClassRepos.findSchoolClassById(Long.parseLong(classId));
         for (SchoolClass sc : teacher.getSchoolClassSet()) {
-            if (sc.getId().equals(schoolClass.getId())) {
+            if (sc.fastEqualsById(schoolClass)) {
                 for (Task tk : sc.getTasks()) {
-                    if (tk.getId().equals(task.getId())) {
+                    if (tk.fastEqualsById(task)) {
                         model.addAttribute("answers", task.getAnswers());
                         model.addAttribute("task", task);
                     }

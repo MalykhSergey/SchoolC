@@ -80,5 +80,7 @@ public class User {
 
     public User() {
     }
-
+    public boolean fastEqualsById(User user){
+        return (this.id.equals(user.getId())) ?  true : false;
+    }
 }

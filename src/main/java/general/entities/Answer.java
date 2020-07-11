@@ -1,5 +1,7 @@
 package general.entities;
 
+import java.util.Objects;
+
 import javax.persistence.CollectionTable;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -67,4 +69,5 @@ public class Answer {
     public void setBody(String body) {
         this.body = body;
     }
+
 }
