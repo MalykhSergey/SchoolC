@@ -21,6 +21,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .authorizeRequests()
                 .antMatchers("/addschool").access("hasRole('ROLE_ADMIN')")
+                .antMatchers("/aboutSchool").access("hasRole('ROLE_OPERATOR')")
                 .antMatchers("/adduser", "/addclass", "/adft", "/scfs").access("hasAnyRole('ROLE_ADMIN', 'ROLE_OPERATOR')")
                 .antMatchers("/addtask/**","/checkAnswer/**","/files","/tasksOfClass/**").access("hasRole('ROLE_TEACHER')")
                 .antMatchers("/addanswer").access("hasRole('ROLE_STUDENT')")

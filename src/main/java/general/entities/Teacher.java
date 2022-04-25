@@ -7,6 +7,7 @@ import java.util.Set;
 
 @Entity
 public class Teacher extends User{
+    @JoinTable(name = "teacher_classes")
     @ManyToMany
     private Set<SchoolClass> schoolClassSet;
     
@@ -18,8 +19,8 @@ public class Teacher extends User{
         schoolClassSet.add(schoolClass);
     }
 
-    public Teacher(String name, String password, School school, Collection<Role> roles) {
-        super(name, password, school, roles);
+    public Teacher(String name, String password, School school, Role role) {
+        super(name, password, school, role);
         schoolClassSet = new HashSet<>();
     }
 

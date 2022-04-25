@@ -1,21 +1,23 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package general.reposes;
 
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 
 import general.entities.SchoolClass;
 import general.entities.Task;
 
-/**
- *
- * @author dmali
- */
-public interface TaskRepos extends CrudRepository<Task, Long> {
-    Iterable<Task> findTasksBySchoolClass(SchoolClass schoolClass);
+import java.util.List;
 
-    public Task findTaskById(Long id);
+public interface TaskRepos extends CrudRepository<Task, Long> {
+    List<Task> findTasksBySchoolClassOrderByTimeStamp(SchoolClass schoolClass);
+
+    @Query(value = "SELECT * FROM tasks WHERE school_class_id = ?1", nativeQuery = true)
+    List<Task> findTasksBySchoolClassId(Long schoolClassId);
+
+    Task findTaskById(Long id);
+
+    @Modifying
+    @Query(value = "INSERT INTO task_answers VALUES (?1,?2)", nativeQuery = true)
+    void addAnswerToTask(Long taskId, Long answerId);
 }

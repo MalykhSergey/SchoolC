@@ -1,18 +1,14 @@
 package general.entities;
 
+import javax.persistence.*;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
-
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 
 @Entity
 public class Student extends User {
     @ManyToOne
     private SchoolClass schoolClass;
+    @JoinTable(name = "student_answers")
     @OneToMany(targetEntity = Answer.class, cascade = CascadeType.ALL)
     private List<Answer> answers;
 
@@ -23,9 +19,9 @@ public class Student extends User {
     public void addAnswer(Answer answer) {
         this.answers.add(answer);
     }
-    
-    public Student(String user, String password, Collection<Role> roles, School school, SchoolClass schoolClass) {
-        super(user, password, school, roles);
+
+    public Student(String user, String password, Role role, School school, SchoolClass schoolClass) {
+        super(user, password, school, role);
         this.answers = new ArrayList<>();
         this.setSchoolClass(schoolClass);
     }

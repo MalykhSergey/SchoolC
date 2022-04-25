@@ -1,46 +1,20 @@
 package general.entities;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+public enum Role {
+    Admin("ROLE_ADMIN"),
+    Operator("ROLE_OPERATOR"),
+    Teacher("ROLE_TEACHER"),
+    Student("ROLE_STUDENT");
 
-@Entity
-public class Role {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
     private String name;
 
-    public Role() {
-    }
-
-    public Role(String name) {
-        this.name = name;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    @Override
-    public String toString() {
-        return "Role{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                '}';
+    Role(String roleName) {
+        this.name = roleName;
     }
 }

@@ -1,29 +1,25 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package general.entities;
 
 import javax.persistence.*;
-import java.util.*;
-
-/**
- *
- * @author dmali
- */
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
+@Table(name = "tasks")
 @Entity
 public class Task {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @OneToMany(targetEntity = Answer.class, cascade = CascadeType.ALL)
+    @JoinTable(name = "task_answers")
+    @OneToMany(targetEntity = Answer.class, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Answer> answers;
     private String name;
     @Column(length = 2000)
     private String body;
-    private Calendar date;
+    private Timestamp timeStamp;
     @ManyToOne
     private SchoolClass schoolClass;
 
@@ -31,11 +27,11 @@ public class Task {
         answers = new ArrayList<>();
     }
 
-    public Task(String nameString,String body, SchoolClass schoolClass, Calendar date) {
+    public Task(String nameString,String body, SchoolClass schoolClass, Timestamp timeStamp) {
         this.name = nameString;
         this.schoolClass = schoolClass;
         this.body = body;
-        this.date =date;
+        this.timeStamp = timeStamp;
         answers = new ArrayList<>();
     }
 
@@ -73,15 +69,20 @@ public class Task {
 
 
     public String getDateTemplate() {
-        return Integer.toString(date.get(Calendar.DAY_OF_MONTH))+":"+Integer.toString(date.get(Calendar.MONTH) + 1)+":"+Integer.toString(date.get(Calendar.YEAR));
+        String time = getTimeStamp().toLocaleString();
+        return time.substring(0,time.length()-3);
     }
 
-    public Calendar getDate() {
-        return date;
+    public Timestamp getTimeStamp() {
+        return timeStamp;
     }
 
-    public void setDate(Calendar date) {
-        this.date = date;
+    public void setTimeStamp(Timestamp timeStamp) {
+        this.timeStamp = timeStamp;
+    }
+
+    public void setAnswers(List<Answer> answers) {
+        this.answers = answers;
     }
 
     public List<Answer> getAnswers() {

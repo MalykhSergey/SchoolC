@@ -1,9 +1,21 @@
 package general.reposes;
 
+import general.entities.*;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 
-import general.entities.Answer;
+import java.util.List;
 
 public interface AnswerRepos extends CrudRepository<Answer, Long> {
     Answer findAnswerById(Long id);
+
+    Iterable<Answer> findAllByStudent(Student student);
+
+    @Modifying
+    @Query(value = "UPDATE answers SET rating = ?2, comment = ?3 WHERE id = ?1", nativeQuery = true)
+    void answerChecked(Long answerId, Byte rating, String comment);
+
+    Answer findByStudentAndTask(Student student, Task task);
+
 }

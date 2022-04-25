@@ -1,7 +1,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org"
       xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
-<nav class="navbar navbar-expand-lg navbar-light bg-light" th:fragment="body">
-    <a class="navbar-brand" href="#">School1C</a>
+<head th:fragment="head (title)">
+    <meta charset="UTF-8">
+    <title th:text="'School1C '+${title}"></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link href="/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
+</head>
+<nav class="container navbar navbar-expand-lg navbar-light bg-light" th:fragment="navbar">
+    <a class="navbar-brand" th:href="@{'/'}">School1C</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
             aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -11,9 +17,12 @@
             <li sec:authorize="authenticated" class="nav-item active">
                 <a class="nav-link" th:href="@{'/'}">Главная<span class="sr-only">(current)</span></a>
             </li>
+            <li sec:authorize="hasRole('ROLE_OPERATOR')">
+                <a class="nav-link" href="/aboutSchool">О школе</a>
+            </li>
 
-            <li sec:authorize="authenticated" class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+            <li sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_OPERATOR', 'ROLE_TEACHER')" class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="" id="navbarDropdown" role="button" data-toggle="dropdown"
                    aria-haspopup="true" aria-expanded="false">
                     Выбрать
                 </a>
@@ -41,6 +50,15 @@
         </ul>
     </div>
 </nav>
-</div>
+<div th:fragment="scripts">
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+            integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+            crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+            integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+            crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+            integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+            crossorigin="anonymous"></script>
 </div>
 </html>

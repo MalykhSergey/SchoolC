@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Set;
 import javax.persistence.*;
 
+@Table(name = "classes")
 @Entity
 public class SchoolClass {
     @Id
@@ -13,10 +14,21 @@ public class SchoolClass {
     private String name;
     @ManyToOne
     private School school;
+    @JoinTable(name = "class_tasks")
     @OneToMany(targetEntity = Task.class, cascade = CascadeType.ALL)
     private Set<Task> tasks;
+    @JoinTable(name = "class_students")
     @OneToMany(targetEntity = Student.class, cascade = CascadeType.ALL)
     private Set<Student> students;
+
+    public SchoolClass(String name, School school) {
+        this.name = name;
+        this.school = school;
+    }
+
+    public SchoolClass() {
+
+    }
 
     public Set<Student> getStudents() {
         return students;
@@ -55,10 +67,12 @@ public class SchoolClass {
     public void setSchool(School school) {
         this.school = school;
     }
-    public void addTask(Task task){
+
+    public void addTask(Task task) {
         this.tasks.add(task);
     }
-    public boolean fastEqualsById(SchoolClass schoolClass){
-        return (this.id.equals(schoolClass.getId())) ?  true : false;
+
+    public boolean fastEqualsById(SchoolClass schoolClass) {
+        return (this.id.equals(schoolClass.getId())) ? true : false;
     }
 }

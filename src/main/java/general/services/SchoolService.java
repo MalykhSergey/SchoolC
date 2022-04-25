@@ -1,57 +1,39 @@
-/*
-* To change this license header, choose License Headers in Project Properties.
-* To change this template file, choose Tools | Templates
-* and open the template in the editor.
-*/
 package general.services;
 
+import general.utils.CheckDataBoolAnswer;
 import general.entities.School;
-import general.reposes.SchoolClassRepos;
 import general.reposes.SchoolRepos;
-import general.reposes.UserRepos;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 
-/**
- *
- * @author dmali
- */
-
 @Service
-public class SchoolService{
+public class SchoolService {
+    private SchoolRepos schoolRepos;
+
     @Autowired
-    UserRepos userRepos;
-    @Autowired
-    SchoolRepos schoolRepos;
-    @Autowired
-    SchoolClassRepos schoolClassRepos;
-    public String addSchool(String name, Model model){
-        if (checkSchoolName(name, model)) return "addschool";
-        return createSchool(name, model);
+    public SchoolService(SchoolRepos schoolRepos) {
+        this.schoolRepos = schoolRepos;
     }
 
-    private String createSchool(String name, Model model) {
+    @Transactional
+    public void createSchool(String name) {
         School school = new School(name);
         school.setName(name);
-        model.addAttribute("completed", "Школа успешно добавлена");
         schoolRepos.save(school);
-        return "addschool";
     }
 
-    private boolean checkSchoolName(String name, Model model) {
-        if (name == null){
-                model.addAttribute("error", "Введите имя!");
-            return true;
-            }
-        if (schoolRepos.findSchoolByName(name) != null){
-            model.addAttribute("error", "Такая школа уже существует");
-            return true;
+    public CheckDataBoolAnswer checkSchoolName(String name, Model model) {
+        if (name == null) {
+            return new CheckDataBoolAnswer(false, "Введите имя!");
         }
-        if (name.length() < 6){
-            model.addAttribute("error", "Введите полное название");
-            return true;
+        if (schoolRepos.findSchoolByName(name) != null) {
+            return new CheckDataBoolAnswer(false, "Такая школа уже существует");
         }
-        return false;
+        if (name.length() < 6) {
+            return new CheckDataBoolAnswer(false, "Введите полное название");
+        }
+        return new CheckDataBoolAnswer(true, null);
     }
 }

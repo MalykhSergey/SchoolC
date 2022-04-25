@@ -1,21 +1,25 @@
 package general.entities;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Set;
 
-@Entity
 @Table(name = "schools")
+@Entity
 public class School {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String name;
+    @JoinTable(name = "schools_teachers")
     @OneToMany(targetEntity = Teacher.class, cascade = CascadeType.ALL)
     private Set<Teacher> teachers;
+    @JoinTable(name = "schools_operators")
     @OneToMany(targetEntity = User.class, cascade = CascadeType.ALL)
     private Set<User> operators;
+    @JoinTable(name = "schools_classes")
     @OneToMany(targetEntity = SchoolClass.class, cascade = CascadeType.ALL)
-    private Set<SchoolClass> schoolClasses;
+    private Set<SchoolClass> schoolClasses = new HashSet<>();
 
     public Long getId() {
         return id;

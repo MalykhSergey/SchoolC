@@ -1,14 +1,8 @@
 package general.entities;
 
-import java.util.Objects;
+import javax.persistence.*;
 
-import javax.persistence.CollectionTable;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
-
+@Table(name = "answers")
 @Entity
 public class Answer {
     @Id
@@ -16,26 +10,19 @@ public class Answer {
     private Long id;
     @ManyToOne
     private Student student;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     private Task task;
-    @CollectionTable
     private String body;
-    byte rating;
-
-    public byte getRating() {
-        return rating;
-    }
-
-    public void setRating(byte rating) {
-        this.rating = rating;
-    }
+    private String comment;
+    private byte rating;
 
     public Answer() {
     }
 
-    public Answer(Student student, Task task) {
+    public Answer(Student student, Task task, String body) {
         this.student = student;
         this.task = task;
+        this.body = body;
     }
 
     public Long getId() {
@@ -69,5 +56,22 @@ public class Answer {
     public void setBody(String body) {
         this.body = body;
     }
+
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
+
+    public byte getRating() {
+        return rating;
+    }
+
+    public void setRating(byte rating) {
+        this.rating = rating;
+    }
+
 
 }

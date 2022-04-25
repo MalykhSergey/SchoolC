@@ -1,12 +1,8 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package general.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 
 import general.entities.SchoolClass;
@@ -18,25 +14,16 @@ import general.reposes.UserRepos;
 @Service
 public class TeacherService {
 
-    @Autowired
-    UserRepos userRepos;
-    @Autowired
-    SchoolRepos schoolRepos;
-    @Autowired
-    SchoolClassRepos schoolClassRepos;
+    private UserRepos userRepos;
+    private SchoolClassRepos schoolClassRepos;
 
-    public String addClassForTeacher(String teacherName, String className, Model model) {
-        if (checkInputData(teacherName, className, model))
-            return "addclassforteacher";
-        Teacher teacher = (Teacher) userRepos.findUserByName(teacherName);
-        SchoolClass schoolClass = schoolClassRepos.findSchoolClassByName(className);
-        teacher.addSchoolClass(schoolClass);
-        userRepos.save(teacher);
-        model.addAttribute("completed", "Учитель: " + teacherName + " привязан к классу!");
-        return "addclassforteacher";
+    @Autowired
+    public TeacherService(UserRepos userRepos, SchoolRepos schoolRepos, SchoolClassRepos schoolClassRepos) {
+        this.userRepos = userRepos;
+        this.schoolClassRepos = schoolClassRepos;
     }
 
-    private boolean checkInputData(String teacherName, String className, Model model) {
+    public boolean checkInputDataForAddingClassToTeacher(String teacherName, String className, Model model) {
         if (className == null | teacherName == null) {
             model.addAttribute("error", "Введите имя!");
             return true;
@@ -50,9 +37,5 @@ public class TeacherService {
             return true;
         }
         return false;
-    }
-
-    public String checkAnswer() {
-        return "";
     }
 }

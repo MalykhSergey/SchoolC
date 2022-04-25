@@ -27,16 +27,14 @@ public class User {
     private String password;
     @ManyToOne
     private School school;
-    @ManyToMany(fetch = FetchType.EAGER, cascade = { CascadeType.MERGE, CascadeType.PERSIST })
-    @JoinTable(name = "users_roles", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
-    private Collection<Role> roles;
+    private Role role;
 
-    public Collection<Role> getRoles() {
-        return roles;
+    public Role getRole() {
+        return role;
     }
 
-    public void setRoles(Collection<Role> roles) {
-        this.roles = roles;
+    public void setRoles(Role role) {
+        this.role = role;
     }
 
     public School getSchool() {
@@ -71,11 +69,11 @@ public class User {
         this.password = password;
     }
 
-    public User(String name, String password, School school, Collection<Role> roles) {
+    public User(String name, String password, School school, Role role) {
         this.name = name;
         this.password = password;
         this.school = school;
-        this.roles = roles;
+        this.role = role;
     }
 
     public User() {
