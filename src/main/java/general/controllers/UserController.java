@@ -1,9 +1,9 @@
 package general.controllers;
 
 import general.entities.*;
-import general.reposes.SchoolClassRepos;
-import general.reposes.SchoolRepos;
 import general.reposes.UserRepos;
+import general.services.SchoolClassService;
+import general.services.SchoolService;
 import general.services.UserService;
 import general.utils.CheckDataBoolAnswer;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,33 +11,32 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 public class UserController {
     private final UserService userService;
     private final UserRepos userRepos;
     private final PasswordEncoder passwordEncoder;
-    private final SchoolRepos schoolRepos;
-    private final SchoolClassRepos schoolClassRepos;
+    private final SchoolService schoolService;
+    private final SchoolClassService schoolClassService;
 
     @Autowired
-    public UserController(UserService userService, UserRepos userRepos, PasswordEncoder passwordEncoder, SchoolRepos schoolRepos, SchoolClassRepos schoolClassRepos) {
+    public UserController(UserService userService, UserRepos userRepos, PasswordEncoder passwordEncoder,
+                          SchoolService schoolService, SchoolClassService schoolClassService) {
         this.userService = userService;
         this.userRepos = userRepos;
         this.passwordEncoder = passwordEncoder;
-        this.schoolRepos = schoolRepos;
-        this.schoolClassRepos = schoolClassRepos;
+        this.schoolService = schoolService;
+        this.schoolClassService = schoolClassService;
     }
 
-    @RequestMapping(value = "/adduser", method = RequestMethod.GET)
+    @GetMapping(value = "/adduser")
     public String addUserGet() {
-        return "adduser";
+        return "AddUser";
     }
 
-    @RequestMapping(value = "/adduser", method = RequestMethod.POST)
+    @PostMapping(value = "/adduser")
     public String addUserPost(
             @RequestParam(name = "name") String name,
             @RequestParam(name = "typeOfUser") String type,
@@ -48,7 +47,7 @@ public class UserController {
         User user = userRepos.findUserByName(SecurityContextHolder.getContext().getAuthentication().getName());
         if (nameOfSchool != null) {
             if ("ROLE_ADMIN".equals(user.getRole().getName())) {
-                school = schoolRepos.findSchoolByName(nameOfSchool);
+                school = schoolService.getSchoolByName(nameOfSchool);
                 if (school == null) {
                     model.addAttribute("error", "Неверно указана школа");
                     return "AddUser";
@@ -62,24 +61,21 @@ public class UserController {
             }
             switch (type) {
                 case "student":
-                    SchoolClass schoolClass = schoolClassRepos.findSchoolClassByName(nameOfSchoolClass);
+                    SchoolClass schoolClass = schoolClassService.getClassByName(nameOfSchoolClass);
                     if (nameOfSchoolClass == null | schoolClass == null) {
                         model.addAttribute("error", "Неверно указан класс");
-                        return "adduser";
+                        return "AddUser";
                     }
                     Student student = new Student(name, passwordEncoder.encode(password), Role.Student, school, schoolClass);
-                    schoolClass.addStudent(student);
-                    schoolClassRepos.save(schoolClass);
+                    userService.saveUser(student);
                     break;
                 case "teacher":
                     Teacher teacher = new Teacher(name, passwordEncoder.encode(password), school, Role.Teacher);
-                    school.addTeacher(teacher);
-                    schoolRepos.save(school);
+                    userService.saveUser(teacher);
                     break;
                 case "operator":
                     User operator = new User(name, passwordEncoder.encode(password), school, Role.Operator);
-                    school.addOperator(operator);
-                    schoolRepos.save(school);
+                    userService.saveUser(operator);
                     break;
                 default: {
                     model.addAttribute("error", "Не жульничай!");
@@ -91,12 +87,12 @@ public class UserController {
         return "AddUser";
     }
 
-    @RequestMapping(value = "/scfs", method = RequestMethod.GET)
+    @GetMapping(value = "/scfs")
     public String setClassForStudentGet() {
-        return "setClassForStudent";
+        return "SetClassForStudent";
     }
 
-    @RequestMapping(value = "/scfs", method = RequestMethod.POST)
+    @PostMapping(value = "/scfs")
     public String setClassForStudentPost(
             @RequestParam(name = "name") String name,
             @RequestParam(name = "class") String className,
@@ -111,9 +107,10 @@ public class UserController {
             return "SetClassForStudent";
         }
         Student student = (Student) (userRepos.findUserByName(name));
-        SchoolClass schoolClass = schoolClassRepos.findSchoolClassByName(className);
+        SchoolClass schoolClass = schoolClassService.getClassByName(className);
         if ((student != null || schoolClass != null) && student.getSchool().getId() == schoolClass.getSchool().getId()) {
-            userService.updateClassForStudent(schoolClass,student);
+            student.setSchoolClass(schoolClass);
+            userRepos.save(student);
         } else {
             model.addAttribute("error", "Введите корректные данные");
             return "SetClassForStudent";

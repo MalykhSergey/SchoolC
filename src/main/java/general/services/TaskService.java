@@ -1,12 +1,10 @@
 package general.services;
 
-import general.utils.CheckDataBoolAnswer;
 import general.entities.SchoolClass;
 import general.entities.Task;
 import general.entities.Teacher;
-import general.reposes.SchoolClassRepos;
 import general.reposes.TaskRepos;
-import general.reposes.UserRepos;
+import general.utils.CheckDataBoolAnswer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,19 +18,15 @@ import java.util.List;
 @Service
 public class TaskService {
 
-    private TaskRepos taskRepos;
-    private SchoolClassRepos schoolClassRepos;
-    private UserRepos userRepos;
+    private final TaskRepos taskRepos;
 
     @Autowired
-    public TaskService(TaskRepos taskRepos, SchoolClassRepos schoolClassRepos, UserRepos userRepos) {
+    public TaskService(TaskRepos taskRepos) {
         this.taskRepos = taskRepos;
-        this.schoolClassRepos = schoolClassRepos;
-        this.userRepos = userRepos;
     }
 
     @Transactional
-    public void createTask(String name, String body, String dateString, SchoolClass schoolClass) {
+    public void createTask(String name, String body, String dateString, SchoolClass schoolClass, Teacher teacher) {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
         Timestamp timestamp;
         try {
@@ -43,14 +37,20 @@ public class TaskService {
             return;
         }
         Task task;
-        task = new Task(name, body, schoolClass, timestamp);
+        task = new Task(name, body, schoolClass, teacher, timestamp);
         taskRepos.save(task);
-        schoolClass.addTask(task);
-        schoolClassRepos.save(schoolClass);
+    }
+
+    public Task getTaskById(Long id) {
+        return taskRepos.findTaskById(id);
+    }
+
+    public List<Task> getTasksByClass(SchoolClass schoolClass) {
+        return taskRepos.findTasksBySchoolClassOrderByTimeStamp(schoolClass);
     }
 
     public CheckDataBoolAnswer checkInputData(String name, String body, String nameOfSchoolClass, String dateString,
-                                               Teacher teacher, SchoolClass schoolClass) {
+                                              Teacher teacher, SchoolClass schoolClass) {
         if (name == null | body == null | nameOfSchoolClass == null | dateString == null) {
             return new CheckDataBoolAnswer(false, "Введите все значения");
         }
@@ -66,14 +66,14 @@ public class TaskService {
         if (name.length() < 5 | body.length() < 25) {
             return new CheckDataBoolAnswer(false, "Введите более полное описание или название задания");
         }
-        if (name.length() > 40 | body.length() > 2000) {
+        if (name.length() > 80 | body.length() > 2000) {
             return new CheckDataBoolAnswer(false, "Введите более короткое описание или название задания");
         }
         return new CheckDataBoolAnswer(true, null);
     }
 
-    public List<Task> getTaskByClass(Long schoolClassId) {
-        return taskRepos.findTasksBySchoolClassId(schoolClassId);
+    public List<Task> getTaskByTeacherAndClass(Teacher teacher, SchoolClass schoolClass) {
+        return taskRepos.findAllByTeacherAndSchoolClass(teacher, schoolClass);
     }
 
 }

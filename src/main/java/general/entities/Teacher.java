@@ -8,7 +8,7 @@ import java.util.Set;
 @Entity
 public class Teacher extends User{
     @JoinTable(name = "teacher_classes")
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.PERSIST)
     private Set<SchoolClass> schoolClassSet;
     
     public Set<SchoolClass> getSchoolClassSet() {

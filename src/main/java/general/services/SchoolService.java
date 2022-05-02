@@ -1,5 +1,7 @@
 package general.services;
 
+import general.entities.Teacher;
+import general.reposes.UserRepos;
 import general.utils.CheckDataBoolAnswer;
 import general.entities.School;
 import general.reposes.SchoolRepos;
@@ -8,13 +10,17 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 
+import java.util.List;
+
 @Service
 public class SchoolService {
     private SchoolRepos schoolRepos;
+    private UserRepos userRepos;
 
     @Autowired
-    public SchoolService(SchoolRepos schoolRepos) {
+    public SchoolService(SchoolRepos schoolRepos, UserRepos userRepos) {
         this.schoolRepos = schoolRepos;
+        this.userRepos = userRepos;
     }
 
     @Transactional
@@ -22,6 +28,13 @@ public class SchoolService {
         School school = new School(name);
         school.setName(name);
         schoolRepos.save(school);
+    }
+
+    public School getSchoolByName(String name){
+        return schoolRepos.findSchoolByName(name);
+    }
+    public List<Teacher> getTeachersBySchool(School school){
+        return userRepos.findTeachersBySchoolId(school.getId());
     }
 
     public CheckDataBoolAnswer checkSchoolName(String name, Model model) {

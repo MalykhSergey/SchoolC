@@ -12,14 +12,10 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class SchoolClassService {
 
-    private UserRepos userRepos;
-    private SchoolRepos schoolRepos;
-    private SchoolClassRepos schoolClassRepos;
+    private final SchoolClassRepos schoolClassRepos;
 
     @Autowired
-    public SchoolClassService(UserRepos userRepos, SchoolRepos schoolRepos, SchoolClassRepos schoolClassRepos) {
-        this.userRepos = userRepos;
-        this.schoolRepos = schoolRepos;
+    public SchoolClassService(SchoolClassRepos schoolClassRepos) {
         this.schoolClassRepos = schoolClassRepos;
     }
 
@@ -27,7 +23,14 @@ public class SchoolClassService {
     public void createNewSchoolClass(String name, School school) {
         SchoolClass schoolClass = new SchoolClass(name, school);
         schoolClassRepos.save(schoolClass);
-        schoolRepos.addClassToSchoolById(school.getId(), schoolClass.getId());
+    }
+
+    public SchoolClass getClassByName(String name) {
+        return schoolClassRepos.findSchoolClassByName(name);
+    }
+
+    public SchoolClass getClassById(Long id) {
+        return schoolClassRepos.findSchoolClassById(id);
     }
 
     public boolean checkClass(String name) {

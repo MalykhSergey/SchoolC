@@ -2,6 +2,7 @@ package general.services;
 
 import general.entities.SchoolClass;
 import general.entities.Student;
+import general.entities.User;
 import general.reposes.UserRepos;
 import general.utils.CheckDataBoolAnswer;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,11 @@ public class UserService {
     @Autowired
     public UserService(UserRepos userRepos) {
         this.userRepos = userRepos;
+    }
+
+    @Transactional
+    public void saveUser(User user) {
+        userRepos.save(user);
     }
 
     public CheckDataBoolAnswer checkInputData(String name, String password) {
@@ -40,10 +46,8 @@ public class UserService {
         return new CheckDataBoolAnswer(true, null);
     }
 
-    @Transactional
-    public void updateClassForStudent(SchoolClass schoolClass, Student student) {
-        userRepos.updateClassForUser(schoolClass.getId(), student.getId());
-        userRepos.updateClassForStudentInJoinTable(schoolClass.getId(), student.getId());
+    public User getUserByName(String name){
+        return userRepos.findUserByName(name);
     }
 
     public String getUserName() {

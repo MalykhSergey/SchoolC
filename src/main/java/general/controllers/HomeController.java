@@ -1,13 +1,13 @@
 package general.controllers;
 
 import general.entities.*;
-import general.reposes.AnswerRepos;
-import general.reposes.TaskRepos;
-import general.reposes.UserRepos;
+import general.services.AnswerService;
+import general.services.TaskService;
+import general.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -17,25 +17,26 @@ import java.util.List;
 
 @Controller
 public class HomeController {
-    private UserRepos userRepos;
-    private AnswerRepos answerRepos;
-    private TaskRepos taskRepos;
+
+    private final UserService userService;
+    private final AnswerService answerService;
+    private final TaskService taskService;
 
     @Autowired
-    public HomeController(UserRepos userRepos, AnswerRepos answerRepos, TaskRepos taskRepos) {
-        this.userRepos = userRepos;
-        this.answerRepos = answerRepos;
-        this.taskRepos = taskRepos;
+    public HomeController(UserService userService, AnswerService answerService, TaskService taskService) {
+        this.userService = userService;
+        this.answerService = answerService;
+        this.taskService = taskService;
     }
 
-    @RequestMapping(value = "/", method = RequestMethod.GET)
+    @GetMapping(value = "/")
     public String home(Model model) {
-        User user = userRepos.findUserByName(SecurityContextHolder.getContext().getAuthentication().getName());
+        User user = userService.getUserByName(userService.getUserName());
         if ("ROLE_STUDENT".equals(user.getRole().getName())) {
             Student student = (Student) (user);
             List<Task> newTasks = new ArrayList<>();
-            Iterable<Task> tasks = taskRepos.findTasksBySchoolClassOrderByTimeStamp(student.getSchoolClass());
-            Iterable<Answer> answers = answerRepos.findAllByStudent(student);
+            List<Task> tasks = taskService.getTasksByClass(student.getSchoolClass());
+            List<Answer> answers = answerService.getAnswersByStudent(student);
             Timestamp now = new Timestamp(System.currentTimeMillis());
             for (Task task : tasks) {
                 if (now.before(task.getTimeStamp())) {

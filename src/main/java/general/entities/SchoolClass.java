@@ -12,13 +12,11 @@ public class SchoolClass {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String name;
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.PERSIST)
     private School school;
-    @JoinTable(name = "class_tasks")
-    @OneToMany(targetEntity = Task.class, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "schoolClass", cascade = CascadeType.REMOVE)
     private Set<Task> tasks;
-    @JoinTable(name = "class_students")
-    @OneToMany(targetEntity = Student.class, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "schoolClass", cascade = CascadeType.REMOVE)
     private Set<Student> students;
 
     public SchoolClass(String name, School school) {
@@ -59,8 +57,7 @@ public class SchoolClass {
         return school;
     }
 
-    public List<Task> getTasks() {
-        List<Task> tasks = new ArrayList<Task>(this.tasks);
+    public Set<Task> getTasks() {
         return tasks;
     }
 

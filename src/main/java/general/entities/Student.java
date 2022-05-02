@@ -6,18 +6,12 @@ import java.util.List;
 
 @Entity
 public class Student extends User {
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.PERSIST)
     private SchoolClass schoolClass;
-    @JoinTable(name = "student_answers")
-    @OneToMany(targetEntity = Answer.class, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "student", cascade = CascadeType.REMOVE)
     private List<Answer> answers;
 
-    public List<Answer> getAnswers() {
-        return answers;
-    }
-
-    public void addAnswer(Answer answer) {
-        this.answers.add(answer);
+    public Student() {
     }
 
     public Student(String user, String password, Role role, School school, SchoolClass schoolClass) {
@@ -34,7 +28,12 @@ public class Student extends User {
         this.schoolClass = schoolClass;
     }
 
-    public Student() {
+
+    public List<Answer> getAnswers() {
+        return answers;
     }
 
+    public void setAnswers(List<Answer> answers) {
+        this.answers = answers;
+    }
 }

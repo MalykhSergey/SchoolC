@@ -15,14 +15,4 @@ public interface SchoolClassRepos extends CrudRepository<SchoolClass, Long> {
 
     SchoolClass findSchoolClassById(Long id);
 
-    @Query(value = "SELECT name FROM classes where id = ?1", nativeQuery = true)
-    String findSchoolClassNameById(Long id);
-
-    @Modifying
-    @Query(value = "INSERT INTO schools_classes  VALUES (?2,?1)", nativeQuery = true)
-    void addClassToSchool(Long classId, Long schoolId);
-
-    @Modifying
-    @Query(value = "INSERT INTO class_students  VALUES (?1,?2)", nativeQuery = true)
-    void addStudentToClass(Long classId, Long studentId);
 }

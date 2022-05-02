@@ -12,6 +12,8 @@ public class Answer {
     private Student student;
     @ManyToOne(fetch = FetchType.EAGER)
     private Task task;
+    @ManyToOne
+    private Teacher teacher;
     private String body;
     private String comment;
     private byte rating;
@@ -23,6 +25,7 @@ public class Answer {
         this.student = student;
         this.task = task;
         this.body = body;
+        this.teacher = task.getTeacher();
     }
 
     public Long getId() {
@@ -49,6 +52,14 @@ public class Answer {
         return task;
     }
 
+    public Teacher getTeacher() {
+        return teacher;
+    }
+
+    public void setTeacher(Teacher teacher) {
+        this.teacher = teacher;
+    }
+
     public String getBody() {
         return body;
     }
@@ -72,6 +83,4 @@ public class Answer {
     public void setRating(byte rating) {
         this.rating = rating;
     }
-
-
 }

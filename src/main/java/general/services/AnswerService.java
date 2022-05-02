@@ -2,28 +2,20 @@ package general.services;
 
 import general.entities.*;
 import general.reposes.AnswerRepos;
-import general.reposes.TaskRepos;
-import general.reposes.UserRepos;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.ui.Model;
+
+import java.util.List;
 
 @Service
 public class AnswerService {
-    private TaskRepos taskRepos;
-    private UserRepos userRepos;
-    private AnswerRepos answerRepos;
-    private UserService userService;
+    private final AnswerRepos answerRepos;
 
 
     @Autowired
-    public AnswerService(TaskRepos taskRepos, UserRepos userRepos, AnswerRepos answerRepos,
-                         UserService userService) {
-        this.taskRepos = taskRepos;
-        this.userRepos = userRepos;
+    public AnswerService(AnswerRepos answerRepos) {
         this.answerRepos = answerRepos;
-        this.userService = userService;
     }
 
 
@@ -31,13 +23,24 @@ public class AnswerService {
     public void createAnswer(String body, Task task, Student student) {
         Answer answer = new Answer(student, task, body);
         answerRepos.save(answer);
-        taskRepos.addAnswerToTask(task.getId(), answer.getId());
     }
 
 
     @Transactional
     public void updateAnswer(String rating, String comment, Answer answer) {
         answerRepos.answerChecked(answer.getId(), Byte.parseByte(rating), comment);
+    }
+
+    public Answer getByStudentAndTask(Student student, Task task){
+        return answerRepos.findByStudentAndTask(student, task);
+    }
+
+    public List<Answer> getAnswersByStudent(Student student){
+        return answerRepos.findAllByStudent(student);
+    }
+
+    public Answer getAnswerById(Long id){
+        return answerRepos.findAnswerById(id);
     }
 
     public Boolean isStudentInClassSetOfTeacher(Teacher teacher, Answer answer) {
