@@ -1,25 +1,29 @@
 package general.controllers;
 
+import general.controllers.forms.ClassForm;
+import general.controllers.forms.UserForm;
 import general.entities.*;
 import general.services.SchoolClassService;
 import general.services.SchoolService;
-import general.services.TeacherService;
 import general.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 public class ClassController {
-    private final TeacherService teacherService;
     private final SchoolClassService schoolClassService;
     private final UserService userService;
     private final SchoolService schoolService;
+    private final String addClassPage = "/classControllerPages/AddClass";
+    private final String adcftPage = "/classControllerPages/AddClassForTeacher";
 
     @Autowired
-    public ClassController(TeacherService teacherService, SchoolClassService schoolClassService, UserService userService, SchoolService schoolService) {
-        this.teacherService = teacherService;
+    public ClassController(SchoolClassService schoolClassService, UserService userService, SchoolService schoolService) {
         this.schoolClassService = schoolClassService;
         this.userService = userService;
         this.schoolService = schoolService;
@@ -27,53 +31,69 @@ public class ClassController {
 
     @GetMapping(value = "/addclass")
     public String addClassGet() {
-        return "AddClass";
+        return addClassPage;
     }
 
     @PostMapping(value = "/addclass")
     public String addClassPost(
-            @RequestParam(name = "name") String name,
-            @RequestParam(name = "school", required = false) String schoolName, Model model) {
+            @ModelAttribute("schoolClass") SchoolClass schoolClass,
+            @RequestParam(name = "schoolName", required = false) String schoolName,
+            @RequestParam(name = "classNumber", required = false) int classNumber,
+            Model model) {
         School school = null;
-        User user = userService.getUserByName(userService.getUserName());
+        User user = userService.getUserByName(userService.getCurrentUserName());
         if (user.getRole() == Role.Admin) {
             school = schoolService.getSchoolByName(schoolName);
             if (school == null) {
                 model.addAttribute("error", "Вы неверно указали школу");
-                return "AddClass";
+                return addClassPage;
             }
         }
         if (school == null)
             school = user.getSchool();
-        if (schoolClassService.checkClassName(name)) {
+        if (!schoolClassService.checkClassName(schoolClass.getName())) {
             model.addAttribute("error", "Введите полное название");
-            return "AddClass";
+            return addClassPage;
         }
-        if (schoolClassService.checkClass(name)) {
+        if (schoolClassService.isClassExistsInSchool(schoolClass.getName(), classNumber, school)) {
             model.addAttribute("error", "Такой класс уже есть");
-            return "AddClass";
+            return addClassPage;
         }
-        schoolClassService.createNewSchoolClass(name, school);
-        model.addAttribute("completed", "Класс " + name + " был добавлен");
-        return "AddClass";
+        schoolClass.setSchool(school);
+        schoolClassService.createNewSchoolClass(schoolClass);
+        model.addAttribute("completed", schoolClass.getNameWithNumber() + " класс был добавлен");
+        return addClassPage;
     }
 
     @GetMapping(value = "/adcft")
-    public String addClassForTeacherGet() {
-        return "AddClassForTeacher";
+    public String addClassForTeacherGet(Model model) {
+        User user = userService.getUserByName(userService.getCurrentUserName());
+        if (user.getRole() == Role.Operator)
+            model.addAttribute("classes", schoolClassService.getAllClassesBySchool(user.getSchool()));
+        return adcftPage;
     }
 
     @PostMapping(value = "/adcft")
     public String addClassForTeacherPost(
-            @RequestParam(name = "className") String className,
-            @RequestParam(name = "teacherName") String teacherName, Model model) {
-        if (teacherService.checkInputDataForAddingClassToTeacher(teacherName, className, model))
-            return "AddClassForTeacher";
-        Teacher teacher = (Teacher) userService.getUserByName(teacherName);
-        SchoolClass schoolClass = schoolClassService.getClassByName(className);
+            @ModelAttribute("userForm") UserForm userForm,
+            @ModelAttribute("classForm") ClassForm classForm,
+            Model model) {
+        User operator = userService.getUserByName(userService.getCurrentUserName());
+        model.addAttribute("classes", schoolClassService.getAllClassesBySchool(operator.getSchool()));
+        User foundedUser = userService.getUserByName(userForm.getUserName());
+        if (foundedUser == null || foundedUser.getRole() != Role.Teacher ){
+            model.addAttribute("error", "Введите корректные данные");
+            return adcftPage;
+        }
+        SchoolClass schoolClass = schoolClassService.getClassById(classForm.getClassId());
+        if (schoolClass==null) {
+            model.addAttribute("error", "Введите корректные данные");
+            return adcftPage;
+        }
+        Teacher teacher = (Teacher) foundedUser;
         teacher.addSchoolClass(schoolClass);
         userService.saveUser(teacher);
-        model.addAttribute("completed", "Учитель: " + teacherName + " привязан к классу!");
-        return "AddClassForTeacher";
+        model.addAttribute("completed", "Учитель: " + teacher.getName() + " привязан к классу!");
+        return adcftPage;
     }
 }

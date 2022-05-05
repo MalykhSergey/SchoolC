@@ -7,11 +7,11 @@ import javax.persistence.*;
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 public class User {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
     private String password;
-    @ManyToOne(cascade = CascadeType.PERSIST)
+    @ManyToOne
     private School school;
     private Role role;
 
@@ -61,7 +61,7 @@ public class User {
         return role;
     }
 
-    public void setRoles(Role role) {
+    public void setRole(Role role) {
         this.role = role;
     }
 

@@ -10,20 +10,22 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     AuthorizeService userService;
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .authorizeRequests()
                 .antMatchers("/addschool").access("hasRole('ROLE_ADMIN')")
-                .antMatchers("/aboutSchool").access("hasRole('ROLE_OPERATOR')")
-                .antMatchers("/adduser", "/addclass", "/adft", "/scfs").access("hasAnyRole('ROLE_ADMIN', 'ROLE_OPERATOR')")
-                .antMatchers("/addtask/**","/checkAnswer/**","/files","/tasksOfClass/**").access("hasRole('ROLE_TEACHER')")
+                .antMatchers("/aboutSchool", "/adft", "/scfs").access("hasRole('ROLE_OPERATOR')")
+                .antMatchers("/adduser", "/addclass").access("hasAnyRole('ROLE_ADMIN', 'ROLE_OPERATOR')")
+                .antMatchers("/addtask/**", "/checkAnswer/**", "/files", "/tasksOfClass/**").access("hasRole('ROLE_TEACHER')")
                 .antMatchers("/addanswer").access("hasRole('ROLE_STUDENT')")
                 .antMatchers("/").authenticated()
                 .antMatchers("/js/**", "/css/**").permitAll()
@@ -34,17 +36,19 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .permitAll()
                 .and()
                 .logout()
+                .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
+                .logoutSuccessUrl("/login")
                 .permitAll();
     }
 
 
     @Bean
-    public BCryptPasswordEncoder passwordEncoder(){
+    public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
     @Bean
-    public DaoAuthenticationProvider authenticationProvider(){
+    public DaoAuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider auth = new DaoAuthenticationProvider();
         auth.setUserDetailsService(userService);
         auth.setPasswordEncoder(passwordEncoder());
@@ -52,7 +56,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+    protected void configure(AuthenticationManagerBuilder auth) {
         auth.authenticationProvider(authenticationProvider());
     }
 }

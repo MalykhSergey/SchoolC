@@ -8,8 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -31,8 +29,8 @@ public class HomeController {
 
     @GetMapping(value = "/")
     public String home(Model model) {
-        User user = userService.getUserByName(userService.getUserName());
-        if ("ROLE_STUDENT".equals(user.getRole().getName())) {
+        User user = userService.getUserByName(userService.getCurrentUserName());
+        if (user.getRole() == Role.Student) {
             Student student = (Student) (user);
             List<Task> newTasks = new ArrayList<>();
             List<Task> tasks = taskService.getTasksByClass(student.getSchoolClass());
@@ -50,7 +48,7 @@ public class HomeController {
             model.addAttribute("newtasks", newTasks);
             return "StudentHome";
         }
-        if ("ROLE_TEACHER".equals(user.getRole().getName())) {
+        if (user.getRole() == Role.Teacher) {
             Teacher teacher = (Teacher) (user);
             model.addAttribute("schoolClasses", teacher.getSchoolClassSet());
             return "TeacherHome";

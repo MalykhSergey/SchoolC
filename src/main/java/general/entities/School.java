@@ -8,10 +8,11 @@ import java.util.Set;
 @Entity
 public class School {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
-    @OneToMany(mappedBy = "school", cascade = CascadeType.REMOVE)
+    @OrderBy("classNumber, name")
+    @OneToMany(mappedBy = "school", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
     private Set<SchoolClass> schoolClasses;
 
     public Long getId() {

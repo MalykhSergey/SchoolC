@@ -1,22 +1,22 @@
 package general.entities;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 public class Student extends User {
-    @ManyToOne(cascade = CascadeType.PERSIST)
+    @ManyToOne
     private SchoolClass schoolClass;
-    @OneToMany(mappedBy = "student", cascade = CascadeType.REMOVE)
-    private List<Answer> answers;
+    @OneToMany(mappedBy = "student", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
+    private Set<Answer> answers;
 
     public Student() {
     }
 
     public Student(String user, String password, Role role, School school, SchoolClass schoolClass) {
         super(user, password, school, role);
-        this.answers = new ArrayList<>();
+        this.answers = new HashSet<>();
         this.setSchoolClass(schoolClass);
     }
 
@@ -29,11 +29,11 @@ public class Student extends User {
     }
 
 
-    public List<Answer> getAnswers() {
+    public Set<Answer> getAnswers() {
         return answers;
     }
 
-    public void setAnswers(List<Answer> answers) {
+    public void setAnswers(Set<Answer> answers) {
         this.answers = answers;
     }
 }

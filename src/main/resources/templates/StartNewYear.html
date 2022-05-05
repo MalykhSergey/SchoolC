@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
+<div th:replace="fragments/fragments :: head ('Начать новый учебный год')"></div>
+<body>
+<div th:replace="fragments/fragments :: navbar"></div>
+<div class="container">
+    <h1>Вы уверены, что хотите перевести всех учеников в новый учебный год?</h1>
+    <h3 class="alert alert-danger"> Ученики 11 классов пропадут, а действие нельзя будет отменить</h3>
+    <form th:action="@{/startNewYear}" method="post">
+        <label for="checkBox">Я осознаю последствия</label>
+        <input class="form-group" type="checkbox" required id="checkBox">
+        <button class="btn btn-danger" type="submit">Да</button>
+    </form>
+</div>
+<div th:replace="fragments/fragments :: scripts"></div>
+</body>
+</html>

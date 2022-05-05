@@ -9,10 +9,15 @@ import org.springframework.data.repository.CrudRepository;
 import java.util.List;
 
 public interface SchoolClassRepos extends CrudRepository<SchoolClass, Long> {
-    SchoolClass findSchoolClassByName(String Name);
+    SchoolClass findSchoolClassByNameAndClassNumberAndSchool(String name,int number, School school);
 
-    List<SchoolClass> findSchoolClassBySchool(School school);
+    List<SchoolClass> findAllBySchoolOrderByClassNumber(School school);
 
     SchoolClass findSchoolClassById(Long id);
 
+    void deleteBySchoolIdAndClassNumber(Long schoolId, int classNumber);
+
+    @Modifying
+    @Query(value = "UPDATE classes SET class_number = class_number + 1 WHERE school_id = ?1", nativeQuery = true)
+    void incrementClassNumbersBySchoolId(Long schoolId);
 }

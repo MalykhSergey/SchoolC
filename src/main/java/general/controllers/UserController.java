@@ -1,121 +1,146 @@
 package general.controllers;
 
+import general.controllers.forms.ClassForm;
+import general.controllers.forms.SchoolForm;
+import general.controllers.forms.UserForm;
 import general.entities.*;
-import general.reposes.UserRepos;
 import general.services.SchoolClassService;
 import general.services.SchoolService;
 import general.services.UserService;
 import general.utils.CheckDataBoolAnswer;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 
 @Controller
 public class UserController {
     private final UserService userService;
-    private final UserRepos userRepos;
     private final PasswordEncoder passwordEncoder;
     private final SchoolService schoolService;
     private final SchoolClassService schoolClassService;
+    private final String addUserPage = "/userControllerPages/AddUser";
+    private final String setClassForStudentPage = "/userControllerPages/SetClassForStudent";
 
     @Autowired
-    public UserController(UserService userService, UserRepos userRepos, PasswordEncoder passwordEncoder,
+    public UserController(UserService userService, PasswordEncoder passwordEncoder,
                           SchoolService schoolService, SchoolClassService schoolClassService) {
         this.userService = userService;
-        this.userRepos = userRepos;
         this.passwordEncoder = passwordEncoder;
         this.schoolService = schoolService;
         this.schoolClassService = schoolClassService;
     }
 
     @GetMapping(value = "/adduser")
-    public String addUserGet() {
-        return "AddUser";
+    public String addUserGet(Model model) {
+        User user = userService.getUserByName(userService.getCurrentUserName());
+        if (user.getRole() == Role.Operator)
+            model.addAttribute("classes", schoolClassService.getAllClassesBySchool(user.getSchool()));
+        return addUserPage;
     }
 
     @PostMapping(value = "/adduser")
     public String addUserPost(
-            @RequestParam(name = "name") String name,
-            @RequestParam(name = "typeOfUser") String type,
-            @RequestParam(name = "school", required = false) String nameOfSchool,
-            @RequestParam(name = "password") String password,
-            @RequestParam(name = "class", required = false) String nameOfSchoolClass, Model model) {
+            @ModelAttribute("userForm") UserForm userForm,
+            @ModelAttribute("schoolForm") SchoolForm schoolForm,
+            @ModelAttribute("classForm") ClassForm classForm,
+            Model model) {
         School school = null;
-        User user = userRepos.findUserByName(SecurityContextHolder.getContext().getAuthentication().getName());
-        if (nameOfSchool != null) {
-            if ("ROLE_ADMIN".equals(user.getRole().getName())) {
-                school = schoolService.getSchoolByName(nameOfSchool);
+        User user = userService.getUserByName(userService.getCurrentUserName());
+        if (user.getRole() == Role.Operator)
+            model.addAttribute("classes", schoolClassService.getAllClassesBySchool(user.getSchool()));
+        if (schoolForm.getSchoolName() != null) {
+            if (user.getRole() == Role.Admin) {
+                school = schoolService.getSchoolByName(schoolForm.getSchoolName());
                 if (school == null) {
                     model.addAttribute("error", "Неверно указана школа");
-                    return "AddUser";
+                    return addUserPage;
                 }
             }
         }
-        CheckDataBoolAnswer checkDataBoolAnswer = userService.checkInputData(name, password);
+        CheckDataBoolAnswer checkDataBoolAnswer = userService.checkUserFormForCreate(userForm);
         if (checkDataBoolAnswer.isTrue()) {
             if (school == null) {
                 school = user.getSchool();
             }
-            switch (type) {
-                case "student":
-                    SchoolClass schoolClass = schoolClassService.getClassByName(nameOfSchoolClass);
-                    if (nameOfSchoolClass == null | schoolClass == null) {
+            switch (userForm.getRole()) {
+                case Student:
+                    SchoolClass schoolClass;
+                    if (classForm.getClassId() != null) {
+                        schoolClass = schoolClassService.getClassById(classForm.getClassId());
+                    } else
+                        schoolClass = schoolClassService.getClassByNameAndNumberAndSchool(classForm.getClassName(), classForm.getClassNumber(), school);
+                    if (schoolClass == null) {
                         model.addAttribute("error", "Неверно указан класс");
-                        return "AddUser";
+                        return addUserPage;
                     }
-                    Student student = new Student(name, passwordEncoder.encode(password), Role.Student, school, schoolClass);
+                    Student student = new Student(userForm.getUserName(),
+                            passwordEncoder.encode(userForm.getPassword()), Role.Student, school, schoolClass);
                     userService.saveUser(student);
                     break;
-                case "teacher":
-                    Teacher teacher = new Teacher(name, passwordEncoder.encode(password), school, Role.Teacher);
+                case Teacher:
+                    Teacher teacher = new Teacher(userForm.getUserName(),
+                            passwordEncoder.encode(userForm.getPassword()), school, Role.Teacher);
                     userService.saveUser(teacher);
                     break;
-                case "operator":
-                    User operator = new User(name, passwordEncoder.encode(password), school, Role.Operator);
+                case Operator:
+                    User operator = new User(userForm.getUserName(),
+                            passwordEncoder.encode(userForm.getPassword()), school, Role.Operator);
                     userService.saveUser(operator);
                     break;
                 default: {
                     model.addAttribute("error", "Не жульничай!");
                 }
             }
-            model.addAttribute("completed", "Пользователь с именем: " + name + " был успешно добавлен");
+            model.addAttribute("completed", "Пользователь с именем: " + userForm.getUserName() + " был успешно добавлен");
         } else
             model.addAttribute("error", checkDataBoolAnswer.getAnswer());
-        return "AddUser";
+        return addUserPage;
     }
 
     @GetMapping(value = "/scfs")
-    public String setClassForStudentGet() {
-        return "SetClassForStudent";
+    public String setClassForStudentGet(Model model) {
+        User user = userService.getUserByName(userService.getCurrentUserName());
+        if (user.getRole() == Role.Operator)
+            model.addAttribute("classes", schoolClassService.getAllClassesBySchool(user.getSchool()));
+        return setClassForStudentPage;
     }
 
     @PostMapping(value = "/scfs")
     public String setClassForStudentPost(
-            @RequestParam(name = "name") String name,
-            @RequestParam(name = "class") String className,
+            @ModelAttribute("userForm") UserForm userForm,
+            @ModelAttribute("classForm") ClassForm classForm,
             Model model
     ) {
-        if (name == null) {
+        User user = userService.getUserByName(userService.getCurrentUserName());
+        if (user.getRole() == Role.Operator)
+            model.addAttribute("classes", schoolClassService.getAllClassesBySchool(user.getSchool()));
+        if (userForm.getUserName() == null) {
             model.addAttribute("error", "Введите имя ученика");
-            return "SetClassForStudent";
+            return setClassForStudentPage;
         }
-        if (className == null) {
-            model.addAttribute("error", "Введите класс");
-            return "SetClassForStudent";
+        User foundedUser = userService.getUserByName(userForm.getUserName());
+        if (foundedUser == null || foundedUser.getRole() != Role.Student) {
+            model.addAttribute("error", "Введите корректные данные");
+            return setClassForStudentPage;
         }
-        Student student = (Student) (userRepos.findUserByName(name));
-        SchoolClass schoolClass = schoolClassService.getClassByName(className);
-        if ((student != null || schoolClass != null) && student.getSchool().getId() == schoolClass.getSchool().getId()) {
+        Student student = (Student) foundedUser;
+        SchoolClass schoolClass;
+        if (classForm.getClassId() != null)
+            schoolClass = schoolClassService.getClassById(classForm.getClassId());
+        else
+            schoolClass = schoolClassService.getClassByNameAndNumberAndSchool(classForm.getClassName(), classForm.getClassNumber(), student.getSchool());
+        if (schoolClass != null && student.getSchool().getId() == schoolClass.getSchool().getId()) {
             student.setSchoolClass(schoolClass);
-            userRepos.save(student);
+            userService.saveUser(student);
         } else {
             model.addAttribute("error", "Введите корректные данные");
-            return "SetClassForStudent";
+            return setClassForStudentPage;
         }
         model.addAttribute("completed", "Ученик привязан к классу");
-        return "SetClassForStudent";
+        return setClassForStudentPage;
     }
 }

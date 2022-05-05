@@ -49,9 +49,9 @@ public class TaskService {
         return taskRepos.findTasksBySchoolClassOrderByTimeStamp(schoolClass);
     }
 
-    public CheckDataBoolAnswer checkInputData(String name, String body, String nameOfSchoolClass, String dateString,
+    public CheckDataBoolAnswer checkInputData(String name, String body, String dateString,
                                               Teacher teacher, SchoolClass schoolClass) {
-        if (name == null | body == null | nameOfSchoolClass == null | dateString == null) {
+        if (name == null || body == null || dateString == null) {
             return new CheckDataBoolAnswer(false, "Введите все значения");
         }
         boolean bool = false;
@@ -63,10 +63,10 @@ public class TaskService {
         if (!bool) {
             return new CheckDataBoolAnswer(false, "Неверный класс");
         }
-        if (name.length() < 5 | body.length() < 25) {
+        if (name.length() < 5 || body.length() < 25) {
             return new CheckDataBoolAnswer(false, "Введите более полное описание или название задания");
         }
-        if (name.length() > 80 | body.length() > 2000) {
+        if (name.length() > 80 || body.length() > 2000) {
             return new CheckDataBoolAnswer(false, "Введите более короткое описание или название задания");
         }
         return new CheckDataBoolAnswer(true, null);

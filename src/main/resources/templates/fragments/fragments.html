@@ -43,13 +43,68 @@
                 </div>
             </li>
             <li sec:authorize="authenticated" class="nav-item">
-                <form th:action="@{/logout}" method="post" class="form-inline my-2 my-lg-0">
-                    <input class="btn btn-outline-success my-2 my-sm-0" type="submit" value="Выйти"/>
-                </form>
+                <a class="nav-link" href="/logout">Выйти</a>
             </li>
         </ul>
     </div>
 </nav>
+<div th:object="${userForm}" th:fragment="userForm (password, role)">
+    <label for="name">Имя пользователя</label>
+    <input required type="text" class="form-control form-group" id="name" name="userName"
+           placeholder="Введите имя" th:value="${userForm?.getUserName()}">
+    <div th:if="${password}" class="form-group">
+        <label for="password">Пароль</label>
+        <input required type="text" class="form-control" id="password" name="password"
+               placeholder="Введите пароль" th:value="${userForm?.getPassword()}">
+    </div>
+    <div class="form-group" th:if="${role}">
+        <label for="role">Тип пользователя</label>
+        <select name="role" class="form-control  form-group" id="role" onchange="checkSelect()">
+            <option value="Teacher">Учитель</option>
+            <div sec:authorize="hasRole('ROLE_ADMIN')">
+                <option value="Operator">Оператор</option>
+            </div>
+            <option value="Student">Ученик</option>
+        </select>
+    </div>
+</div>
+<div class="form-group" th:object="${schoolForm}" th:fragment="schoolForm">
+    <label for="schoolName">Название школы</label>
+    <input required type="text" class="form-control" id="schoolName" name="schoolName"
+           placeholder="Введите школу" th:value="${schoolForm?.getSchoolName()}">
+</div>
+<div id="dinContainer" class="form-group" th:object="${classForm}" th:fragment="classForm">
+    <label for="className">Название класса</label>
+    <select required name="classId" id="className" sec:authorize="hasAnyRole('ROLE_OPERATOR', 'ROLE_TEACHER')">
+        <option th:each="schoolClass : ${classes}"
+                th:text="${schoolClass.getNameWithNumber()}"
+                th:value="${schoolClass.getId()}">
+        </option>
+    </select>
+    <div sec:authorize="hasRole('ROLE_ADMIN')">
+        <select name="classNumber" class="form-group" id="classNumber">
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+            <option value="8">8</option>
+            <option value="9">9</option>
+            <option value="10">10</option>
+            <option value="11">11</option>
+        </select>
+        <input required type="text" id="className" name="className" class="form-control" placeholder="Введите класс"
+               th:value="${classForm?.getClassName()}">
+    </div>
+</div>
+<div class="row" th:fragment="notification">
+    <div th:if="${error}" th:text="${error}" class="alert alert-danger col-8  mt-3" role="alert">
+    </div>
+    <div th:if="${completed}" th:text="${completed}" class="alert alert-success col-8  mt-3" role="alert">
+    </div>
+</div>
 <div th:fragment="scripts">
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
             integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"

@@ -2,27 +2,25 @@ package general.entities;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
+import java.util.Set;
 
 @Table(name = "tasks")
 @Entity
 public class Task {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
     @Column(length = 2000)
     private String body;
     private Timestamp timeStamp;
-    @ManyToOne(cascade = CascadeType.PERSIST)
+    @ManyToOne
     private SchoolClass schoolClass;
-    @ManyToOne(cascade = CascadeType.PERSIST)
+    @ManyToOne
     private Teacher teacher;
     @OneToMany(mappedBy = "task", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
-    private List<Answer> answers;
+    private Set<Answer> answers;
 
     public Task() {
     }
@@ -88,11 +86,11 @@ public class Task {
         this.teacher = teacher;
     }
 
-    public List<Answer> getAnswers() {
+    public Set<Answer> getAnswers() {
         return answers;
     }
 
-    public void setAnswers(List<Answer> answers) {
+    public void setAnswers(Set<Answer> answers) {
         this.answers = answers;
     }
 }

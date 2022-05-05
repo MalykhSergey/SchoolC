@@ -44,43 +44,45 @@ public class Application {
                     null, Role.Admin);
             userService.saveUser(admin);
             String schoolName = "Омская БОУ СОШ №1";
-            School school = schoolRepos.findSchoolByName(schoolName);
-            if (school == null) {
-                school = new School(schoolName);
-                schoolRepos.save(school);
-            }
-            String className = "Класс №1";
-            SchoolClass schoolClass = schoolClassRepos.findSchoolClassByName(className);
-            if (schoolClass == null) {
-                schoolClass = new SchoolClass(className, school);
-                schoolClassRepos.save(schoolClass);
-            }
+            School school = new School(schoolName);
+            schoolRepos.save(school);
+            User operator = new User("Operator", bCryptPasswordEncoder.encode("12345"),
+                    school, Role.Operator);
+            userService.saveUser(operator);
             String teacherName = "Фролов Константин Романович (Учитель Физики)";
             Teacher teacher = new Teacher(teacherName, bCryptPasswordEncoder.encode("12345"),
                     school, Role.Teacher);
-            teacher.addSchoolClass(schoolClass);
+            SchoolClass schoolClass = null;
+            for (int i = 1; i < 12; i++) {
+                for (int j = 1; j < 4; j++) {
+                    schoolClass = new SchoolClass(Integer.toString(j), i, school);
+                    schoolClassRepos.save(schoolClass);
+                    teacher.addSchoolClass(schoolClass);
+                }
+            }
             userService.saveUser(teacher);
             String studentName = "Сидоров";
-            if (userRepos.findUserByName(studentName) == null) {
-                Student student = new Student(studentName, bCryptPasswordEncoder.encode("12345"),
-                        Role.Student, school, schoolClass);
-                userService.saveUser(student);
+            Student student = new Student(studentName, bCryptPasswordEncoder.encode("12345"),
+                    Role.Student, school, schoolClass);
+            userService.saveUser(student);
+            String taskExampleBody = "Используя рычажные весы с разновесом, мензурку, стакан с водой," +
+                    " цилиндр, соберите экспериментальную установку для измерения плотности материала, из которого изготовлен цилиндр. \n" +
+                    "\n" +
+                    "В бланке ответов:\n" +
+                    "\n" +
+                    "1) сделайте рисунок экспериментальной установки для определения объема тела;\n" +
+                    "\n" +
+                    "2) запишите формулу для расчета плотности;\n" +
+                    "\n" +
+                    "3) укажите результаты измерения массы цилиндра и его объема;\n" +
+                    "\n" +
+                    "4) запишите числовое значение плотности материала цилиндра.";
+            for (int i = 1; i < 12; i++) {
+                for (int j = 1; j < 4; j++) {
+                    taskService.createTask("Задача №" + i + "." + j, taskExampleBody, "2022-10-28T19:55",
+                            (schoolClassService.getClassByNameAndNumberAndSchool(Integer.toString(j), i, school)), teacher);
+                }
             }
-            String taskExampleBody = "Происходит от глагола задать, из за- + дать, дал" +
-                    "ее от праслав. *dā́tī; *dājā́tī; *dāvā́tī, от кот. в числе прочего произошли: ст.-слав. дати " +
-                    "(греч. διδόναι), русск. дать, давать, укр. дати, белор. даць, сербохорв. да̏ти, словенск. dáti" +
-                    ", чешск. dát, польск., в.-луж. dać, н.-луж. daś. Восходит к праиндоевр. *do-. Родственно лит. dúot" +
-                    "i, 1 л. ед. dúomi, dúodu «даю», греч. δίδωμι, др.-инд. dádāti «даёт», авест. dadāiti «даёт», алб. аор.";
-            taskService.createTask("Задача №1", taskExampleBody,
-                    "2022-10-28T19:55", schoolClass, teacher);
-            taskService.createTask("Задача №2", taskExampleBody,
-                    "2022-10-28T19:56", schoolClass, teacher);
-            taskService.createTask("Задача №3", taskExampleBody,
-                    "2022-10-28T19:56", schoolClass, teacher);
-            taskService.createTask("Задача №4", taskExampleBody,
-                    "2022-10-28T19:56", schoolClass, teacher);
-            taskService.createTask("Задача №5", taskExampleBody,
-                    "2022-10-28T19:56", schoolClass, teacher);
         }
     }
 

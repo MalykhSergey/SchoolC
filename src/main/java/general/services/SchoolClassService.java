@@ -3,11 +3,11 @@ package general.services;
 import general.entities.School;
 import general.entities.SchoolClass;
 import general.reposes.SchoolClassRepos;
-import general.reposes.SchoolRepos;
-import general.reposes.UserRepos;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 public class SchoolClassService {
@@ -20,26 +20,29 @@ public class SchoolClassService {
     }
 
     @Transactional
-    public void createNewSchoolClass(String name, School school) {
-        SchoolClass schoolClass = new SchoolClass(name, school);
+    public void createNewSchoolClass(SchoolClass schoolClass) {
         schoolClassRepos.save(schoolClass);
     }
 
-    public SchoolClass getClassByName(String name) {
-        return schoolClassRepos.findSchoolClassByName(name);
+    public SchoolClass getClassByNameAndNumberAndSchool(String name, int number, School school) {
+        return schoolClassRepos.findSchoolClassByNameAndClassNumberAndSchool(name, number, school);
     }
 
     public SchoolClass getClassById(Long id) {
         return schoolClassRepos.findSchoolClassById(id);
     }
 
-    public boolean checkClass(String name) {
-        return schoolClassRepos.findSchoolClassByName(name) != null;
+    public List<SchoolClass> getAllClassesBySchool(School school) {
+        return schoolClassRepos.findAllBySchoolOrderByClassNumber(school);
+    }
+
+    public boolean isClassExistsInSchool(String name, int number, School school) {
+        return schoolClassRepos.findSchoolClassByNameAndClassNumberAndSchool(name,number, school) != null;
     }
 
 
     public boolean checkClassName(String name) {
-        return name.length() < 6;
+        return name.length() < 20;
     }
 
 }

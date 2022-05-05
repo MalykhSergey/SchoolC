@@ -6,11 +6,16 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-public class Teacher extends User{
-    @JoinTable(name = "teacher_classes")
-    @ManyToMany(cascade = CascadeType.PERSIST)
+public class Teacher extends User {
+    @OrderBy("classNumber,name")
+    @ManyToMany
+    @JoinTable(
+            name = "teacher_classes",
+            joinColumns = @JoinColumn(name = "teacher_id"),
+            inverseJoinColumns = @JoinColumn(name = "class_id")
+    )
     private Set<SchoolClass> schoolClassSet;
-    
+
     public Set<SchoolClass> getSchoolClassSet() {
         return schoolClassSet;
     }

@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+
+<div th:replace="fragments/fragments :: head ('Добавить пользователя')"></div>
+
+<body>
+<div th:replace="fragments/fragments :: navbar"></div>
+<div class="container">
+    <form method="post">
+        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+        <div th:replace="fragments/fragments :: userForm (true,true)"></div>
+        <div sec:authorize="hasRole('ROLE_ADMIN')" th:replace="fragments/fragments :: schoolForm"></div>
+        <div th:replace="fragments/fragments :: classForm"></div>
+        <input type="submit" class="btn btn-primary" value="Отправить">
+    </form>
+    <div th:replace="fragments/fragments :: notification"></div>
+</div>
+<script src="/js/hideClassForm.js"></script>
+<div th:replace="fragments/fragments :: scripts"></div>
+</body>
+</html>

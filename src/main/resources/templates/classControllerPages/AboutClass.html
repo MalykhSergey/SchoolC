@@ -1,24 +1,22 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
-<div th:replace="fragments/fragments :: head ('Просмотреть классы')"></div>
+<div th:replace="fragments/fragments :: head ('О классе: '+${class.getNameWithNumber()})"></div>
 <body>
 <div th:replace="fragments/fragments :: navbar"></div>
 <div class="container">
-    <h1 th:text="${schoolName}"></h1>
-    <h1>Классы:</h1>
+    <h1 th:text="${class.getNameWithNumber()} + ' класс:'"></h1>
+    <h1>Ученике:</h1>
     <table class="table table-striped table-bordered">
         <thead>
         <tr>
-            <th scope="col">Название класса</th>
-            <th scope="col">Количество человек</th>
+            <th scope="col">Имя ученика</th>
         </tr>
         </thead>
         <tbody>
-        <tr th:each="class : ${classes}">
+        <tr th:each="student : ${class.getStudents()}">
             <th scope="row">
-                <a th:href="'/aboutClass/?classId='+${class.getId()}" th:text="${class.getName()}"></a>
+                <a th:href="'/aboutStudent/'+${student.getId()}" th:text="${student.getName()}"></a>
             </th>
-            <td th:text="${class.getStudents().size()}"></td>
         </tr>
         </tbody>
     </table>
@@ -30,7 +28,7 @@
         </tr>
         </thead>
         <tbody>
-        <tr th:each="teacher : ${teachers}">
+        <tr th:each="teacher : ${class.getTeachers()}">
             <th scope="row" th:text="${teacher.getName()}">
             </th>
         </tr>

@@ -8,7 +8,7 @@
         <div class="row justify-content-center">
             <tr th:each="schoolClass : ${schoolClasses}">
                 <div class="container"><h4><a th:href="@{'/tasksOfClass/?id='+${schoolClass.getId()}}"
-                                              th:text="${schoolClass.getName()}"></a></h4>
+                                              th:text="${schoolClass.getNameWithNumber()}"></a></h4>
                 </div>
             </tr>
         </div>

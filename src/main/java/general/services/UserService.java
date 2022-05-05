@@ -1,5 +1,6 @@
 package general.services;
 
+import general.controllers.forms.UserForm;
 import general.entities.SchoolClass;
 import general.entities.Student;
 import general.entities.User;
@@ -24,23 +25,23 @@ public class UserService {
         userRepos.save(user);
     }
 
-    public CheckDataBoolAnswer checkInputData(String name, String password) {
-        if (password == null) {
+    public CheckDataBoolAnswer checkUserFormForCreate(UserForm userForm) {
+        if (userForm.getPassword() == null) {
             return new CheckDataBoolAnswer(false, "Введите пароль");
         }
-        if (password.length() < 4) {
+        if (userForm.getPassword().length() < 4) {
             return new CheckDataBoolAnswer(false, "Введите пароль длинее 5 символов");
         }
-        if (password.length() > 20) {
+        if (userForm.getPassword().length() > 20) {
             return new CheckDataBoolAnswer(false, "Ваш пароль слишком длинный!");
         }
-        if (name == null) {
+        if (userForm.getUserName() == null) {
             return new CheckDataBoolAnswer(false, "Введите имя");
         }
-        if (name.length() > 25) {
-            return new CheckDataBoolAnswer(false, "Введите имя короче 15 символов");
+        if (userForm.getUserName().length() > 25) {
+            return new CheckDataBoolAnswer(false, "Введите имя короче 25 символов");
         }
-        if (userRepos.findUserByName(name) != null) {
+        if (userRepos.findUserByName(userForm.getUserName()) != null) {
             return new CheckDataBoolAnswer(false, "Введите другое имя");
         }
         return new CheckDataBoolAnswer(true, null);
@@ -50,7 +51,7 @@ public class UserService {
         return userRepos.findUserByName(name);
     }
 
-    public String getUserName() {
+    public String getCurrentUserName() {
         return SecurityContextHolder.getContext().getAuthentication().getName();
     }
 
