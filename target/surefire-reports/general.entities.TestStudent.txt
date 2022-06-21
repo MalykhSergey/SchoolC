@@ -1,8 +1,0 @@
--------------------------------------------------------------------------------
-Test set: general.entities.TestStudent
--------------------------------------------------------------------------------
-Tests run: 2, Failures: 0, Errors: 1, Skipped: 0, Time elapsed: 0.002 s <<< FAILURE! - in general.entities.TestStudent
-testAddAnswer  Time elapsed: 0.001 s  <<< ERROR!
-java.lang.NullPointerException
-	at general.entities.TestStudent.testAddAnswer(TestStudent.java:23)
-

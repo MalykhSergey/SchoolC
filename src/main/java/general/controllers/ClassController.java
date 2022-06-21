@@ -52,7 +52,7 @@ public class ClassController {
         if (school == null)
             school = user.getSchool();
         if (!schoolClassService.checkClassName(schoolClass.getName())) {
-            model.addAttribute("error", "Введите полное название");
+            model.addAttribute("error", "Введите название класса короче 20 символов");
             return addClassPage;
         }
         if (schoolClassService.isClassExistsInSchool(schoolClass.getName(), classNumber, school)) {
