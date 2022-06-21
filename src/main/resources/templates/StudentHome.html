@@ -18,7 +18,7 @@
                 <div class="card-body">
                     <h5 th:text="${task.getName()}" class="card-title"></h5>
                     <p th:text="${task.getBody()}" class="card-text"></p>
-                    <a th:href="'/addanswer/?id='+${task.getId()}"
+                    <a th:href="'/addAnswer/?id='+${task.getId()}"
                        class="btn btn-primary">Выполнить</a>
                 </div>
             </div>

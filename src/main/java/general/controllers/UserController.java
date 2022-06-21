@@ -101,7 +101,7 @@ public class UserController {
         return addUserPage;
     }
 
-    @GetMapping(value = "/scfs")
+    @GetMapping(value = "/setClassForStudent")
     public String setClassForStudentGet(Model model) {
         User user = userService.getUserByName(userService.getCurrentUserName());
         if (user.getRole() == Role.Operator)
@@ -109,7 +109,7 @@ public class UserController {
         return setClassForStudentPage;
     }
 
-    @PostMapping(value = "/scfs")
+    @PostMapping(value = "/setClassForStudent")
     public String setClassForStudentPost(
             @ModelAttribute("userForm") UserForm userForm,
             @ModelAttribute("classForm") ClassForm classForm,

@@ -29,16 +29,16 @@
                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                     <a sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_OPERATOR')" class="dropdown-item"
                        th:href="@{'/adduser'}">Добавить пользователя</a>
-                    <a sec:authorize="hasRole('ROLE_ADMIN')" class="dropdown-item" th:href="@{'/addschool'}">Добавить
+                    <a sec:authorize="hasRole('ROLE_ADMIN')" class="dropdown-item" th:href="@{'/addSchool'}">Добавить
                         школу</a>
-                    <a sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_OPERATOR')" th:href="@{'/addclass'}"
+                    <a sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_OPERATOR')" th:href="@{'/addClass'}"
                        class="dropdown-item">Добавить класс</a>
-                    <a sec:authorize="hasRole('ROLE_TEACHER')" class="dropdown-item" th:href="@{'/addtask'}">Добавить
+                    <a sec:authorize="hasRole('ROLE_TEACHER')" class="dropdown-item" th:href="@{'/addTask'}">Добавить
                         задание</a>
                     <a sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_OPERATOR')" class="dropdown-item"
-                       th:href="@{'/adcft'}">Привязать учителя к классу</a>
+                       th:href="@{'/addClassForTeacher'}">Привязать учителя к классу</a>
                     <a sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_OPERATOR')" class="dropdown-item"
-                       th:href="@{'/scfs'}">Переприривязать ученика к классу</a>
+                       th:href="@{'/setClassForStudent'}">Переприривязать ученика к классу</a>
                     <div class="dropdown-divider"></div>
                 </div>
             </li>

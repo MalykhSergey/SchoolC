@@ -20,7 +20,7 @@ public class ClassController {
     private final UserService userService;
     private final SchoolService schoolService;
     private final String addClassPage = "/classControllerPages/AddClass";
-    private final String adcftPage = "/classControllerPages/AddClassForTeacher";
+    private final String addClassForTeacherPage = "/classControllerPages/AddClassForTeacher";
 
     @Autowired
     public ClassController(SchoolClassService schoolClassService, UserService userService, SchoolService schoolService) {
@@ -29,12 +29,12 @@ public class ClassController {
         this.schoolService = schoolService;
     }
 
-    @GetMapping(value = "/addclass")
+    @GetMapping(value = "/addClass")
     public String addClassGet() {
         return addClassPage;
     }
 
-    @PostMapping(value = "/addclass")
+    @PostMapping(value = "/addClass")
     public String addClassPost(
             @ModelAttribute("schoolClass") SchoolClass schoolClass,
             @RequestParam(name = "schoolName", required = false) String schoolName,
@@ -65,15 +65,15 @@ public class ClassController {
         return addClassPage;
     }
 
-    @GetMapping(value = "/adcft")
+    @GetMapping(value = "/addClassForTeacher")
     public String addClassForTeacherGet(Model model) {
         User user = userService.getUserByName(userService.getCurrentUserName());
         if (user.getRole() == Role.Operator)
             model.addAttribute("classes", schoolClassService.getAllClassesBySchool(user.getSchool()));
-        return adcftPage;
+        return addClassForTeacherPage;
     }
 
-    @PostMapping(value = "/adcft")
+    @PostMapping(value = "/addClassForTeacher")
     public String addClassForTeacherPost(
             @ModelAttribute("userForm") UserForm userForm,
             @ModelAttribute("classForm") ClassForm classForm,
@@ -83,17 +83,17 @@ public class ClassController {
         User foundedUser = userService.getUserByName(userForm.getUserName());
         if (foundedUser == null || foundedUser.getRole() != Role.Teacher ){
             model.addAttribute("error", "Введите корректные данные");
-            return adcftPage;
+            return addClassForTeacherPage;
         }
         SchoolClass schoolClass = schoolClassService.getClassById(classForm.getClassId());
         if (schoolClass==null) {
             model.addAttribute("error", "Введите корректные данные");
-            return adcftPage;
+            return addClassForTeacherPage;
         }
         Teacher teacher = (Teacher) foundedUser;
         teacher.addSchoolClass(schoolClass);
         userService.saveUser(teacher);
         model.addAttribute("completed", "Учитель: " + teacher.getName() + " привязан к классу!");
-        return adcftPage;
+        return addClassForTeacherPage;
     }
 }

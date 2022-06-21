@@ -41,7 +41,7 @@ public class TaskAndAnswerController {
         this.userService = userService;
     }
 
-    @GetMapping(value = "/addtask")
+    @GetMapping(value = "/addTask")
     public String addTaskGet(Model model) {
         Teacher teacher = (Teacher) userService.getUserByName(userService.getCurrentUserName());
         model.addAttribute("classes", teacher.getSchoolClassSet());
@@ -52,7 +52,7 @@ public class TaskAndAnswerController {
         return addTaskPage;
     }
 
-    @PostMapping(value = "/addtask")
+    @PostMapping(value = "/addTask")
     public String addTaskPost(@ModelAttribute(name = "name") String name,
                               @ModelAttribute(name = "body") String body,
                               @ModelAttribute(name = "classForm") ClassForm classForm,
@@ -72,13 +72,13 @@ public class TaskAndAnswerController {
         return addTaskPage;
     }
 
-    @GetMapping(value = "/addanswer")
+    @GetMapping(value = "/addAnswer")
     public String addAnswerGet(@RequestParam(name = "id") String id, Model model) {
         model.addAttribute("task", taskService.getTaskById(Long.parseLong(id)));
         return addAnswerPage;
     }
 
-    @PostMapping(value = "/addanswer")
+    @PostMapping(value = "/addAnswer")
     public String addAnswerPost(@RequestParam(name = "id") String id, @RequestParam(name = "body") String body,
                                 Model model) {
         Task task = taskService.getTaskById(Long.parseLong(id));

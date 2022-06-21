@@ -18,12 +18,12 @@ public class SchoolController {
         this.schoolService = schoolService;
     }
 
-    @GetMapping(value = "/addschool")
+    @GetMapping(value = "/addSchool")
     public String addSchoolGet() {
         return addSchoolPage;
     }
 
-    @PostMapping(value = "/addschool")
+    @PostMapping(value = "/addSchool")
     public String addSchoolPost(
             @ModelAttribute("schoolForm") SchoolForm schoolForm,
             Model model) {

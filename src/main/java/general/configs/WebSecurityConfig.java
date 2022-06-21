@@ -22,11 +22,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .authorizeRequests()
-                .antMatchers("/addschool").access("hasRole('ROLE_ADMIN')")
-                .antMatchers("/aboutSchool", "/adft", "/scfs").access("hasRole('ROLE_OPERATOR')")
-                .antMatchers("/adduser", "/addclass").access("hasAnyRole('ROLE_ADMIN', 'ROLE_OPERATOR')")
-                .antMatchers("/addtask/**", "/checkAnswer/**", "/files", "/tasksOfClass/**").access("hasRole('ROLE_TEACHER')")
-                .antMatchers("/addanswer").access("hasRole('ROLE_STUDENT')")
+                .antMatchers("/addSchool").access("hasRole('ROLE_ADMIN')")
+                .antMatchers("/aboutSchool", "/adft", "/setClassForStudent").access("hasRole('ROLE_OPERATOR')")
+                .antMatchers("/adduser", "/addClass").access("hasAnyRole('ROLE_ADMIN', 'ROLE_OPERATOR')")
+                .antMatchers("/addTask/**", "/checkAnswer/**", "/files", "/tasksOfClass/**").access("hasRole('ROLE_TEACHER')")
+                .antMatchers("/addAnswer").access("hasRole('ROLE_STUDENT')")
                 .antMatchers("/").authenticated()
                 .antMatchers("/js/**", "/css/**").permitAll()
                 .anyRequest().authenticated()
