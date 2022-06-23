@@ -133,7 +133,7 @@ public class TaskAndAnswerController {
         if (Byte.parseByte(rating) < 6 && Byte.parseByte(rating) > 1) {
             Teacher teacher = (Teacher) userService.getUserByName(userService.getCurrentUserName());
             Answer answer = answerService.getAnswerById(Long.parseLong(answerId));
-            if (answerService.isStudentInClassSetOfTeacher(teacher, answer)) {
+            if (answer.getTeacher().fastEqualsById(teacher)) {
                 answerService.updateAnswer(rating, comment, answer);
                 schoolClassId = answer.getTask().getSchoolClass().getId();
                 taskId = answer.getTask().getId();

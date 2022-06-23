@@ -24,8 +24,13 @@ class TaskAndAnswerControllerTester {
     SchoolClassService classService = Mockito.mock(SchoolClassService.class);
     UserService userService = Mockito.mock(UserService.class);
     Model model = new ConcurrentModel();
-    Teacher teacher = Mockito.mock(Teacher.class);
-    SchoolClass schoolClass = Mockito.mock(SchoolClass.class);
+    Teacher teacher = new Teacher();
+    SchoolClass schoolClass = new SchoolClass("Class", 11, null);
+    {
+        teacher.setId(100L);
+        schoolClass.setId(100L);
+    }
+
     ClassForm classForm = Mockito.mock(ClassForm.class);
     TaskAndAnswerController taskAndAnswerController =
             new TaskAndAnswerController(taskService, answerService, userRatingDTORepository, classService, userService);
@@ -54,20 +59,17 @@ class TaskAndAnswerControllerTester {
 
     @Test
     void testCheckAnswerPost() {
-        Long taskId = 100L;
-        Long schoolClassId = 100L;
-        Mockito.when(answerService.isStudentInClassSetOfTeacher(any(), any())).thenReturn(true);
-        Answer answer = Mockito.mock(Answer.class);
+        Task task = new Task();
+        task.setId(100L);
+        task.setSchoolClass(schoolClass);
+        Answer answer = new Answer();
+        answer.setTeacher(teacher);
+        answer.setTask(task);
+        Mockito.when(userService.getUserByName(any())).thenReturn(teacher);
         Mockito.when(answerService.getAnswerById(any())).thenReturn(answer);
-        Task task = Mockito.mock(Task.class);
-        Mockito.when(answer.getTask()).thenReturn(task);
-        Mockito.when(task.getSchoolClass()).thenReturn(schoolClass);
-        Mockito.when(schoolClass.getId()).thenReturn(schoolClassId);
-        Mockito.when(task.getId()).thenReturn(taskId);
         assertEquals(taskAndAnswerController.checkAnswerPost("33", "3", null),
-                "redirect:/answersOfTask/?taskId=" + taskId + "&classId=" + schoolClassId);
-        Mockito.when(schoolClass.getId()).thenReturn(schoolClassId);
-        Mockito.when(task.getId()).thenReturn(null);
+                "redirect:/answersOfTask/?taskId=" + task.getId() + "&classId=" + schoolClass.getId());
+        task.setId(null);
         assertEquals(taskAndAnswerController.checkAnswerPost("33", "3", null),
                 "redirect:/");
     }

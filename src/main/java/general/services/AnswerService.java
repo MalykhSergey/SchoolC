@@ -43,15 +43,4 @@ public class AnswerService {
         return answerRepos.findAnswerById(id);
     }
 
-    public Boolean isStudentInClassSetOfTeacher(Teacher teacher, Answer answer) {
-        for (SchoolClass sc : teacher.getSchoolClassSet()) {
-            for (Student st : sc.getStudents()) {
-                if (st.fastEqualsById(answer.getStudent())) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
 }
