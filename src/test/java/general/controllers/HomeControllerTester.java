@@ -1,9 +1,6 @@
 package general.controllers;
 
-import general.entities.Role;
-import general.entities.Student;
-import general.entities.Teacher;
-import general.entities.User;
+import general.entities.*;
 import general.services.AnswerService;
 import general.services.TaskService;
 import general.services.UserService;
@@ -26,20 +23,20 @@ class HomeControllerTester {
     public void homeForAdmin() {
         user = new User("Admin", "password", null, null);
         Mockito.when(userService.getUserByName(any())).thenReturn(user);
-        assertEquals(homeController.home(model), "Home");
+        assertEquals(homeController.home(null,model), "Home");
     }
 
     @Test
     public void homeForTeacher() {
         user = new Teacher("Teacher", "password", null, Role.Teacher);
         Mockito.when(userService.getUserByName(any())).thenReturn(user);
-        assertEquals(homeController.home(model), "TeacherHome");
+        assertEquals(homeController.home(null,model), "TeacherHome");
     }
 
     @Test
     public void homeForStudent() {
-        user = new Student("Student", "password", Role.Student, null, null);
+        user = new Student("Student", "password", Role.Student, null, Mockito.mock(SchoolClass.class));
         Mockito.when(userService.getUserByName(any())).thenReturn(user);
-        assertEquals(homeController.home(model), "StudentHome");
+        assertEquals(homeController.home(null,model), "StudentHome");
     }
 }

@@ -6,6 +6,15 @@
 <div th:replace="fragments/fragments :: navbar"></div>
 <div class="container">
     <h1>Не выполненные</h1>
+    <h2 th:if="${teacherName}" th:text="'Показаны только от '+${teacherName}+':'"></h2>
+    <label for="teacherNames">Найти только для</label>
+    <select id="teacherNames" onchange="redirectForSort()">
+        <option value="">Всех</option>
+        <tr th:each="name : ${teacherNames}">
+            <option th:if="${teacherName==name}" selected th:value="${name}" th:text="${name}"></option>
+            <option th:if="${teacherName!=name}" th:value="${name}" th:text="${name}"></option>
+        </tr>
+    </select>
     <tr th:each="task : ${newtasks}">
         <div class="container mt-2 mb-2">
             <div class="card">
@@ -50,5 +59,6 @@
     </tr>
 </div>
 <div th:replace="fragments/fragments :: scripts"></div>
+<script src="/js/sortByTeacher.js"></script>
 </body>
 </html>
