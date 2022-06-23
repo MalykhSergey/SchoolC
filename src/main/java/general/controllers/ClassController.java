@@ -78,16 +78,21 @@ public class ClassController {
             @ModelAttribute("userForm") UserForm userForm,
             @ModelAttribute("classForm") ClassForm classForm,
             Model model) {
-        User operator = userService.getUserByName(userService.getCurrentUserName());
-        model.addAttribute("classes", schoolClassService.getAllClassesBySchool(operator.getSchool()));
+        User user = userService.getUserByName(userService.getCurrentUserName());
+        if (user.getRole() == Role.Operator)
+            model.addAttribute("classes", schoolClassService.getAllClassesBySchool(user.getSchool()));
         User foundedUser = userService.getUserByName(userForm.getUserName());
-        if (foundedUser == null || foundedUser.getRole() != Role.Teacher ){
-            model.addAttribute("error", "Введите корректные данные");
+        if (foundedUser == null || foundedUser.getRole() != Role.Teacher) {
+            model.addAttribute("error", "Введите корректные данные (пользователь не найден)");
             return addClassForTeacherPage;
         }
-        SchoolClass schoolClass = schoolClassService.getClassById(classForm.getClassId());
-        if (schoolClass==null) {
-            model.addAttribute("error", "Введите корректные данные");
+        SchoolClass schoolClass;
+        if (user.getRole() == Role.Operator)
+            schoolClass = schoolClassService.getClassById(classForm.getClassId());
+        else
+            schoolClass = schoolClassService.getClassByNameAndNumberAndSchool(classForm.getClassName(), classForm.getClassNumber(), foundedUser.getSchool());
+        if (schoolClass == null) {
+            model.addAttribute("error", "Введите корректные данные (класс не найден)");
             return addClassForTeacherPage;
         }
         Teacher teacher = (Teacher) foundedUser;
