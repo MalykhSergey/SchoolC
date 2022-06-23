@@ -1,8 +1,6 @@
 package general.services;
 
 import general.controllers.forms.UserForm;
-import general.entities.SchoolClass;
-import general.entities.Student;
 import general.entities.User;
 import general.reposes.UserRepos;
 import general.utils.CheckDataBoolAnswer;
@@ -10,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 public class UserService {
@@ -53,6 +53,10 @@ public class UserService {
 
     public String getCurrentUserName() {
         return SecurityContextHolder.getContext().getAuthentication().getName();
+    }
+
+    public List<String> getNamesOfTeachersByClassId(Long classId){
+        return userRepos.findNamesOfTeachersByClassId(classId);
     }
 
 }
