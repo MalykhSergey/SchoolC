@@ -56,14 +56,15 @@ public class ClassControllerTester {
     }
 
     public void testAddClassForTeacherPost(User teacher, SchoolClass schoolClass, String status, String message) {
+        Mockito.when(userService.getUserByName(any())).thenReturn(teacher);
         Mockito.when(userService.getCurrentUserName()).thenReturn("Admin");
         Mockito.when(userService.getUserByName("Admin")).thenReturn(admin);
         User operator = new User();
         operator.setRole(Role.Operator);
         Mockito.when(userService.getUserByName("Operator")).thenReturn(operator);
-        Mockito.when(userService.getUserByName(any())).thenReturn(teacher);
         Mockito.when(classService.getClassByNameAndNumberAndSchool(any(),anyInt(),any())).thenReturn(schoolClass);
         classController.addClassForTeacherPost(Mockito.mock(UserForm.class), Mockito.mock(ClassForm.class),model);
+        assertEquals(model.getAttribute(status), message);
         Mockito.when(userService.getCurrentUserName()).thenReturn("Operator");
         classController.addClassForTeacherPost(Mockito.mock(UserForm.class), Mockito.mock(ClassForm.class),model);
         assertEquals(model.getAttribute(status), message);
