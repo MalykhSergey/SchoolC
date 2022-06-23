@@ -120,7 +120,7 @@ public class UserController {
             model.addAttribute("classes", schoolClassService.getAllClassesBySchool(user.getSchool()));
         User foundedUser = userService.getUserByName(userForm.getUserName());
         if (foundedUser == null || foundedUser.getRole() != Role.Student) {
-            model.addAttribute("error", "Введите корректные данные");
+            model.addAttribute("error", "Введите корректные данные (пользователь не найден)");
             return setClassForStudentPage;
         }
         Student student = (Student) foundedUser;
@@ -133,7 +133,7 @@ public class UserController {
             student.setSchoolClass(schoolClass);
             userService.saveUser(student);
         } else {
-            model.addAttribute("error", "Введите корректные данные");
+            model.addAttribute("error", "Введите корректные данные (класс не найден)");
             return setClassForStudentPage;
         }
         model.addAttribute("completed", "Ученик привязан к классу");
