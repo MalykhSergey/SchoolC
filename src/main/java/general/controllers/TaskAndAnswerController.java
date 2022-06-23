@@ -97,7 +97,7 @@ public class TaskAndAnswerController {
         Teacher teacher = (Teacher) userService.getUserByName(userService.getCurrentUserName());
         SchoolClass schoolClass = schoolClassService.getClassById(schoolClassId);
         model.addAttribute("students", schoolClass.getStudents());
-        model.addAttribute("tasks", taskService.getTaskByTeacherAndClass(teacher, schoolClass));
+        model.addAttribute("tasks", taskService.getTasksByClassAndTeacher(schoolClass, teacher));
         model.addAttribute("usersRatings", userRatingDTORepository.findAllUsersRatingByTeacherAndClass(teacher, schoolClass));
         model.addAttribute("schoolClassName", schoolClass.getNameWithNumber());
         model.addAttribute("schoolClassId", schoolClass.getId());

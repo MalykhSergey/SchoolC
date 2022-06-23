@@ -49,6 +49,10 @@ public class TaskService {
         return taskRepos.findTasksBySchoolClassOrderByTimeStamp(schoolClass);
     }
 
+    public List<Task> getTasksByClassAndTeacher(SchoolClass schoolClass, Teacher teacher) {
+        return taskRepos.findAllByTeacherAndSchoolClass(teacher, schoolClass);
+    }
+
     public CheckDataBoolAnswer checkInputData(String name, String body, String dateString,
                                               Teacher teacher, SchoolClass schoolClass) {
         if (name == null || body == null || dateString == null) {
@@ -70,10 +74,6 @@ public class TaskService {
             return new CheckDataBoolAnswer(false, "Введите более короткое описание или название задания");
         }
         return new CheckDataBoolAnswer(true, null);
-    }
-
-    public List<Task> getTaskByTeacherAndClass(Teacher teacher, SchoolClass schoolClass) {
-        return taskRepos.findAllByTeacherAndSchoolClass(teacher, schoolClass);
     }
 
 }
