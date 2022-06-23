@@ -50,7 +50,7 @@ public class TaskService {
     }
 
     public List<Task> getTasksByClassAndTeacher(SchoolClass schoolClass, Teacher teacher) {
-        return taskRepos.findAllByTeacherAndSchoolClass(teacher, schoolClass);
+        return taskRepos.findAllByTeacherAndSchoolClassOrderByTimeStamp(teacher, schoolClass);
     }
 
     public CheckDataBoolAnswer checkInputData(String name, String body, String dateString,

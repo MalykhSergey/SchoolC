@@ -13,7 +13,7 @@ import java.util.List;
 public interface TaskRepos extends CrudRepository<Task, Long> {
     List<Task> findTasksBySchoolClassOrderByTimeStamp(SchoolClass schoolClass);
 
-    List<Task> findAllByTeacherAndSchoolClass(Teacher teacher, SchoolClass schoolClass);
+    List<Task> findAllByTeacherAndSchoolClassOrderByTimeStamp(Teacher teacher, SchoolClass schoolClass);
 
 
     Task findTaskById(Long id);
