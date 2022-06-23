@@ -66,6 +66,6 @@ public class User {
     }
 
     public boolean fastEqualsById(User user) {
-        return (this.id.equals(user.getId())) ? true : false;
+        return id.equals(user.getId());
     }
 }
