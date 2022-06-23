@@ -21,8 +21,8 @@
                 <div class="card-header">
                     <h5>Не решено!</h5>
                     <h6 th:text="'От: '+${task.getTeacher().getName()}"></h6>
-                    <h7>Выполнить до:</h7>
-                    <h7 th:text="${task.getDateTemplate()}"></h7>
+                    <h6>Выполнить до:</h6>
+                    <h6 th:text="${task.getDateTemplate()}"></h6>
                 </div>
                 <div class="card-body">
                     <h5 th:text="${task.getName()}" class="card-title"></h5>
@@ -42,8 +42,8 @@
                     <h5>Решено</h5>
                     <h6 th:text="'От: '+${answer.getTeacher().getName()}"></h6>
                     <h6 th:text="'Оценка: '+${answer.getRating()}"></h6>
-                    <h7>Выполнить до:</h7>
-                    <h7 th:text="${answer.getTask().getDateTemplate()}"></h7>
+                    <h6>Выполнить до:</h6>
+                    <h6 th:text="${answer.getTask().getDateTemplate()}"></h6>
                 </div>
                 <div class="card-body">
                     <h5 th:text="${answer.getTask().getName()}" class="card-title"></h5>

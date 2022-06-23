@@ -8,8 +8,8 @@
     <tr th:each="task : ${tasks}">
         <div class="card">
             <div class="card-header">
-                <h7>Выполнить до:</h7>
-                <h7 th:text="${task.getDateTemplate()}"></h7>
+                <h6>Выполнить до:</h6>
+                <h6 th:text="${task.getDateTemplate()}"></h6>
             </div>
             <div class="card-body">
                 <h5 class="card-title"><a th:text="${task.getName()}"
