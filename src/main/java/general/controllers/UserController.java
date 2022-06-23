@@ -118,10 +118,6 @@ public class UserController {
         User user = userService.getUserByName(userService.getCurrentUserName());
         if (user.getRole() == Role.Operator)
             model.addAttribute("classes", schoolClassService.getAllClassesBySchool(user.getSchool()));
-        if (userForm.getUserName() == null) {
-            model.addAttribute("error", "Введите имя ученика");
-            return setClassForStudentPage;
-        }
         User foundedUser = userService.getUserByName(userForm.getUserName());
         if (foundedUser == null || foundedUser.getRole() != Role.Student) {
             model.addAttribute("error", "Введите корректные данные");
