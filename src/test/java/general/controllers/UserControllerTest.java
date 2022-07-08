@@ -7,7 +7,7 @@ import general.entities.*;
 import general.services.SchoolClassService;
 import general.services.SchoolService;
 import general.services.UserService;
-import general.utils.CheckDataBoolAnswer;
+import general.utils.ResultOfInputDataChecking;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -35,10 +35,10 @@ class UserControllerTest {
     UserController userController = new UserController(userService, passwordEncoder, schoolService, schoolClassService);
 
     void testAddUserPost(String status, String message, School school, SchoolForm schoolForm,
-                         CheckDataBoolAnswer checkDataBoolAnswer, UserForm userForm, ClassForm classForm, SchoolClass schoolClass) {
+                         ResultOfInputDataChecking resultOfInputDataChecking, UserForm userForm, ClassForm classForm, SchoolClass schoolClass) {
         Mockito.when(userService.getUserByName(any())).thenReturn(admin);
         Mockito.when(schoolService.getSchoolByName(any())).thenReturn(school);
-        Mockito.when(userService.checkUserFormForCreate(any())).thenReturn(checkDataBoolAnswer);
+        Mockito.when(userService.checkUserFormForCreate(any())).thenReturn(resultOfInputDataChecking);
         Mockito.when(schoolClassService.getClassById(anyLong())).thenReturn(schoolClass);
         Mockito.when(schoolClassService.getClassByNameAndNumberAndSchool(any(), anyInt(), any())).thenReturn(schoolClass);
         userController.addUserPost(userForm, schoolForm, classForm, model);
@@ -58,18 +58,18 @@ class UserControllerTest {
         ClassForm classForm = new ClassForm();
         classForm.setClassId(100L);
         testAddUserPost("error", "Неверно указан класс", school, schoolForm,
-                new CheckDataBoolAnswer(true, null), userForm, classForm, null);
+                new ResultOfInputDataChecking(true, null), userForm, classForm, null);
         classForm.setClassId(null);
         classForm.setClassName("");
         classForm.setClassNumber(11);
         testAddUserPost("error", "Неверно указан класс", school, schoolForm,
-                new CheckDataBoolAnswer(true, null), userForm, classForm, null);
+                new ResultOfInputDataChecking(true, null), userForm, classForm, null);
     }
 
     @Test
     void testAddUserPostOnUserFormError() {
         testAddUserPost("error", "user form error", school, schoolForm,
-                new CheckDataBoolAnswer(false, "user form error"), null, null, null);
+                new ResultOfInputDataChecking(false, "user form error"), null, null, null);
     }
 
     @Test
@@ -80,7 +80,7 @@ class UserControllerTest {
         classForm.setClassId(100L);
         testAddUserPost("completed", "Пользователь с именем: " + userForm.getUserName() +
                         " был успешно добавлен", school, schoolForm,
-                new CheckDataBoolAnswer(true, null), userForm, classForm, schoolClass);
+                new ResultOfInputDataChecking(true, null), userForm, classForm, schoolClass);
     }
 
     void testSetClassForStudentPost(String status, String message, Student student, SchoolClass schoolClass) {

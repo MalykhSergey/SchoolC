@@ -1,7 +1,7 @@
 package general.controllers;
 
 import general.controllers.forms.SchoolForm;
-import general.utils.CheckDataBoolAnswer;
+import general.utils.ResultOfInputDataChecking;
 import general.services.SchoolService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -27,12 +27,12 @@ public class SchoolController {
     public String addSchoolPost(
             @ModelAttribute("schoolForm") SchoolForm schoolForm,
             Model model) {
-        CheckDataBoolAnswer checkDataBoolAnswer = schoolService.checkSchoolName(schoolForm.getSchoolName());
-        if (checkDataBoolAnswer.isTrue()) {
+        ResultOfInputDataChecking resultOfInputDataChecking = schoolService.checkSchoolName(schoolForm.getSchoolName());
+        if (resultOfInputDataChecking.isDataValid()) {
             schoolService.createSchool(schoolForm.getSchoolName());
             model.addAttribute("completed", "Школа успешно добавлена");
         } else
-            model.addAttribute("error", checkDataBoolAnswer.getAnswer());
+            model.addAttribute("error", resultOfInputDataChecking.getResult());
         return addSchoolPage;
     }
 

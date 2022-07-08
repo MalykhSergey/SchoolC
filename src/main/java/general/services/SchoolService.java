@@ -1,16 +1,14 @@
 package general.services;
 
-import general.entities.SchoolClass;
 import general.entities.Teacher;
 import general.reposes.SchoolClassRepos;
 import general.reposes.UserRepos;
-import general.utils.CheckDataBoolAnswer;
+import general.utils.ResultOfInputDataChecking;
 import general.entities.School;
 import general.reposes.SchoolRepos;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.ui.Model;
 
 import java.util.List;
 
@@ -52,16 +50,16 @@ public class SchoolService {
         schoolClassRepos.incrementClassNumbersBySchoolId(schoolId);
     }
 
-    public CheckDataBoolAnswer checkSchoolName(String name) {
+    public ResultOfInputDataChecking checkSchoolName(String name) {
         if (name == null) {
-            return new CheckDataBoolAnswer(false, "Введите имя!");
+            return new ResultOfInputDataChecking(false, "Введите имя!");
         }
         if (schoolRepos.findSchoolByName(name) != null) {
-            return new CheckDataBoolAnswer(false, "Такая школа уже существует");
+            return new ResultOfInputDataChecking(false, "Такая школа уже существует");
         }
         if (name.length() < 6) {
-            return new CheckDataBoolAnswer(false, "Введите полное название");
+            return new ResultOfInputDataChecking(false, "Введите полное название");
         }
-        return new CheckDataBoolAnswer(true, null);
+        return new ResultOfInputDataChecking(true, null);
     }
 }

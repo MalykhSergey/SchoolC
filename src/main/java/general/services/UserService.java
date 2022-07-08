@@ -3,7 +3,7 @@ package general.services;
 import general.controllers.forms.UserForm;
 import general.entities.User;
 import general.reposes.UserRepos;
-import general.utils.CheckDataBoolAnswer;
+import general.utils.ResultOfInputDataChecking;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -25,26 +25,26 @@ public class UserService {
         userRepos.save(user);
     }
 
-    public CheckDataBoolAnswer checkUserFormForCreate(UserForm userForm) {
+    public ResultOfInputDataChecking checkUserFormForCreate(UserForm userForm) {
         if (userForm.getPassword() == null) {
-            return new CheckDataBoolAnswer(false, "Введите пароль");
+            return new ResultOfInputDataChecking(false, "Введите пароль");
         }
         if (userForm.getPassword().length() < 4) {
-            return new CheckDataBoolAnswer(false, "Введите пароль длинее 5 символов");
+            return new ResultOfInputDataChecking(false, "Введите пароль длинее 5 символов");
         }
         if (userForm.getPassword().length() > 20) {
-            return new CheckDataBoolAnswer(false, "Ваш пароль слишком длинный!");
+            return new ResultOfInputDataChecking(false, "Ваш пароль слишком длинный!");
         }
         if (userForm.getUserName() == null) {
-            return new CheckDataBoolAnswer(false, "Введите имя");
+            return new ResultOfInputDataChecking(false, "Введите имя");
         }
         if (userForm.getUserName().length() > 25) {
-            return new CheckDataBoolAnswer(false, "Введите имя короче 25 символов");
+            return new ResultOfInputDataChecking(false, "Введите имя короче 25 символов");
         }
         if (userRepos.findUserByName(userForm.getUserName()) != null) {
-            return new CheckDataBoolAnswer(false, "Введите другое имя");
+            return new ResultOfInputDataChecking(false, "Введите другое имя");
         }
-        return new CheckDataBoolAnswer(true, null);
+        return new ResultOfInputDataChecking(true, null);
     }
 
     public User getUserByName(String name){

@@ -4,7 +4,7 @@ import general.entities.SchoolClass;
 import general.entities.Task;
 import general.entities.Teacher;
 import general.reposes.TaskRepos;
-import general.utils.CheckDataBoolAnswer;
+import general.utils.ResultOfInputDataChecking;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -53,10 +53,10 @@ public class TaskService {
         return taskRepos.findAllByTeacherAndSchoolClassOrderByTimeStamp(teacher, schoolClass);
     }
 
-    public CheckDataBoolAnswer checkInputData(String name, String body, String dateString,
-                                              Teacher teacher, SchoolClass schoolClass) {
+    public ResultOfInputDataChecking checkInputData(String name, String body, String dateString,
+                                                    Teacher teacher, SchoolClass schoolClass) {
         if (name == null || body == null || dateString == null) {
-            return new CheckDataBoolAnswer(false, "Введите все значения");
+            return new ResultOfInputDataChecking(false, "Введите все значения");
         }
         boolean bool = false;
         for (SchoolClass checkSchoolClass : teacher.getSchoolClassSet()) {
@@ -65,15 +65,15 @@ public class TaskService {
             }
         }
         if (!bool) {
-            return new CheckDataBoolAnswer(false, "Неверный класс");
+            return new ResultOfInputDataChecking(false, "Неверный класс");
         }
         if (name.length() < 5 || body.length() < 25) {
-            return new CheckDataBoolAnswer(false, "Введите более полное описание или название задания");
+            return new ResultOfInputDataChecking(false, "Введите более полное описание или название задания");
         }
         if (name.length() > 80 || body.length() > 2000) {
-            return new CheckDataBoolAnswer(false, "Введите более короткое описание или название задания");
+            return new ResultOfInputDataChecking(false, "Введите более короткое описание или название задания");
         }
-        return new CheckDataBoolAnswer(true, null);
+        return new ResultOfInputDataChecking(true, null);
     }
 
 }
