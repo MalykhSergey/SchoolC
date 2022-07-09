@@ -38,6 +38,9 @@ public class AnswerService {
     public List<Answer> getAnswersByStudent(Student student){
         return answerRepos.findAllByStudent(student);
     }
+    public List<Answer> getAnswersByStudentAndTeacher(Student student, Teacher teacher){
+        return answerRepos.findAllByStudentAndTeacher(student, teacher);
+    }
 
     public Answer getAnswerById(Long id){
         return answerRepos.findAnswerById(id);
