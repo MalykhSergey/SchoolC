@@ -14,8 +14,8 @@ public class Student extends User {
     public Student() {
     }
 
-    public Student(String user, String password, Role role, School school, SchoolClass schoolClass) {
-        super(user, password, school, role);
+    public Student(String user, String password, School school, SchoolClass schoolClass) {
+        super(user, password, school, Role.Student);
         this.answers = new HashSet<>();
         this.setSchoolClass(schoolClass);
     }

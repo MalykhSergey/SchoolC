@@ -1,7 +1,6 @@
 package general.entities;
 
 import javax.persistence.*;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -24,8 +23,8 @@ public class Teacher extends User {
         schoolClassSet.add(schoolClass);
     }
 
-    public Teacher(String name, String password, School school, Role role) {
-        super(name, password, school, role);
+    public Teacher(String name, String password, School school) {
+        super(name, password, school, Role.Teacher);
         schoolClassSet = new HashSet<>();
     }
 

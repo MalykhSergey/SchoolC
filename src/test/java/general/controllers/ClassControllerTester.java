@@ -23,7 +23,7 @@ public class ClassControllerTester {
     SchoolClass schoolClass = Mockito.mock(SchoolClass.class);
     School school = Mockito.mock(School.class);
     User admin = new User("Admin", "password", school, Role.Admin);
-    Teacher teacher = new Teacher("Teacher", "password", school, Role.Teacher);
+    Teacher teacher = new Teacher("Teacher", "password", school);
     Model model = new ConcurrentModel();
 
     public void testAddClassPost(User user, School school, boolean bool1, boolean bool2, String status, String message) {

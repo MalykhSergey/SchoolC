@@ -28,7 +28,7 @@ class UserControllerTest {
     User admin = new User("Admin", null, null, Role.Admin);
     User operator = new User("Operator", null, null, Role.Operator);
     SchoolClass schoolClass = new SchoolClass("Class",11,school);
-    Student student = new Student("Student", null, Role.Student, school, schoolClass);
+    Student student = new Student("Student", null, school, schoolClass);
     {
         schoolForm.setSchoolName("School");
     }

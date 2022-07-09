@@ -78,12 +78,12 @@ public class UserController {
                         return addUserPage;
                     }
                     Student student = new Student(userForm.getUserName(),
-                            passwordEncoder.encode(userForm.getPassword()), Role.Student, school, schoolClass);
+                            passwordEncoder.encode(userForm.getPassword()), school, schoolClass);
                     userService.saveUser(student);
                     break;
                 case Teacher:
                     Teacher teacher = new Teacher(userForm.getUserName(),
-                            passwordEncoder.encode(userForm.getPassword()), school, Role.Teacher);
+                            passwordEncoder.encode(userForm.getPassword()), school);
                     userService.saveUser(teacher);
                     break;
                 case Operator:

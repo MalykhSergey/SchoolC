@@ -28,14 +28,14 @@ class HomeControllerTester {
 
     @Test
     public void homeForTeacher() {
-        user = new Teacher("Teacher", "password", null, Role.Teacher);
+        user = new Teacher("Teacher", "password", null);
         Mockito.when(userService.getUserByName(any())).thenReturn(user);
         assertEquals(homeController.home(null,model), "TeacherHome");
     }
 
     @Test
     public void homeForStudent() {
-        user = new Student("Student", "password", Role.Student, null, Mockito.mock(SchoolClass.class));
+        user = new Student("Student", "password", null, Mockito.mock(SchoolClass.class));
         Mockito.when(userService.getUserByName(any())).thenReturn(user);
         assertEquals(homeController.home(null,model), "StudentHome");
     }

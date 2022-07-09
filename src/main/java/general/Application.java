@@ -57,7 +57,7 @@ public class Application {
                     schoolClassService.createNewSchoolClass(new SchoolClass(Integer.toString(j), i, school));
             List<Teacher> teachers = new ArrayList<>();
             for (int i = 0; i < 4; i++) {
-                Teacher teacher = new Teacher("Учитель " + i, bCryptPasswordEncoder.encode("12345"), school, Role.Teacher);
+                Teacher teacher = new Teacher("Учитель " + i, bCryptPasswordEncoder.encode("12345"), school);
                 teachers.add(teacher);
             }
             String taskExampleBody = "Используя рычажные весы с разновесом, мензурку, стакан с водой," +
@@ -83,7 +83,7 @@ public class Application {
                 }
                 String studentName = "Ученик " + currentClass.getNameWithNumber();
                 Student student = new Student(studentName, bCryptPasswordEncoder.encode("12345"),
-                        Role.Student, school, currentClass);
+                        school, currentClass);
                 userService.saveUser(student);
             }
         }
