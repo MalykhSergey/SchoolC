@@ -35,13 +35,16 @@ public class HomeController {
             Student student = (Student) (user);
             List<Task> newTasks = new ArrayList<>();
             List<Task> tasks;
+            List<Answer> answers;
             if (teacherName != null) {
                 tasks = taskService.getTasksByClassAndTeacher(student.getSchoolClass(),
                         (Teacher) userService.getUserByName(teacherName));
+                answers = answerService.getAnswersByStudentAndTeacher(student, (Teacher) userService.getUserByName(teacherName));
                 model.addAttribute("teacherName", teacherName);
-            } else
+            } else {
                 tasks = taskService.getTasksByClass(student.getSchoolClass());
-            List<Answer> answers = answerService.getAnswersByStudent(student);
+                answers = answerService.getAnswersByStudent(student);
+            }
             Timestamp now = new Timestamp(System.currentTimeMillis());
             for (Task task : tasks) {
                 if (now.before(task.getTimeStamp())) {

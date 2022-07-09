@@ -16,6 +16,9 @@ import org.springframework.context.event.EventListener;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @SpringBootApplication
 public class Application {
     @Autowired
@@ -49,22 +52,14 @@ public class Application {
             User operator = new User("Operator", bCryptPasswordEncoder.encode("12345"),
                     school, Role.Operator);
             userService.saveUser(operator);
-            String teacherName = "Фролов Константин Романович (Учитель Физики)";
-            Teacher teacher = new Teacher(teacherName, bCryptPasswordEncoder.encode("12345"),
-                    school, Role.Teacher);
-            SchoolClass schoolClass = null;
-            for (int i = 1; i < 12; i++) {
-                for (int j = 1; j < 4; j++) {
-                    schoolClass = new SchoolClass(Integer.toString(j), i, school);
-                    schoolClassRepos.save(schoolClass);
-                    teacher.addSchoolClass(schoolClass);
-                }
+            for (int i = 1; i <= 11; i++)
+                for (int j = 1; j <= 4; j++)
+                    schoolClassService.createNewSchoolClass(new SchoolClass(Integer.toString(j), i, school));
+            List<Teacher> teachers = new ArrayList<>();
+            for (int i = 0; i < 4; i++) {
+                Teacher teacher = new Teacher("Учитель " + i, bCryptPasswordEncoder.encode("12345"), school, Role.Teacher);
+                teachers.add(teacher);
             }
-            userService.saveUser(teacher);
-            String studentName = "Сидоров";
-            Student student = new Student(studentName, bCryptPasswordEncoder.encode("12345"),
-                    Role.Student, school, schoolClass);
-            userService.saveUser(student);
             String taskExampleBody = "Используя рычажные весы с разновесом, мензурку, стакан с водой," +
                     " цилиндр, соберите экспериментальную установку для измерения плотности материала, из которого изготовлен цилиндр. \n" +
                     "\n" +
@@ -77,11 +72,19 @@ public class Application {
                     "3) укажите результаты измерения массы цилиндра и его объема;\n" +
                     "\n" +
                     "4) запишите числовое значение плотности материала цилиндра.";
-            for (int i = 1; i < 12; i++) {
-                for (int j = 1; j < 4; j++) {
-                    taskService.createTask("Задача №" + i + "." + j, taskExampleBody, "2022-10-28T19:55",
-                            (schoolClassService.getClassByNameAndNumberAndSchool(Integer.toString(j), i, school)), teacher);
+            for (SchoolClass currentClass : schoolClassService.getAllClassesBySchool(school)) {
+                for (Teacher teacher : teachers) {
+                    teacher.addSchoolClass(currentClass);
+                    userService.saveUser(teacher);
+                    for (int j = 1; j < 4; j++) {
+                        taskService.createTask("Задача №" + j + "." + j * j + "("+teacher.getName()+")", taskExampleBody, "2022-10-28T19:55",
+                                currentClass, teacher);
+                    }
                 }
+                String studentName = "Ученик " + currentClass.getNameWithNumber();
+                Student student = new Student(studentName, bCryptPasswordEncoder.encode("12345"),
+                        Role.Student, school, currentClass);
+                userService.saveUser(student);
             }
         }
     }
