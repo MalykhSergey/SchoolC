@@ -31,15 +31,19 @@ public class AnswerService {
         answerRepos.answerChecked(answer.getId(), Byte.parseByte(rating), comment);
     }
 
-    public Answer getByStudentAndTask(Student student, Task task){
+    public Answer getByStudentAndTask(Student student, Task task) {
         return answerRepos.findByStudentAndTask(student, task);
     }
 
-    public List<Answer> getAnswersByStudent(Student student){
+    public List<Answer> getAnswersByStudent(Student student) {
         return answerRepos.findAllByStudent(student);
     }
 
-    public Answer getAnswerById(Long id){
+    public List<Answer> getAnswersByStudentAndTeacher(Student student, Teacher teacher) {
+        return answerRepos.findAllByStudentAndTeacher(student, teacher);
+    }
+
+    public Answer getAnswerById(Long id) {
         return answerRepos.findAnswerById(id);
     }
 

@@ -12,10 +12,11 @@ public interface AnswerRepos extends CrudRepository<Answer, Long> {
 
     List<Answer> findAllByStudent(Student student);
 
+    List<Answer> findAllByStudentAndTeacher(Student student, Teacher teacher);
+
     @Modifying
     @Query(value = "UPDATE answers SET rating = ?2, comment = ?3 WHERE id = ?1", nativeQuery = true)
     void answerChecked(Long answerId, Byte rating, String comment);
 
     Answer findByStudentAndTask(Student student, Task task);
-
 }
