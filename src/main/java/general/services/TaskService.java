@@ -4,7 +4,7 @@ import general.entities.SchoolClass;
 import general.entities.Task;
 import general.entities.Teacher;
 import general.reposes.TaskRepos;
-import general.utils.ResultOfInputDataChecking;
+import general.utils.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -53,10 +53,10 @@ public class TaskService {
         return taskRepos.findAllByTeacherAndSchoolClassOrderByTimeStamp(teacher, schoolClass);
     }
 
-    public ResultOfInputDataChecking checkInputData(String name, String body, String dateString,
-                                                    Teacher teacher, SchoolClass schoolClass) {
+    public Result<String> checkInputData(String name, String body, String dateString,
+                                 Teacher teacher, SchoolClass schoolClass) {
         if (name == null || body == null || dateString == null) {
-            return new ResultOfInputDataChecking(false, "Введите все значения");
+            return new Result<>(false, "Введите все значения");
         }
         boolean bool = false;
         for (SchoolClass checkSchoolClass : teacher.getSchoolClassSet()) {
@@ -65,15 +65,15 @@ public class TaskService {
             }
         }
         if (!bool) {
-            return new ResultOfInputDataChecking(false, "Неверный класс");
+            return new Result<>(false, "Неверный класс");
         }
         if (name.length() < 5 || body.length() < 25) {
-            return new ResultOfInputDataChecking(false, "Введите более полное описание или название задания");
+            return new Result<>(false, "Введите более полное описание или название задания");
         }
         if (name.length() > 80 || body.length() > 2000) {
-            return new ResultOfInputDataChecking(false, "Введите более короткое описание или название задания");
+            return new Result<>(false, "Введите более короткое описание или название задания");
         }
-        return new ResultOfInputDataChecking(true, null);
+        return new Result<>(true, null);
     }
 
 }

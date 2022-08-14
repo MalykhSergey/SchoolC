@@ -1,10 +1,10 @@
 package general.utils;
 
-public class ResultOfInputDataChecking {
+public class Result<T> {
     private boolean bool;
-    private String result;
+    private T result;
 
-    public ResultOfInputDataChecking(boolean bool, String result) {
+    public Result(boolean bool, T result) {
         this.bool = bool;
         this.result = result;
     }
@@ -13,7 +13,7 @@ public class ResultOfInputDataChecking {
         return bool;
     }
 
-    public String getResult() {
+    public T getResult() {
         return result;
     }
 }

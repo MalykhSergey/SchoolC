@@ -7,7 +7,7 @@ import general.entities.*;
 import general.services.SchoolClassService;
 import general.services.SchoolService;
 import general.services.UserService;
-import general.utils.ResultOfInputDataChecking;
+import general.utils.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -61,8 +61,8 @@ public class UserController {
                 }
             }
         }
-        ResultOfInputDataChecking resultOfInputDataChecking = userService.checkUserFormForCreate(userForm);
-        if (resultOfInputDataChecking.isDataValid()) {
+        Result<String> result = userService.checkUserFormForCreate(userForm);
+        if (result.isDataValid()) {
             if (school == null) {
                 school = user.getSchool();
             }
@@ -97,7 +97,7 @@ public class UserController {
             }
             model.addAttribute("completed", "Пользователь с именем: " + userForm.getUserName() + " был успешно добавлен");
         } else
-            model.addAttribute("error", resultOfInputDataChecking.getResult());
+            model.addAttribute("error", result.getResult());
         return addUserPage;
     }
 

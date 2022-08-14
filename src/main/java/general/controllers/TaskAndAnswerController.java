@@ -7,7 +7,7 @@ import general.services.AnswerService;
 import general.services.SchoolClassService;
 import general.services.TaskService;
 import general.services.UserService;
-import general.utils.ResultOfInputDataChecking;
+import general.utils.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -61,13 +61,13 @@ public class TaskAndAnswerController {
         Teacher teacher = (Teacher) userService.getUserByName(userService.getCurrentUserName());
         model.addAttribute("classes", teacher.getSchoolClassSet());
         SchoolClass schoolClass = schoolClassService.getClassById(classForm.getClassId());
-        ResultOfInputDataChecking resultOfInputDataChecking = taskService.checkInputData(name, body, date, teacher, schoolClass);
+        Result<String> result = taskService.checkInputData(name, body, date, teacher, schoolClass);
         model.addAttribute("schoolClasses", teacher.getSchoolClassSet());
-        if (resultOfInputDataChecking.isDataValid()) {
+        if (result.isDataValid()) {
             taskService.createTask(name, body, date, schoolClass, teacher);
             model.addAttribute("completed", "Задача для " + schoolClass.getNameWithNumber() + "класса добавлена");
         } else {
-            model.addAttribute("error", resultOfInputDataChecking.getResult());
+            model.addAttribute("error", result.getResult());
         }
         return addTaskPage;
     }

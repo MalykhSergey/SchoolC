@@ -3,7 +3,7 @@ package general.services;
 import general.entities.Teacher;
 import general.reposes.SchoolClassRepos;
 import general.reposes.UserRepos;
-import general.utils.ResultOfInputDataChecking;
+import general.utils.Result;
 import general.entities.School;
 import general.reposes.SchoolRepos;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,16 +50,16 @@ public class SchoolService {
         schoolClassRepos.incrementClassNumbersBySchoolId(schoolId);
     }
 
-    public ResultOfInputDataChecking checkSchoolName(String name) {
+    public Result<String> checkSchoolName(String name) {
         if (name == null) {
-            return new ResultOfInputDataChecking(false, "Введите имя!");
+            return new Result<>(false, "Введите имя!");
         }
         if (schoolRepos.findSchoolByName(name) != null) {
-            return new ResultOfInputDataChecking(false, "Такая школа уже существует");
+            return new Result<>(false, "Такая школа уже существует");
         }
         if (name.length() < 6) {
-            return new ResultOfInputDataChecking(false, "Введите полное название");
+            return new Result<>(false, "Введите полное название");
         }
-        return new ResultOfInputDataChecking(true, null);
+        return new Result<>(true, null);
     }
 }

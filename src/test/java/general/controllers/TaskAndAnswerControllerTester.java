@@ -7,7 +7,7 @@ import general.services.AnswerService;
 import general.services.SchoolClassService;
 import general.services.TaskService;
 import general.services.UserService;
-import general.utils.ResultOfInputDataChecking;
+import general.utils.Result;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.ui.ConcurrentModel;
@@ -37,12 +37,12 @@ class TaskAndAnswerControllerTester {
 
     @Test
     void testAddTaskPost() {
-        Mockito.when(taskService.checkInputData(any(), any(), any(), any(), any())).thenReturn(new ResultOfInputDataChecking(true, null));
+        Mockito.when(taskService.checkInputData(any(), any(), any(), any(), any())).thenReturn(new Result<>(true, null));
         Mockito.when(userService.getUserByName(any())).thenReturn(teacher);
         Mockito.when(classService.getClassById(any())).thenReturn(schoolClass);
         taskAndAnswerController.addTaskPost(null, null, classForm, null, model);
         assertEquals(model.getAttribute("completed"), "Задача для " + schoolClass.getNameWithNumber() + "класса добавлена");
-        Mockito.when(taskService.checkInputData(any(), any(), any(), any(), any())).thenReturn(new ResultOfInputDataChecking(true, null));
+        Mockito.when(taskService.checkInputData(any(), any(), any(), any(), any())).thenReturn(new Result<>(true, null));
         taskAndAnswerController.addTaskPost(null, null, classForm, null, model);
         assertNull(model.getAttribute("error"));
     }

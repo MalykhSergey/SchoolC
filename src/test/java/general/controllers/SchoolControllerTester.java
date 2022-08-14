@@ -2,7 +2,7 @@ package general.controllers;
 
 import general.controllers.forms.SchoolForm;
 import general.services.SchoolService;
-import general.utils.ResultOfInputDataChecking;
+import general.utils.Result;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.ui.ConcurrentModel;
@@ -19,14 +19,14 @@ public class SchoolControllerTester {
 
     @Test
     public void testAddSchoolPostOnCompleted() {
-        Mockito.when(schoolService.checkSchoolName(any())).thenReturn(new ResultOfInputDataChecking(true,""));
+        Mockito.when(schoolService.checkSchoolName(any())).thenReturn(new Result<>(true, ""));
         schoolController.addSchoolPost(schoolForm,model);
         assertEquals(model.getAttribute("completed"), "Школа успешно добавлена");
     }
 
     @Test
     public void testAddSchoolPostOnSchoolError(){
-        Mockito.when(schoolService.checkSchoolName(any())).thenReturn(new ResultOfInputDataChecking(false,"Error!"));
+        Mockito.when(schoolService.checkSchoolName(any())).thenReturn(new Result<>(false, "Error!"));
         schoolController.addSchoolPost(schoolForm,model);
         assertEquals(model.getAttribute("error"), "Error!");
     }
