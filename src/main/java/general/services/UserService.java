@@ -84,7 +84,7 @@ public class UserService {
         if (password == null) {
             return Result.PasswordIsNull;
         }
-        if (password.length() < 4) {
+        if (password.length() < 5) {
             return Result.TooShortPassword;
         }
         if (password.length() > 20) {
@@ -93,7 +93,10 @@ public class UserService {
         if (userName == null) {
             return Result.NameIsNull;
         }
-        if (userName.length() > 25) {
+        if (userName.length() < 5) {
+            return Result.TooShortName;
+        }
+        if (userName.length() > 55) {
             return Result.TooLongName;
         }
         if (userRepos.findUserByName(userName) != null) {
