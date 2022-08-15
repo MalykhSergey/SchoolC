@@ -75,7 +75,7 @@
 </div>
 <div id="dinContainer" class="form-group" th:object="${classForm}" th:fragment="classForm">
     <label for="className">Название класса</label>
-    <select required name="classId" id="className" sec:authorize="hasAnyRole('ROLE_OPERATOR', 'ROLE_TEACHER')">
+    <select name="classId" id="className" sec:authorize="hasAnyRole('ROLE_OPERATOR', 'ROLE_TEACHER')">
         <option th:each="schoolClass : ${classes}"
                 th:text="${schoolClass.getNameWithNumber()}"
                 th:value="${schoolClass.getId()}">
@@ -95,7 +95,7 @@
             <option value="10">10</option>
             <option value="11">11</option>
         </select>
-        <input required type="text" id="className" name="className" class="form-control" placeholder="Введите класс"
+        <input type="text" id="className" name="className" class="form-control" placeholder="Введите класс"
                th:value="${classForm?.getClassName()}">
     </div>
 </div>
