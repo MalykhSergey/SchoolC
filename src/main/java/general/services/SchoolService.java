@@ -50,16 +50,16 @@ public class SchoolService {
         schoolClassRepos.incrementClassNumbersBySchoolId(schoolId);
     }
 
-    public Result<String> checkSchoolName(String name) {
+    public Result checkSchoolName(String name) {
         if (name == null) {
-            return new Result<>(false, "Введите имя!");
+            return Result.NameIsNull;
         }
         if (schoolRepos.findSchoolByName(name) != null) {
-            return new Result<>(false, "Такая школа уже существует");
+            return Result.SchoolIsExists;
         }
         if (name.length() < 6) {
-            return new Result<>(false, "Введите полное название");
+            return Result.RequiredFullName;
         }
-        return new Result<>(true, null);
+        return Result.Ok;
     }
 }

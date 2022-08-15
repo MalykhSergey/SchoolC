@@ -37,12 +37,12 @@ class TaskAndAnswerControllerTester {
 
     @Test
     void testAddTaskPost() {
-        Mockito.when(taskService.checkInputData(any(), any(), any(), any(), any())).thenReturn(new Result<>(true, null));
+        Mockito.when(taskService.checkInputData(any(), any(), any(), any(), any())).thenReturn(Result.Ok);
         Mockito.when(userService.getUserByName(any())).thenReturn(teacher);
         Mockito.when(classService.getClassById(any())).thenReturn(schoolClass);
         taskAndAnswerController.addTaskPost(null, null, classForm, null, model);
         assertEquals(model.getAttribute("completed"), "Задача для " + schoolClass.getNameWithNumber() + "класса добавлена");
-        Mockito.when(taskService.checkInputData(any(), any(), any(), any(), any())).thenReturn(new Result<>(true, null));
+        Mockito.when(taskService.checkInputData(any(), any(), any(), any(), any())).thenReturn(Result.Ok);
         taskAndAnswerController.addTaskPost(null, null, classForm, null, model);
         assertNull(model.getAttribute("error"));
     }

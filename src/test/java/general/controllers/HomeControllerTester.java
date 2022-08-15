@@ -4,12 +4,12 @@ import general.entities.*;
 import general.services.AnswerService;
 import general.services.TaskService;
 import general.services.UserService;
+import general.utils.UserDetailsExtended;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.ui.Model;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
 
 class HomeControllerTester {
     UserService userService = Mockito.mock(UserService.class);
@@ -18,25 +18,26 @@ class HomeControllerTester {
     Model model = Mockito.mock(Model.class);
     HomeController homeController = new HomeController(userService, answerService, taskService);
     User user;
+    UserDetailsExtended userDetailsExtended;
 
     @Test
     public void homeForAdmin() {
-        user = new User("Admin", "password", null, null);
-        Mockito.when(userService.getUserByName(any())).thenReturn(user);
-        assertEquals(homeController.home(null,model), "Home");
+        user = new User("Admin", "password", null, Role.Admin);
+        userDetailsExtended = new UserDetailsExtended(user);
+        assertEquals(homeController.home(null, userDetailsExtended, model), "Home");
     }
 
     @Test
     public void homeForTeacher() {
         user = new Teacher("Teacher", "password", null);
-        Mockito.when(userService.getUserByName(any())).thenReturn(user);
-        assertEquals(homeController.home(null,model), "TeacherHome");
+        userDetailsExtended = new UserDetailsExtended(user);
+        assertEquals(homeController.home(null, userDetailsExtended, model), "TeacherHome");
     }
 
     @Test
     public void homeForStudent() {
         user = new Student("Student", "password", null, Mockito.mock(SchoolClass.class));
-        Mockito.when(userService.getUserByName(any())).thenReturn(user);
-        assertEquals(homeController.home(null,model), "StudentHome");
+        userDetailsExtended = new UserDetailsExtended(user);
+        assertEquals(homeController.home(null,userDetailsExtended, model), "StudentHome");
     }
 }

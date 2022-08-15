@@ -4,7 +4,9 @@ import general.entities.*;
 import general.services.AnswerService;
 import general.services.TaskService;
 import general.services.UserService;
+import general.utils.UserDetailsExtended;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,16 +31,17 @@ public class HomeController {
     }
 
     @GetMapping(value = "/")
-    public String home(@RequestParam(required = false) String teacherName, Model model) {
-        User user = userService.getUserByName(userService.getCurrentUserName());
-        if (user.getRole() == Role.Student) {
-            Student student = (Student) (user);
+    public String home(@RequestParam(required = false) String teacherName,
+                       @AuthenticationPrincipal UserDetailsExtended userDetailsExtended,
+                       Model model) {
+        User authenticatedUser = userDetailsExtended.getUser();
+        if (authenticatedUser.getRole() == Role.Student) {
+            Student student = (Student) authenticatedUser;
             List<Task> newTasks = new ArrayList<>();
             List<Task> tasks;
             List<Answer> answers;
             if (teacherName != null) {
-                tasks = taskService.getTasksByClassAndTeacher(student.getSchoolClass(),
-                        (Teacher) userService.getUserByName(teacherName));
+                tasks = taskService.getTasksByClassAndTeacher(student.getSchoolClass(), (Teacher) userService.getUserByName(teacherName));
                 answers = answerService.getAnswersByStudentAndTeacher(student, (Teacher) userService.getUserByName(teacherName));
                 model.addAttribute("teacherName", teacherName);
             } else {
@@ -59,8 +62,8 @@ public class HomeController {
             model.addAttribute("teacherNames", userService.getNamesOfTeachersByClassId(student.getSchoolClass().getId()));
             return "StudentHome";
         }
-        if (user.getRole() == Role.Teacher) {
-            Teacher teacher = (Teacher) (user);
+        if (authenticatedUser.getRole() == Role.Teacher) {
+            Teacher teacher = (Teacher) (authenticatedUser);
             model.addAttribute("schoolClasses", teacher.getSchoolClassSet());
             return "TeacherHome";
         }

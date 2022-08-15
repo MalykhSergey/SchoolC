@@ -27,12 +27,12 @@ public class SchoolController {
     public String addSchoolPost(
             @ModelAttribute("schoolForm") SchoolForm schoolForm,
             Model model) {
-        Result<String> result = schoolService.checkSchoolName(schoolForm.getSchoolName());
-        if (result.isDataValid()) {
+        Result result = schoolService.checkSchoolName(schoolForm.getSchoolName());
+        if (result == Result.Ok) {
             schoolService.createSchool(schoolForm.getSchoolName());
             model.addAttribute("completed", "Школа успешно добавлена");
         } else
-            model.addAttribute("error", result.getResult());
+            model.addAttribute("error", result.getError());
         return addSchoolPage;
     }
 

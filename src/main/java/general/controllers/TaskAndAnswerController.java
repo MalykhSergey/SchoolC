@@ -61,13 +61,13 @@ public class TaskAndAnswerController {
         Teacher teacher = (Teacher) userService.getUserByName(userService.getCurrentUserName());
         model.addAttribute("classes", teacher.getSchoolClassSet());
         SchoolClass schoolClass = schoolClassService.getClassById(classForm.getClassId());
-        Result<String> result = taskService.checkInputData(name, body, date, teacher, schoolClass);
+        Result result = taskService.checkInputData(name, body, date, teacher, schoolClass);
         model.addAttribute("schoolClasses", teacher.getSchoolClassSet());
-        if (result.isDataValid()) {
+        if (result == Result.Ok) {
             taskService.createTask(name, body, date, schoolClass, teacher);
             model.addAttribute("completed", "Задача для " + schoolClass.getNameWithNumber() + "класса добавлена");
         } else {
-            model.addAttribute("error", result.getResult());
+            model.addAttribute("error", result.getError());
         }
         return addTaskPage;
     }

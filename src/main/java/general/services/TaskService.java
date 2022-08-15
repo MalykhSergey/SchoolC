@@ -53,10 +53,10 @@ public class TaskService {
         return taskRepos.findAllByTeacherAndSchoolClassOrderByTimeStamp(teacher, schoolClass);
     }
 
-    public Result<String> checkInputData(String name, String body, String dateString,
+    public Result checkInputData(String name, String body, String dateString,
                                  Teacher teacher, SchoolClass schoolClass) {
         if (name == null || body == null || dateString == null) {
-            return new Result<>(false, "Введите все значения");
+            return Result.AllValuesRequired;
         }
         boolean bool = false;
         for (SchoolClass checkSchoolClass : teacher.getSchoolClassSet()) {
@@ -65,15 +65,15 @@ public class TaskService {
             }
         }
         if (!bool) {
-            return new Result<>(false, "Неверный класс");
+            return Result.InvalidClassName;
         }
         if (name.length() < 5 || body.length() < 25) {
-            return new Result<>(false, "Введите более полное описание или название задания");
+            return Result.TooShortDescription;
         }
         if (name.length() > 80 || body.length() > 2000) {
-            return new Result<>(false, "Введите более короткое описание или название задания");
+            return Result.TooLongDescription;
         }
-        return new Result<>(true, null);
+        return Result.Ok;
     }
 
 }

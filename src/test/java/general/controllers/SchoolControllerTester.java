@@ -19,15 +19,15 @@ public class SchoolControllerTester {
 
     @Test
     public void testAddSchoolPostOnCompleted() {
-        Mockito.when(schoolService.checkSchoolName(any())).thenReturn(new Result<>(true, ""));
+        Mockito.when(schoolService.checkSchoolName(any())).thenReturn(Result.Ok);
         schoolController.addSchoolPost(schoolForm,model);
         assertEquals(model.getAttribute("completed"), "Школа успешно добавлена");
     }
 
     @Test
     public void testAddSchoolPostOnSchoolError(){
-        Mockito.when(schoolService.checkSchoolName(any())).thenReturn(new Result<>(false, "Error!"));
+        Mockito.when(schoolService.checkSchoolName(any())).thenReturn(Result.InvalidSchoolName);
         schoolController.addSchoolPost(schoolForm,model);
-        assertEquals(model.getAttribute("error"), "Error!");
+        assertEquals(model.getAttribute("error"), Result.InvalidSchoolName.getError());
     }
 }
