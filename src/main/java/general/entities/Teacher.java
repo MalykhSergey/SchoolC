@@ -7,21 +7,13 @@ import java.util.Set;
 @Entity
 public class Teacher extends User {
     @OrderBy("classNumber,name")
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "teacher_classes",
             joinColumns = @JoinColumn(name = "teacher_id"),
             inverseJoinColumns = @JoinColumn(name = "class_id")
     )
-    private Set<SchoolClass> schoolClassSet;
-
-    public Set<SchoolClass> getSchoolClassSet() {
-        return schoolClassSet;
-    }
-
-    public void addSchoolClass(SchoolClass schoolClass) {
-        schoolClassSet.add(schoolClass);
-    }
+    private final Set<SchoolClass> schoolClassSet;
 
     public Teacher(String name, String password, School school) {
         super(name, password, school, Role.Teacher);
@@ -30,5 +22,13 @@ public class Teacher extends User {
 
     public Teacher() {
         schoolClassSet = new HashSet<>();
+    }
+
+    public Set<SchoolClass> getSchoolClassSet() {
+        return schoolClassSet;
+    }
+
+    public void addSchoolClass(SchoolClass schoolClass) {
+        schoolClassSet.add(schoolClass);
     }
 }

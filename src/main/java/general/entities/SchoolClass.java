@@ -1,7 +1,7 @@
 package general.entities;
 
-import java.util.Set;
 import javax.persistence.*;
+import java.util.Set;
 
 @Table(name = "classes")
 @Entity
@@ -13,12 +13,12 @@ public class SchoolClass {
     private int classNumber;
     @ManyToOne
     private School school;
-    @OneToMany(mappedBy = "schoolClass", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "schoolClass", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
     private Set<Task> tasks;
-    @OneToMany(mappedBy = "schoolClass", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "schoolClass", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
     private Set<Student> students;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "teacher_classes",
             joinColumns = @JoinColumn(name = "class_id"),
@@ -40,6 +40,10 @@ public class SchoolClass {
         return students;
     }
 
+    public void setStudents(Set<Student> students) {
+        this.students = students;
+    }
+
     public Long getId() {
         return id;
     }
@@ -52,12 +56,12 @@ public class SchoolClass {
         return name;
     }
 
-    public String getNameWithNumber() {
-        return classNumber + "-" + name;
-    }
-
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getNameWithNumber() {
+        return classNumber + "-" + name;
     }
 
     public int getClassNumber() {
@@ -72,15 +76,16 @@ public class SchoolClass {
         return school;
     }
 
+    public void setSchool(School school) {
+        this.school = school;
+    }
+
     public Set<Task> getTasks() {
         return tasks;
     }
+
     public void setTasks(Set<Task> tasks) {
         this.tasks = tasks;
-    }
-
-    public void setStudents(Set<Student> students) {
-        this.students = students;
     }
 
     public Set<Teacher> getTeachers() {
@@ -91,11 +96,7 @@ public class SchoolClass {
         this.teachers = teachers;
     }
 
-    public void setSchool(School school) {
-        this.school = school;
-    }
-
     public boolean fastEqualsById(SchoolClass schoolClass) {
-        return (this.id.equals(schoolClass.getId())) ? true : false;
+        return this.id.equals(schoolClass.getId());
     }
 }
