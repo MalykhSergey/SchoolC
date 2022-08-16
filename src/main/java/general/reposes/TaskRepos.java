@@ -1,12 +1,9 @@
 package general.reposes;
 
-import general.entities.Teacher;
-import org.springframework.data.jpa.repository.Modifying;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.CrudRepository;
-
 import general.entities.SchoolClass;
 import general.entities.Task;
+import general.entities.Teacher;
+import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;
 

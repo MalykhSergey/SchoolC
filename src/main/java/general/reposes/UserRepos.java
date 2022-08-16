@@ -21,9 +21,7 @@ public interface UserRepos extends CrudRepository<User, Long> {
     @Query(value = "SELECT * FROM users WHERE role = 2 and school_id = ?1", nativeQuery = true)
     List<Teacher> findTeachersBySchoolId(Long id);
 
-    @Query(value = "SELECT name FROM users" +
-            " WHERE id in(SELECT teacher_id FROM teacher_classes" +
-            " WHERE class_id = ?1)", nativeQuery = true)
+    @Query(value = "SELECT name FROM users WHERE id in(SELECT teacher_id FROM teacher_classes WHERE class_id = ?1)", nativeQuery = true)
     List<String> findNamesOfTeachersByClassId(Long classId);
 
 }

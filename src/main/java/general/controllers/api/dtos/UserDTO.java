@@ -26,7 +26,7 @@ public class UserDTO {
         this.classId = classId;
     }
 
-    public UserDTO(UserForm userForm, ClassForm classForm){
+    public UserDTO(UserForm userForm, ClassForm classForm) {
         this.userName = userForm.getUserName();
         this.password = userForm.getPassword();
         this.role = userForm.getRole();
@@ -35,7 +35,7 @@ public class UserDTO {
         this.classId = classForm.getClassId();
     }
 
-    public UserDTO(UserForm userForm, SchoolForm schoolForm, ClassForm classForm){
+    public UserDTO(UserForm userForm, SchoolForm schoolForm, ClassForm classForm) {
         this.userName = userForm.getUserName();
         this.password = userForm.getPassword();
         this.role = userForm.getRole();

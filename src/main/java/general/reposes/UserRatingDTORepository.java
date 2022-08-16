@@ -27,7 +27,7 @@ public class UserRatingDTORepository {
                     .createNativeQuery("SELECT answers.task_id, answers.rating FROM users INNER JOIN" +
                             " answers on answers.student_id = users.id WHERE student_id = ?1 AND teacher_id =?2")
                     .setParameter(1, result[0])
-                    .setParameter(2,teacher.getId())
+                    .setParameter(2, teacher.getId())
                     .getResultList();
             userRatingDTO.setAnswers(answers);
             userRatingDTOList.add(userRatingDTO);

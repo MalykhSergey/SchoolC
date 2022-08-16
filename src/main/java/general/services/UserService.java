@@ -71,7 +71,7 @@ public class UserService {
         if (student == null || student.getRole() != Role.Student) return Result.InvalidName;
         SchoolClass schoolClass = getSchoolClassByRole(userDTO, authenticatedUser, student.getSchool());
         if (schoolClass == null) return Result.InvalidClassName;
-        userRepos.setClassForStudent(student.getId(),schoolClass.getId());
+        userRepos.setClassForStudent(student.getId(), schoolClass.getId());
         return Result.Ok;
     }
 

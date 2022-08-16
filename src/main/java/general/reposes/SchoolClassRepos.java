@@ -9,7 +9,7 @@ import org.springframework.data.repository.CrudRepository;
 import java.util.List;
 
 public interface SchoolClassRepos extends CrudRepository<SchoolClass, Long> {
-    SchoolClass findSchoolClassByNameAndClassNumberAndSchool(String name,int number, School school);
+    SchoolClass findSchoolClassByNameAndClassNumberAndSchool(String name, int number, School school);
 
     List<SchoolClass> findAllBySchoolOrderByClassNumber(School school);
 

@@ -1,11 +1,11 @@
 package general.services;
 
+import general.entities.School;
 import general.entities.Teacher;
 import general.reposes.SchoolClassRepos;
+import general.reposes.SchoolRepos;
 import general.reposes.UserRepos;
 import general.utils.Result;
-import general.entities.School;
-import general.reposes.SchoolRepos;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -46,7 +46,7 @@ public class SchoolService {
 
     @Transactional
     public void startNewYearForSchoolId(Long schoolId) {
-        schoolClassRepos.deleteBySchoolIdAndClassNumber(schoolId,11);
+        schoolClassRepos.deleteBySchoolIdAndClassNumber(schoolId, 11);
         schoolClassRepos.incrementClassNumbersBySchoolId(schoolId);
     }
 

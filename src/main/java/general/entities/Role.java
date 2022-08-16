@@ -7,8 +7,12 @@ public enum Role {
     Student("ROLE_STUDENT");
 
 
-    private String name;
+    private final String name;
 
+
+    Role(String roleName) {
+        this.name = roleName;
+    }
 
     public String getName() {
         return name;
@@ -20,9 +24,5 @@ public enum Role {
             case Teacher -> new Teacher(userName, password, school);
             default -> new User(userName, password, school, this);
         };
-    }
-
-    Role(String roleName) {
-        this.name = roleName;
     }
 }

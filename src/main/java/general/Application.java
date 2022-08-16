@@ -22,21 +22,25 @@ import java.util.List;
 @SpringBootApplication
 public class Application {
     @Autowired
-    private UserRepos userRepos;
-    @Autowired
     UserService userService;
-    @Autowired
-    private SchoolRepos schoolRepos;
-    @Autowired
-    private TaskService taskService;
     @Autowired
     SchoolService schoolService;
     @Autowired
     SchoolClassService schoolClassService;
     @Autowired
+    private UserRepos userRepos;
+    @Autowired
+    private SchoolRepos schoolRepos;
+    @Autowired
+    private TaskService taskService;
+    @Autowired
     private SchoolClassRepos schoolClassRepos;
     @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
+
+    public static void main(String[] args) {
+        SpringApplication.run(Application.class, args);
+    }
 
     @Transactional
     @EventListener(ApplicationReadyEvent.class)
@@ -77,7 +81,7 @@ public class Application {
                     teacher.addSchoolClass(currentClass);
                     userService.saveUser(teacher);
                     for (int j = 1; j < 4; j++) {
-                        taskService.createTask("Задача №" + j + "." + j * j + "("+teacher.getName()+")", taskExampleBody, "2022-10-28T19:55",
+                        taskService.createTask("Задача №" + j + "." + j * j + "(" + teacher.getName() + ")", taskExampleBody, "2022-10-28T19:55",
                                 currentClass, teacher);
                     }
                 }
@@ -87,10 +91,6 @@ public class Application {
                 userService.saveUser(student);
             }
         }
-    }
-
-    public static void main(String[] args) {
-        SpringApplication.run(Application.class, args);
     }
 
 }

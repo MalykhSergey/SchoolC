@@ -1,6 +1,9 @@
 package general.services;
 
-import general.entities.*;
+import general.entities.Answer;
+import general.entities.Student;
+import general.entities.Task;
+import general.entities.Teacher;
 import general.reposes.AnswerRepos;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

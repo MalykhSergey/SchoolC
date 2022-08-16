@@ -1,8 +1,6 @@
 package general.entities;
 
-import java.math.BigInteger;
 import java.util.List;
-import java.util.Map;
 
 public class UserRatingDTO {
 

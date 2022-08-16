@@ -37,7 +37,7 @@ public class SchoolClassService {
     }
 
     public boolean isClassExistsInSchool(String name, int number, School school) {
-        return schoolClassRepos.findSchoolClassByNameAndClassNumberAndSchool(name,number, school) != null;
+        return schoolClassRepos.findSchoolClassByNameAndClassNumberAndSchool(name, number, school) != null;
     }
 
 
