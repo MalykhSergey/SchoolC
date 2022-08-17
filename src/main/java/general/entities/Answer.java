@@ -2,7 +2,9 @@ package general.entities;
 
 import javax.persistence.*;
 
-@Table(name = "answers")
+@Table(name = "answers",
+        uniqueConstraints = @UniqueConstraint(columnNames = {"student_id", "task_id"})
+)
 @Entity
 public class Answer {
     @Id

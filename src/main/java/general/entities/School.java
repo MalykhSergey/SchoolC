@@ -9,6 +9,7 @@ public class School {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column(unique = true)
     private String name;
     @OrderBy("classNumber, name")
     @OneToMany(mappedBy = "school", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)

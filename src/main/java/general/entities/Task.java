@@ -4,7 +4,9 @@ import javax.persistence.*;
 import java.sql.Timestamp;
 import java.util.Set;
 
-@Table(name = "tasks")
+@Table(name = "tasks",
+        uniqueConstraints = @UniqueConstraint(columnNames = {"name", "school_class_id"})
+)
 @Entity
 public class Task {
     @Id

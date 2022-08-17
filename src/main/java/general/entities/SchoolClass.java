@@ -4,13 +4,16 @@ import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
-@Table(name = "classes")
+@Table(name = "classes",
+        uniqueConstraints = @UniqueConstraint(columnNames = {"name", "class_number", "school_id"})
+)
 @Entity
 public class SchoolClass {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
+    @Column(name = "class_number")
     private int classNumber;
     @ManyToOne
     private School school;
