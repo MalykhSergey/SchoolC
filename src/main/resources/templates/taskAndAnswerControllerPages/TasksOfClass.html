@@ -13,7 +13,7 @@
             </div>
             <div class="card-body">
                 <h5 class="card-title"><a th:text="${task.getName()}"
-                                          th:href="'/answersOfTask/?taskId='+${task.getId()}+'&classId='+${schoolClassId}"></a>
+                                          th:href="'/answersOfTask/?taskId='+${task.getId()}"></a>
                 </h5>
                 <p th:text="${task.getBody()}" class="card-text"></p>
             </div>

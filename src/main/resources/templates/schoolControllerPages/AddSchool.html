@@ -8,9 +8,9 @@
         <div th:replace="fragments/fragments :: schoolForm"></div>
         <input class="form-control" type="hidden" th:name="${_csrf.parameterName}"
                th:value="${_csrf.token}"/>
-        <input type="submit" class="btn btn-primary" value="Отправить">
+        <input type="submit" class="btn btn-primary mb-3" value="Отправить">
+        <div th:replace="fragments/fragments :: notification"></div>
     </form>
-    <div th:replace="fragments/fragments :: notification"></div>
 </div>
 <div th:replace="fragments/fragments :: scripts"></div>
 </body>

@@ -14,16 +14,16 @@
         </div>
         <div class="form-group">
             <label for="body">Задание</label>
-            <textarea th:value="${body}" type="text" class="form-control" id="body" name="body" placeholder="Введите задание"></textarea>
+            <textarea th:text="${body}" type="text" class="form-control" id="body" name="body" placeholder="Введите задание"></textarea>
         </div>
         <div class="form-group">
             <label for="date">Выполнить до</label>
             <input th:value="${date}" type="datetime-local" class="form-control" id="date" name="date" min="2022-01-01" max="2024-12-31">
         </div>
         <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
-        <input type="submit" class="btn btn-primary" value="Отправить">
+        <input type="submit" class="btn btn-primary mb-3" value="Отправить">
+        <div th:replace="fragments/fragments :: notification"></div>
     </form>
-    <div th:replace="fragments/fragments :: notification"></div>
 </div>
 <div th:replace="fragments/fragments :: scripts"></div>
 </body>

@@ -5,6 +5,9 @@ import general.entities.Student;
 import general.entities.Task;
 import general.entities.Teacher;
 import general.reposes.AnswerRepos;
+import general.utils.Result;
+import general.utils.StringLengthConstants;
+import general.utils.UserDetailsExtended;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,15 +26,24 @@ public class AnswerService {
 
 
     @Transactional
-    public void createAnswer(String body, Task task, Student student) {
+    public Result createAnswer(String body, Task task, Student student) {
+        if (getByStudentAndTask(student, task) != null) return Result.AnswerIsExists;
+        if (body.length() < StringLengthConstants.AnswerBody.getMinLength()) return Result.TooShortAnswerBody;
+        if (body.length() > StringLengthConstants.AnswerBody.getMaxLength()) return Result.TooLongAnswerBody;
+        if (!student.getSchoolClass().fastEqualsById(task.getSchoolClass())) return Result.InvalidClassName;
         Answer answer = new Answer(student, task, body);
         answerRepos.save(answer);
+        return Result.Ok;
     }
 
 
     @Transactional
-    public void updateAnswer(String rating, String comment, Answer answer) {
-        answerRepos.answerChecked(answer.getId(), Byte.parseByte(rating), comment);
+    public Result checkAnswer(Answer answer, String comment, Byte rating, UserDetailsExtended userDetailsExtended) {
+        if (answer == null) return Result.AnswerIsNotExists;
+        if (rating > 5 || rating < 2) return Result.InvalidRating;
+        if (!answer.getTeacher().fastEqualsById(userDetailsExtended.getUser())) return Result.InvalidTeacher;
+        answerRepos.checkAnswer(answer.getId(), rating, comment);
+        return Result.Ok;
     }
 
     public Answer getByStudentAndTask(Student student, Task task) {

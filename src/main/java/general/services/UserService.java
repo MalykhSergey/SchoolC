@@ -6,6 +6,7 @@ import general.reposes.SchoolClassRepos;
 import general.reposes.SchoolRepos;
 import general.reposes.UserRepos;
 import general.utils.Result;
+import general.utils.StringLengthConstants;
 import general.utils.UserDetailsExtended;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -84,19 +85,19 @@ public class UserService {
         if (password == null) {
             return Result.PasswordIsNull;
         }
-        if (password.length() < 5) {
+        if (password.length() < StringLengthConstants.Password.getMinLength()) {
             return Result.TooShortPassword;
         }
-        if (password.length() > 20) {
+        if (password.length() > StringLengthConstants.Password.getMaxLength()) {
             return Result.TooLongPassword;
         }
         if (userName == null) {
             return Result.NameIsNull;
         }
-        if (userName.length() < 5) {
+        if (userName.length() < StringLengthConstants.Name.getMinLength()) {
             return Result.TooShortName;
         }
-        if (userName.length() > 55) {
+        if (userName.length() > StringLengthConstants.Name.getMaxLength()) {
             return Result.TooLongName;
         }
         if (userRepos.findUserByName(userName) != null) {

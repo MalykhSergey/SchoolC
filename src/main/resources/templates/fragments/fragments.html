@@ -99,10 +99,10 @@
                th:value="${classForm?.getClassName()}">
     </div>
 </div>
-<div class="row" th:fragment="notification">
-    <div th:if="${error}" th:text="${error}" class="alert alert-danger col-8  mt-3" role="alert">
+<div th:fragment="notification">
+    <div th:if="${error}" th:text="${error}" class="alert alert-danger" role="alert">
     </div>
-    <div th:if="${completed}" th:text="${completed}" class="alert alert-success col-8  mt-3" role="alert">
+    <div th:if="${completed}" th:text="${completed}" class="alert alert-success" role="alert">
     </div>
 </div>
 <div th:fragment="scripts">
