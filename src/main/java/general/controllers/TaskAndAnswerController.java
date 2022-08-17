@@ -132,8 +132,13 @@ public class TaskAndAnswerController {
                                   Model model) {
         Answer answer = answerService.getAnswerById(answerId);
         Result result = answerService.checkAnswer(answer, comment, rating, userDetailsExtended);
-        if (result == Result.Ok)
+        if (result == Result.Ok) {
+            model.addAttribute("taskName", answer.getTask().getName());
+            model.addAttribute("taskBody", answer.getTask().getBody());
+            model.addAttribute("answerBody", answer.getBody());
+            model.addAttribute("studentName", answer.getStudent().getName());
             model.addAttribute("completed", "Ответ успешно проверен!");
+        }
         else {
             if (answer != null) {
                 model.addAttribute("taskName", answer.getTask().getName());

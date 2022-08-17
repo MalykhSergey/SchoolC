@@ -1,6 +1,7 @@
 package general.reposes;
 
 import general.entities.School;
+import general.entities.Student;
 import general.entities.Teacher;
 import general.entities.User;
 import org.springframework.data.jpa.repository.Modifying;
@@ -11,9 +12,11 @@ import java.util.List;
 
 public interface UserRepos extends CrudRepository<User, Long> {
     User findUserByName(String name);
+    Student findStudentByName(String name);
     Teacher findTeacherByName(String name);
 
     User findUserByNameAndSchool(String name, School school);
+    Student findStudentByNameAndSchool(String name, School school);
 
     @Query(value = "update users set school_class_id = ?2 where id=?1", nativeQuery = true)
     @Modifying

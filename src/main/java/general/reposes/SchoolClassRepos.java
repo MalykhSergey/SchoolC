@@ -11,7 +11,7 @@ import java.util.List;
 public interface SchoolClassRepos extends CrudRepository<SchoolClass, Long> {
     SchoolClass findSchoolClassByNameAndClassNumberAndSchool(String name, int number, School school);
 
-    List<SchoolClass> findAllBySchoolOrderByClassNumber(School school);
+    List<SchoolClass> findAllBySchoolOrderByClassNumberAscName(School school);
 
     SchoolClass findSchoolClassById(Long id);
 

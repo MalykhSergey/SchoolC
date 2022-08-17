@@ -54,7 +54,7 @@ public class SchoolClassService {
     }
 
     public List<SchoolClass> getAllClassesBySchool(School school) {
-        return schoolClassRepos.findAllBySchoolOrderByClassNumber(school);
+        return schoolClassRepos.findAllBySchoolOrderByClassNumberAscName(school);
     }
 
     @Transactional

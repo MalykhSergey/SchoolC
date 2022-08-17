@@ -69,8 +69,8 @@ public class UserService {
         User authenticatedUser = userDetailsExtended.getUser();
         Student student;
         if (authenticatedUser.getRole() == Role.Operator)
-            student = (Student) userRepos.findUserByNameAndSchool(userDTO.getUserName(), authenticatedUser.getSchool());
-        else student = (Student) userRepos.findUserByName(userDTO.getUserName());
+            student = userRepos.findStudentByNameAndSchool(userDTO.getUserName(), authenticatedUser.getSchool());
+        else student = userRepos.findStudentByName(userDTO.getUserName());
         if (student == null || student.getRole() != Role.Student) return Result.InvalidName;
         SchoolClass schoolClass = getSchoolClassByRole(classDTO, authenticatedUser, student.getSchool());
         if (schoolClass == null) return Result.InvalidClassName;

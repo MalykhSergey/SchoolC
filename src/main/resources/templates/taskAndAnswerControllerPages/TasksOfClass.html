@@ -33,7 +33,7 @@
             <td>
                 <th:block th:each="answer : ${userRating.getAnswers()}">
                     <a th:if="${answer[1]>1}"
-                       th:href="'/answersOfTask/?taskId='+${answer[0]}+'&classId='+${schoolClassId}"
+                       th:href="'/answersOfTask/?taskId='+${answer[0]}"
                        th:text="${answer[1]}"></a>
                 </th:block>
             </td>

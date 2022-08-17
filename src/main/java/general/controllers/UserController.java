@@ -67,6 +67,8 @@ public class UserController {
             @AuthenticationPrincipal UserDetailsExtended userDetailsExtended,
             Model model
     ) {
+        if (userDetailsExtended.getUser().getRole() == Role.Operator)
+            model.addAttribute("classes", schoolClassService.getAllClassesBySchool(userDetailsExtended.getUser().getSchool()));
         Result result = userService.setClassForStudent(userDTO, classDTO, userDetailsExtended);
         if (result == Result.Ok)
             model.addAttribute("completed", "Ученик привязан к классу");
