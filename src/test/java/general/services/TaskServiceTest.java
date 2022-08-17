@@ -29,20 +29,14 @@ class TaskServiceTest {
 
     {
         schoolClass.setId(1L);
-    }
-
-    {
         otherClass.setId(2L);
-    }
-
-    {
         teacher.addSchoolClass(schoolClass);
     }
 
     @Test
     void createTask() {
-        nameBuilder.setLength(StringLengthConstants.TaskName.getMinLength() + 1);
-        bodyBuilder.setLength(StringLengthConstants.TaskBody.getMinLength() + 1);
+        nameBuilder.setLength(StringLengthConstants.TaskName.getMinLength());
+        bodyBuilder.setLength(StringLengthConstants.TaskBody.getMinLength());
         assertEquals(taskService.createTask(nameBuilder.toString(), bodyBuilder.toString(), "2077-12-12T23:00", schoolClass, teacher), Result.Ok);
         assertEquals(taskService.createTask(nameBuilder.toString(), bodyBuilder.toString(), "2077-Dec-12T23:00", schoolClass, teacher), Result.InvalidDate);
         assertEquals(taskService.createTask(nameBuilder.toString(), bodyBuilder.toString(), "2077-12-12T23:00", otherClass, teacher), Result.InvalidClassName);
@@ -50,18 +44,18 @@ class TaskServiceTest {
 
     @Test
     void validateTask() {
-        nameBuilder.setLength(StringLengthConstants.TaskName.getMinLength() + 1);
-        bodyBuilder.setLength(StringLengthConstants.TaskBody.getMinLength() + 1);
+        nameBuilder.setLength(StringLengthConstants.TaskName.getMinLength());
+        bodyBuilder.setLength(StringLengthConstants.TaskBody.getMinLength());
         Task rightTask = new Task(nameBuilder.toString(), bodyBuilder.toString(), schoolClass, teacher, new Timestamp(System.currentTimeMillis() + TimeUnit.DAYS.toMillis(2)));
         nameBuilder.setLength(StringLengthConstants.TaskName.getMinLength() - 1);
         Task tooShortNameTask = new Task(nameBuilder.toString(), bodyBuilder.toString(), schoolClass, teacher, new Timestamp(System.currentTimeMillis() + TimeUnit.DAYS.toMillis(2)));
-        nameBuilder.setLength(StringLengthConstants.TaskName.getMinLength() + 1);
+        nameBuilder.setLength(StringLengthConstants.TaskName.getMinLength());
         bodyBuilder.setLength(StringLengthConstants.TaskBody.getMinLength() - 1);
         Task tooShortBodyTask = new Task(nameBuilder.toString(), bodyBuilder.toString(), schoolClass, teacher, new Timestamp(System.currentTimeMillis() + TimeUnit.DAYS.toMillis(2)));
-        bodyBuilder.setLength(StringLengthConstants.TaskBody.getMinLength() + 1);
+        bodyBuilder.setLength(StringLengthConstants.TaskBody.getMinLength());
         nameBuilder.setLength(StringLengthConstants.TaskName.getMaxLength() + 1);
         Task tooLongNameTask = new Task(nameBuilder.toString(), bodyBuilder.toString(), schoolClass, teacher, new Timestamp(System.currentTimeMillis() + TimeUnit.DAYS.toMillis(2)));
-        nameBuilder.setLength(StringLengthConstants.TaskName.getMinLength() + 1);
+        nameBuilder.setLength(StringLengthConstants.TaskName.getMinLength());
         bodyBuilder.setLength(StringLengthConstants.TaskBody.getMaxLength() + 1);
         Task tooLongBodyTask = new Task(nameBuilder.toString(), bodyBuilder.toString(), schoolClass, teacher, new Timestamp(System.currentTimeMillis() + TimeUnit.DAYS.toMillis(2)));
         assertEquals(taskService.validateTask(rightTask), Result.Ok);
