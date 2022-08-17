@@ -47,27 +47,32 @@ class SchoolClassServiceTest {
     @Test
     void createSchoolClass() {
         stringBuilder.setLength(StringLengthConstants.ClassName.getMinLength());
-        assertEquals(schoolClassService.createSchoolClass(stringBuilder.toString(), 1, school, operatorDetails), Result.Ok);
-        assertEquals(schoolClassService.createSchoolClass(stringBuilder.toString(), 0, school, operatorDetails), Result.InvalidClassNumber);
-        assertEquals(schoolClassService.createSchoolClass(stringBuilder.toString(), 110, school, operatorDetails), Result.InvalidClassNumber);
+        assertEquals(schoolClassService.createSchoolClass(stringBuilder.toString(), 1, school), Result.Ok);
+        assertEquals(schoolClassService.createSchoolClass(stringBuilder.toString(), 0, school), Result.InvalidClassNumber);
+        assertEquals(schoolClassService.createSchoolClass(stringBuilder.toString(), 110, school), Result.InvalidClassNumber);
         stringBuilder.setLength(StringLengthConstants.ClassName.getMaxLength());
-        assertEquals(schoolClassService.createSchoolClass(stringBuilder.toString(), 1, school, adminDetails), Result.Ok);
-        assertEquals(schoolClassService.createSchoolClass(stringBuilder.toString(), 1, null, adminDetails), Result.InvalidSchoolName);
+        assertEquals(schoolClassService.createSchoolClass(stringBuilder.toString(), 1, school), Result.Ok);
+        assertEquals(schoolClassService.createSchoolClass(stringBuilder.toString(), 1, null), Result.InvalidSchoolName);
         stringBuilder.setLength(StringLengthConstants.ClassName.getMinLength() - 1);
-        assertEquals(schoolClassService.createSchoolClass(stringBuilder.toString(), 1, school, adminDetails), Result.TooShortClassName);
+        assertEquals(schoolClassService.createSchoolClass(stringBuilder.toString(), 1, school), Result.TooShortClassName);
         stringBuilder.setLength(StringLengthConstants.ClassName.getMaxLength() + 1);
-        assertEquals(schoolClassService.createSchoolClass(stringBuilder.toString(), 1, school, adminDetails), Result.TooLongClassName);
+        assertEquals(schoolClassService.createSchoolClass(stringBuilder.toString(), 1, school), Result.TooLongClassName);
         Mockito.when(schoolClassRepos.findSchoolClassByNameAndClassNumberAndSchool(schoolClass.getName(), schoolClass.getClassNumber(), school)).thenReturn(schoolClass);
-        assertEquals(schoolClassService.createSchoolClass("className", 1, school, adminDetails), Result.ClassIsExists);
+        assertEquals(schoolClassService.createSchoolClass("className", 1, school), Result.ClassIsExists);
     }
 
     @Test
     void addClassForTeacher() {
-        assertEquals(schoolClassService.addClassForTeacher(teacher, schoolClass), Result.Ok);
-        assertEquals(schoolClassService.addClassForTeacher(otherTeacher, schoolClass), Result.InvalidName);
-        assertEquals(schoolClassService.addClassForTeacher(null, schoolClass), Result.InvalidName);
-        assertEquals(schoolClassService.addClassForTeacher(teacher, null), Result.InvalidClassName);
+        assertEquals(schoolClassService.addClassForTeacher(teacher, schoolClass, operatorDetails), Result.Ok);
+        assertEquals(schoolClassService.addClassForTeacher(teacher, schoolClass, adminDetails), Result.Ok);
+        assertEquals(schoolClassService.addClassForTeacher(otherTeacher, schoolClass, operatorDetails), Result.InvalidName);
+        assertEquals(schoolClassService.addClassForTeacher(otherTeacher, schoolClass, adminDetails), Result.InvalidName);
+        assertEquals(schoolClassService.addClassForTeacher(null, schoolClass, operatorDetails), Result.InvalidName);
+        assertEquals(schoolClassService.addClassForTeacher(null, schoolClass, adminDetails), Result.InvalidName);
+        assertEquals(schoolClassService.addClassForTeacher(teacher, null, operatorDetails), Result.InvalidClassName);
+        assertEquals(schoolClassService.addClassForTeacher(teacher, null, adminDetails), Result.InvalidClassName);
         teacher.addSchoolClass(schoolClass);
-        assertEquals(schoolClassService.addClassForTeacher(teacher, schoolClass), Result.TeacherIsLinked);
+        assertEquals(schoolClassService.addClassForTeacher(teacher, schoolClass, operatorDetails), Result.TeacherIsLinked);
+        assertEquals(schoolClassService.addClassForTeacher(teacher, schoolClass, adminDetails), Result.TeacherIsLinked);
     }
 }

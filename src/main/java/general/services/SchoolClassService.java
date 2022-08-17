@@ -1,5 +1,6 @@
 package general.services;
 
+import general.entities.Role;
 import general.entities.School;
 import general.entities.SchoolClass;
 import general.entities.Teacher;
@@ -28,7 +29,7 @@ public class SchoolClassService {
     }
 
     @Transactional
-    public Result createSchoolClass(String className, int classNumber, School school, UserDetailsExtended userDetailsExtended) {
+    public Result createSchoolClass(String className, int classNumber, School school) {
         if (school == null) return Result.InvalidSchoolName;
         if (className.length() > StringLengthConstants.ClassName.getMaxLength()) return Result.TooLongClassName;
         if (className.length() < StringLengthConstants.ClassName.getMinLength()) return Result.TooShortClassName;
@@ -58,8 +59,11 @@ public class SchoolClassService {
     }
 
     @Transactional
-    public Result addClassForTeacher(Teacher teacher, SchoolClass schoolClass) {
+    public Result addClassForTeacher(Teacher teacher, SchoolClass schoolClass, UserDetailsExtended userDetailsExtended) {
         if (teacher == null) return Result.InvalidName;
+        if (userDetailsExtended.getUser().getRole() == Role.Operator)
+            if (!userDetailsExtended.getUser().getSchool().getId().equals(teacher.getSchool().getId()))
+                return Result.InvalidName;
         if (schoolClass == null) return Result.InvalidClassName;
         if (!teacher.getSchool().getId().equals(schoolClass.getSchool().getId())) return Result.InvalidName;
         if (isClassInTeacherSet(teacher, schoolClass)) return Result.TeacherIsLinked;

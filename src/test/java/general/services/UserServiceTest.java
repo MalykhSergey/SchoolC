@@ -79,10 +79,13 @@ class UserServiceTest {
     void setClassForStudent() {
         assertEquals(userService.setClassForStudent(studentDTO, classDTO, operatorDetails), Result.InvalidName);
         assertEquals(userService.setClassForStudent(studentDTO, classDTO, adminDetails), Result.InvalidName);
-        Mockito.when(userRepos.findUserByName(studentDTO.getUserName())).thenReturn(student);
+        Mockito.when(userRepos.findStudentByName(studentDTO.getUserName())).thenReturn(student);
         assertEquals(userService.setClassForStudent(studentDTO, classDTO, adminDetails), Result.InvalidClassName);
-        Mockito.when(userRepos.findUserByNameAndSchool(studentDTO.getUserName(), school)).thenReturn(student);
+        Mockito.when(userRepos.findStudentByNameAndSchool(studentDTO.getUserName(), school)).thenReturn(student);
         assertEquals(userService.setClassForStudent(studentDTO, classDTO, operatorDetails), Result.InvalidClassName);
+        Mockito.when(schoolClassRepos.findSchoolClassById(classDTO.getClassId())).thenReturn(schoolClass);
+        Mockito.when(schoolClassRepos.findSchoolClassByNameAndClassNumberAndSchool(classDTO.getClassName(), classDTO.getClassNumber(), school)).thenReturn(schoolClass);
+        assertEquals(userService.setClassForStudent(studentDTO, classDTO, operatorDetails), Result.Ok);
     }
 
     @Test

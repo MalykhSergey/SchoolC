@@ -51,7 +51,7 @@ public class ClassController {
         if (userDetailsExtended.getUser().getRole() == Role.Operator)
             school = userDetailsExtended.getUser().getSchool();
         else school = schoolService.getSchoolByName(schoolName);
-        Result result = schoolClassService.createSchoolClass(className, classNumber, school, userDetailsExtended);
+        Result result = schoolClassService.createSchoolClass(className, classNumber, school);
         if (result == Result.Ok) {
             model.addAttribute("completed", classNumber + "-" + className + " класс был добавлен");
         } else model.addAttribute("error", result.getError());
@@ -78,7 +78,7 @@ public class ClassController {
             schoolClass = schoolClassService.getClassById(classDTO.getClassId());
         } else
             schoolClass = schoolClassService.getClassByNameAndNumberAndSchool(classDTO.getClassName(), classDTO.getClassNumber(), teacher.getSchool());
-        Result result = schoolClassService.addClassForTeacher(teacher, schoolClass);
+        Result result = schoolClassService.addClassForTeacher(teacher, schoolClass, userDetailsExtended);
         if (result == Result.Ok)
             model.addAttribute("completed", "Учитель: " + teacher.getName() + " привязан к классу!");
         else model.addAttribute("error", result.getError());
