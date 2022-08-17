@@ -5,7 +5,8 @@ public enum StringLengthConstants {
     Password(5, 20),
     TaskName(5, 50),
     TaskBody(15, 2000),
-    AnswerBody(5, 5000);
+    AnswerBody(5, 5000),
+    Comment(0,500);
 
     private final int minLength;
     private final int maxLength;
