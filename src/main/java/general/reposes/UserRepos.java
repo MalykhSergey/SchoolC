@@ -11,6 +11,7 @@ import java.util.List;
 
 public interface UserRepos extends CrudRepository<User, Long> {
     User findUserByName(String name);
+    Teacher findTeacherByName(String name);
 
     User findUserByNameAndSchool(String name, School school);
 

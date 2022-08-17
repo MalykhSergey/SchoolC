@@ -109,6 +109,9 @@ public class UserService {
     public User getUserByName(String name) {
         return userRepos.findUserByName(name);
     }
+    public Teacher getTeacherByName(String name) {
+        return userRepos.findTeacherByName(name);
+    }
 
     public String getCurrentUserName() {
         return SecurityContextHolder.getContext().getAuthentication().getName();
