@@ -27,7 +27,7 @@ public class AnswerService {
 
     @Transactional
     public Result createAnswer(String body, Task task, Student student) {
-        if (getByStudentAndTask(student, task) != null) return Result.AnswerIsExists;
+        if (answerRepos.findByStudentAndTask(student, task) != null) return Result.AnswerIsExists;
         if (body.length() < StringLengthConstants.AnswerBody.getMinLength()) return Result.TooShortAnswerBody;
         if (body.length() > StringLengthConstants.AnswerBody.getMaxLength()) return Result.TooLongAnswerBody;
         if (!student.getSchoolClass().fastEqualsById(task.getSchoolClass())) return Result.InvalidClassName;
@@ -45,11 +45,6 @@ public class AnswerService {
         answerRepos.checkAnswer(answer.getId(), rating, comment);
         return Result.Ok;
     }
-
-    public Answer getByStudentAndTask(Student student, Task task) {
-        return answerRepos.findByStudentAndTask(student, task);
-    }
-
     public List<Answer> getAnswersByStudent(Student student) {
         return answerRepos.findAllByStudent(student);
     }
