@@ -130,7 +130,7 @@ public class TaskAndAnswerController {
 
     @PostMapping(value = "/checkAnswer")
     public String checkAnswerPost(@RequestParam(name = "answerId") Long answerId,
-                                  @RequestParam(name = "rating") Byte rating,
+                                  @RequestParam(name = "rating") int rating,
                                   @RequestParam(name = "comment") String comment,
                                   @AuthenticationPrincipal UserDetailsExtended userDetailsExtended,
                                   Model model) {
@@ -139,7 +139,7 @@ public class TaskAndAnswerController {
         if (result == Result.Ok)
             model.addAttribute("completed", "Ответ успешно проверен!");
         else {
-            if (answer!=null){
+            if (answer != null) {
                 model.addAttribute("taskName", answer.getTask().getName());
                 model.addAttribute("taskBody", answer.getTask().getBody());
                 model.addAttribute("answerBody", answer.getBody());

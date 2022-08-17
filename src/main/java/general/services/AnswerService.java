@@ -38,7 +38,7 @@ public class AnswerService {
 
 
     @Transactional
-    public Result checkAnswer(Answer answer, String comment, Byte rating, UserDetailsExtended userDetailsExtended) {
+    public Result checkAnswer(Answer answer, String comment, int rating, UserDetailsExtended userDetailsExtended) {
         if (answer == null) return Result.AnswerIsNotExists;
         if (rating > 5 || rating < 2) return Result.InvalidRating;
         if (!answer.getTeacher().fastEqualsById(userDetailsExtended.getUser())) return Result.InvalidTeacher;

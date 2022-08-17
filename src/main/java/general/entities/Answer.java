@@ -16,7 +16,7 @@ public class Answer {
     private Teacher teacher;
     private String body;
     private String comment;
-    private byte rating;
+    private int rating;
 
     public Answer() {
     }
@@ -76,11 +76,11 @@ public class Answer {
         this.comment = comment;
     }
 
-    public byte getRating() {
+    public int getRating() {
         return rating;
     }
 
-    public void setRating(byte rating) {
+    public void setRating(int rating) {
         this.rating = rating;
     }
 }

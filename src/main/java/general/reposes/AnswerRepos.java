@@ -19,7 +19,7 @@ public interface AnswerRepos extends CrudRepository<Answer, Long> {
 
     @Modifying
     @Query(value = "UPDATE answers SET rating = ?2, comment = ?3 WHERE id = ?1", nativeQuery = true)
-    void checkAnswer(Long answerId, Byte rating, String comment);
+    void checkAnswer(Long answerId, int rating, String comment);
 
     Answer findByStudentAndTask(Student student, Task task);
 }
