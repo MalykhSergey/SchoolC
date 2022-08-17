@@ -1,6 +1,7 @@
 package general.entities;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Set;
 
 @Table(name = "classes")
@@ -30,6 +31,7 @@ public class SchoolClass {
         this.name = name;
         this.classNumber = classNumber;
         this.school = school;
+        this.students = new HashSet<>();
     }
 
     public SchoolClass() {
@@ -42,6 +44,10 @@ public class SchoolClass {
 
     public void setStudents(Set<Student> students) {
         this.students = students;
+    }
+
+    public void addStudent(Student student) {
+        students.add(student);
     }
 
     public Long getId() {
