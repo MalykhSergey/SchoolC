@@ -14,6 +14,7 @@ import java.sql.Timestamp;
 import java.util.concurrent.TimeUnit;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
 
 class TaskServiceTest {
     TaskRepos taskRepos = Mockito.mock(TaskRepos.class);
@@ -40,6 +41,8 @@ class TaskServiceTest {
         assertEquals(taskService.createTask(nameBuilder.toString(), bodyBuilder.toString(), "2077-12-12T23:00", schoolClass, teacher), Result.Ok);
         assertEquals(taskService.createTask(nameBuilder.toString(), bodyBuilder.toString(), "2077-Dec-12T23:00", schoolClass, teacher), Result.InvalidDate);
         assertEquals(taskService.createTask(nameBuilder.toString(), bodyBuilder.toString(), "2077-12-12T23:00", otherClass, teacher), Result.InvalidClassName);
+        Mockito.when(taskRepos.findTaskBySchoolClassAndName(any(),any())).thenReturn(new Task());
+        assertEquals(taskService.createTask(nameBuilder.toString(), bodyBuilder.toString(), "2077-12-12T23:00", schoolClass, teacher), Result.TaskIsExists);
     }
 
     @Test

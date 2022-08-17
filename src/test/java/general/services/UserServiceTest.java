@@ -12,6 +12,7 @@ import org.mockito.Mockito;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.anyString;
 
 class UserServiceTest {
     UserRepos userRepos = Mockito.mock(UserRepos.class);
@@ -51,6 +52,11 @@ class UserServiceTest {
         assertEquals(userService.createUser(teacherDTO, operatorDetails), Result.Ok);
         assertEquals(userService.createUser(studentDTO, adminDetails), Result.Ok);
         assertEquals(userService.createUser(teacherDTO, adminDetails), Result.Ok);
+        Mockito.when(userRepos.findUserByName(anyString())).thenReturn(student);
+        assertEquals(userService.createUser(studentDTO, operatorDetails), Result.UserIsExists);
+        assertEquals(userService.createUser(teacherDTO, operatorDetails), Result.UserIsExists);
+        assertEquals(userService.createUser(studentDTO, adminDetails), Result.UserIsExists);
+        assertEquals(userService.createUser(teacherDTO, adminDetails), Result.UserIsExists);
     }
 
     @Test
@@ -61,9 +67,6 @@ class UserServiceTest {
         assertEquals(userService.setClassForStudent(studentDTO,adminDetails),Result.InvalidClassName);
         Mockito.when(userRepos.findUserByNameAndSchool(studentDTO.getUserName(), school)).thenReturn(student);
         assertEquals(userService.setClassForStudent(studentDTO,operatorDetails),Result.InvalidClassName);
-        Mockito.when(schoolClassRepos.findSchoolClassByNameAndClassNumberAndSchool(studentDTO.getClassName(), studentDTO.getClassNumber(), school))
-                .thenReturn(schoolClass);
-        Mockito.when(schoolClassRepos.findSchoolClassById(schoolClass.getId())).thenReturn(schoolClass);
     }
 
     @Test
@@ -84,6 +87,6 @@ class UserServiceTest {
         assertEquals(userService.validateUserNameAndPassword(studentDTO.getUserName(), studentDTO.getPassword()), Result.PasswordIsNull);
         studentDTO.setPassword("12345");
         Mockito.when(userRepos.findUserByName(studentDTO.getUserName())).thenReturn(operator);
-        assertEquals(userService.validateUserNameAndPassword(studentDTO.getUserName(), studentDTO.getPassword()), Result.InvalidName);
+        assertEquals(userService.validateUserNameAndPassword(studentDTO.getUserName(), studentDTO.getPassword()), Result.UserIsExists);
     }
 }

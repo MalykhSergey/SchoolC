@@ -36,6 +36,7 @@ public class TaskService {
             Task task = new Task(name, body, schoolClass, teacher, timestamp);
             Result result = validateTask(task);
             if (result != Result.Ok) return result;
+            if (taskRepos.findTaskBySchoolClassAndName(schoolClass,name)!=null) return Result.TaskIsExists;
             taskRepos.save(task);
         } catch (ParseException e) {
             return Result.InvalidDate;

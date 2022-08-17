@@ -101,7 +101,7 @@ public class UserService {
             return Result.TooLongName;
         }
         if (userRepos.findUserByName(userName) != null) {
-            return Result.InvalidName;
+            return Result.UserIsExists;
         }
         return Result.Ok;
     }
