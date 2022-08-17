@@ -48,14 +48,14 @@
         </ul>
     </div>
 </nav>
-<div th:object="${userForm}" th:fragment="userForm (password, role)">
+<div th:object="${userDTO}" th:fragment="userDTO (password, role)">
     <label for="name">Имя пользователя</label>
     <input required type="text" class="form-control form-group" id="name" name="userName"
-           placeholder="Введите имя" th:value="${userForm?.getUserName()}">
+           placeholder="Введите имя" th:value="${userDTO?.getUserName()}">
     <div th:if="${password}" class="form-group">
         <label for="password">Пароль</label>
         <input required type="text" class="form-control" id="password" name="password"
-               placeholder="Введите пароль" th:value="${userForm?.getPassword()}">
+               placeholder="Введите пароль" th:value="${userDTO?.getPassword()}">
     </div>
     <div class="form-group" th:if="${role}">
         <label for="role">Тип пользователя</label>
@@ -68,12 +68,12 @@
         </select>
     </div>
 </div>
-<div class="form-group" th:object="${schoolForm}" th:fragment="schoolForm">
+<div class="form-group" th:object="${schoolDTO}" th:fragment="schoolDTO">
     <label for="schoolName">Название школы</label>
     <input required type="text" class="form-control" id="schoolName" name="schoolName"
-           placeholder="Введите школу" th:value="${schoolForm?.getSchoolName()}">
+           placeholder="Введите школу" th:value="${schoolDTO?.getSchoolName()}">
 </div>
-<div id="dinContainer" class="form-group" th:object="${classForm}" th:fragment="classForm">
+<div id="dinContainer" class="form-group" th:object="${classDTO}" th:fragment="classDTO">
     <label for="className">Название класса</label>
     <select name="classId" id="className" sec:authorize="hasAnyRole('ROLE_OPERATOR', 'ROLE_TEACHER')">
         <option th:each="schoolClass : ${classes}"
@@ -96,7 +96,7 @@
             <option value="11">11</option>
         </select>
         <input type="text" id="className" name="className" class="form-control" placeholder="Введите класс"
-               th:value="${classForm?.getClassName()}">
+               th:value="${classDTO?.getClassName()}">
     </div>
 </div>
 <div th:fragment="notification">

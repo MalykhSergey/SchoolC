@@ -5,6 +5,7 @@ public enum Result {
     AnswerIsNotExists("Ответ не существует!"),
     UserIsExists("Это имя уже занято!"),
     TaskIsExists("Задача для этого класса с таким именем уже есть!"),
+    TeacherIsLinked("Учитель уже привязан!"),
     ClassIsExists("Такой класс уже есть!"),
     SchoolIsExists("Такая школа уже существует!"),
     NameIsNull("Введите имя!"),

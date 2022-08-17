@@ -1,6 +1,6 @@
 package general.controllers;
 
-import general.controllers.forms.ClassForm;
+import general.controllers.dto.ClassDTO;
 import general.entities.*;
 import general.reposes.UserRatingDTORepository;
 import general.services.AnswerService;
@@ -43,23 +43,19 @@ public class TaskAndAnswerController {
     public String addTaskGet(@AuthenticationPrincipal UserDetailsExtended userDetailsExtended, Model model) {
         Teacher teacher = (Teacher) userDetailsExtended.getUser();
         model.addAttribute("classes", teacher.getSchoolClassSet());
-        model.addAttribute("name", "");
-        model.addAttribute("body", "");
-        model.addAttribute("classForm", "");
-        model.addAttribute("date", "");
         return addTaskPage;
     }
 
     @PostMapping(value = "/addTask")
     public String addTaskPost(@ModelAttribute(name = "name") String name,
                               @ModelAttribute(name = "body") String body,
-                              @ModelAttribute(name = "classForm") ClassForm classForm,
+                              @ModelAttribute(name = "classDTO") ClassDTO classDTO,
                               @ModelAttribute(name = "date") String date,
                               @AuthenticationPrincipal UserDetailsExtended userDetailsExtended,
                               Model model) {
         Teacher teacher = (Teacher) userDetailsExtended.getUser();
         model.addAttribute("classes", teacher.getSchoolClassSet());
-        SchoolClass schoolClass = schoolClassService.getClassById(classForm.getClassId());
+        SchoolClass schoolClass = schoolClassService.getClassById(classDTO.getClassId());
         Result result = taskService.createTask(name, body, date, schoolClass, teacher);
         if (result == Result.Ok) {
             model.addAttribute("completed", "Задача для " + schoolClass.getNameWithNumber() + " класса добавлена");

@@ -1,9 +1,8 @@
 package general.controllers;
 
-import general.controllers.api.dtos.UserDTO;
-import general.controllers.forms.ClassForm;
-import general.controllers.forms.SchoolForm;
-import general.controllers.forms.UserForm;
+import general.controllers.dto.ClassDTO;
+import general.controllers.dto.SchoolDTO;
+import general.controllers.dto.UserDTO;
 import general.entities.Role;
 import general.services.SchoolClassService;
 import general.services.UserService;
@@ -39,16 +38,16 @@ public class UserController {
 
     @PostMapping(value = "/adduser")
     public String addUserPost(
-            @ModelAttribute("userForm") UserForm userForm,
-            @ModelAttribute("schoolForm") SchoolForm schoolForm,
-            @ModelAttribute("classForm") ClassForm classForm,
+            @ModelAttribute("userDTO") UserDTO userDTO,
+            @ModelAttribute("schoolDTO") SchoolDTO schoolDTO,
+            @ModelAttribute("classDTO") ClassDTO classDTO,
             @AuthenticationPrincipal UserDetailsExtended userDetailsExtended,
             Model model) {
         if (userDetailsExtended.getUser().getRole() == Role.Operator)
             model.addAttribute("classes", schoolClassService.getAllClassesBySchool(userDetailsExtended.getUser().getSchool()));
-        Result result = userService.createUser(new UserDTO(userForm, schoolForm, classForm), userDetailsExtended);
+        Result result = userService.createUser(userDTO, classDTO, schoolDTO, userDetailsExtended);
         if (result == Result.Ok)
-            model.addAttribute("completed", "Пользователь с именем: " + userForm.getUserName() + " был успешно добавлен");
+            model.addAttribute("completed", "Пользователь с именем: " + userDTO.getUserName() + " был успешно добавлен");
         else
             model.addAttribute("error", result.getError());
         return addUserPage;
@@ -63,12 +62,12 @@ public class UserController {
 
     @PostMapping(value = "/setClassForStudent")
     public String setClassForStudentPost(
-            @ModelAttribute("userForm") UserForm userForm,
-            @ModelAttribute("classForm") ClassForm classForm,
+            @ModelAttribute("userDTO") UserDTO userDTO,
+            @ModelAttribute("classDTO") ClassDTO classDTO,
             @AuthenticationPrincipal UserDetailsExtended userDetailsExtended,
             Model model
     ) {
-        Result result = userService.setClassForStudent(new UserDTO(userForm, classForm), userDetailsExtended);
+        Result result = userService.setClassForStudent(userDTO, classDTO, userDetailsExtended);
         if (result == Result.Ok)
             model.addAttribute("completed", "Ученик привязан к классу");
         else model.addAttribute("error", result.getError());

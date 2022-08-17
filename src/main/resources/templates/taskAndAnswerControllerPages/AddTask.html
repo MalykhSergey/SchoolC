@@ -7,7 +7,7 @@
 <div th:replace="fragments/fragments :: navbar"></div>
 <div class="container">
     <form method="post" id="form">
-        <div th:replace="fragments/fragments :: classForm"></div>
+        <div th:replace="fragments/fragments :: classDTO"></div>
         <div class="form-group">
             <label for="name">Заголовок</label>
             <input th:value="${name}" type="text" class="form-control" id="name" name="name" placeholder="Введите заголовк">

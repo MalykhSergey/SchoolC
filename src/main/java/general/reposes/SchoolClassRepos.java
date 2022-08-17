@@ -20,4 +20,8 @@ public interface SchoolClassRepos extends CrudRepository<SchoolClass, Long> {
     @Modifying
     @Query(value = "UPDATE classes SET class_number = class_number + 1 WHERE school_id = ?1", nativeQuery = true)
     void incrementClassNumbersBySchoolId(Long schoolId);
+
+    @Modifying
+    @Query(value = "INSERT INTO teacher_classes(teacher_id, class_id) VALUES (?1,?2)", nativeQuery = true)
+    void addClassForTeacher(Long teacherId, Long classId);
 }

@@ -1,12 +1,18 @@
 package general.controllers;
 
-import general.controllers.forms.ClassForm;
-import general.controllers.forms.UserForm;
-import general.entities.*;
+import general.controllers.dto.ClassDTO;
+import general.controllers.dto.UserDTO;
+import general.entities.Role;
+import general.entities.School;
+import general.entities.SchoolClass;
+import general.entities.Teacher;
 import general.services.SchoolClassService;
 import general.services.SchoolService;
 import general.services.UserService;
+import general.utils.Result;
+import general.utils.UserDetailsExtended;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -36,69 +42,46 @@ public class ClassController {
 
     @PostMapping(value = "/addClass")
     public String addClassPost(
-            @ModelAttribute("schoolClass") SchoolClass schoolClass,
+            @RequestParam(name = "className") String className,
+            @RequestParam(name = "classNumber") int classNumber,
             @RequestParam(name = "schoolName", required = false) String schoolName,
-            @RequestParam(name = "classNumber", required = false) int classNumber,
+            @AuthenticationPrincipal UserDetailsExtended userDetailsExtended,
             Model model) {
-        School school = null;
-        User user = userService.getUserByName(userService.getCurrentUserName());
-        if (user.getRole() == Role.Admin) {
-            school = schoolService.getSchoolByName(schoolName);
-            if (school == null) {
-                model.addAttribute("error", "Вы неверно указали школу");
-                return addClassPage;
-            }
-        }
-        if (school == null)
-            school = user.getSchool();
-        if (!schoolClassService.checkClassName(schoolClass.getName())) {
-            model.addAttribute("error", "Введите название класса короче 20 символов");
-            return addClassPage;
-        }
-        if (schoolClassService.isClassExistsInSchool(schoolClass.getName(), classNumber, school)) {
-            model.addAttribute("error", "Такой класс уже есть");
-            return addClassPage;
-        }
-        schoolClass.setSchool(school);
-        schoolClassService.createNewSchoolClass(schoolClass);
-        model.addAttribute("completed", schoolClass.getNameWithNumber() + " класс был добавлен");
+        School school;
+        if (userDetailsExtended.getUser().getRole() == Role.Operator)
+            school = userDetailsExtended.getUser().getSchool();
+        else school = schoolService.getSchoolByName(schoolName);
+        Result result = schoolClassService.createSchoolClass(className, classNumber, school, userDetailsExtended);
+        if (result == Result.Ok) {
+            model.addAttribute("completed", classNumber + "-" + className + " класс был добавлен");
+        } else model.addAttribute("error", result.getError());
         return addClassPage;
     }
 
     @GetMapping(value = "/addClassForTeacher")
-    public String addClassForTeacherGet(Model model) {
-        User user = userService.getUserByName(userService.getCurrentUserName());
-        if (user.getRole() == Role.Operator)
-            model.addAttribute("classes", schoolClassService.getAllClassesBySchool(user.getSchool()));
+    public String addClassForTeacherGet(@AuthenticationPrincipal UserDetailsExtended userDetailsExtended, Model model) {
+        if (userDetailsExtended.getUser().getRole() == Role.Operator)
+            model.addAttribute("classes", schoolClassService.getAllClassesBySchool(userDetailsExtended.getUser().getSchool()));
         return addClassForTeacherPage;
     }
 
     @PostMapping(value = "/addClassForTeacher")
     public String addClassForTeacherPost(
-            @ModelAttribute("userForm") UserForm userForm,
-            @ModelAttribute("classForm") ClassForm classForm,
+            @ModelAttribute("userDTO") UserDTO userDTO,
+            @ModelAttribute("classDTO") ClassDTO classDTO,
+            @AuthenticationPrincipal UserDetailsExtended userDetailsExtended,
             Model model) {
-        User user = userService.getUserByName(userService.getCurrentUserName());
-        if (user.getRole() == Role.Operator)
-            model.addAttribute("classes", schoolClassService.getAllClassesBySchool(user.getSchool()));
-        User foundedUser = userService.getUserByName(userForm.getUserName());
-        if (foundedUser == null || foundedUser.getRole() != Role.Teacher) {
-            model.addAttribute("error", "Введите корректные данные (пользователь не найден)");
-            return addClassForTeacherPage;
-        }
+        Teacher teacher = userService.getTeacherByName(userDTO.getUserName());
         SchoolClass schoolClass;
-        if (user.getRole() == Role.Operator)
-            schoolClass = schoolClassService.getClassById(classForm.getClassId());
-        else
-            schoolClass = schoolClassService.getClassByNameAndNumberAndSchool(classForm.getClassName(), classForm.getClassNumber(), foundedUser.getSchool());
-        if (schoolClass == null) {
-            model.addAttribute("error", "Введите корректные данные (класс не найден)");
-            return addClassForTeacherPage;
-        }
-        Teacher teacher = (Teacher) foundedUser;
-        teacher.addSchoolClass(schoolClass);
-        userService.saveUser(teacher);
-        model.addAttribute("completed", "Учитель: " + teacher.getName() + " привязан к классу!");
+        if (userDetailsExtended.getUser().getRole() == Role.Operator) {
+            model.addAttribute("classes", schoolClassService.getAllClassesBySchool(userDetailsExtended.getUser().getSchool()));
+            schoolClass = schoolClassService.getClassById(classDTO.getClassId());
+        } else
+            schoolClass = schoolClassService.getClassByNameAndNumberAndSchool(classDTO.getClassName(), classDTO.getClassNumber(), teacher.getSchool());
+        Result result = schoolClassService.addClassForTeacher(teacher, schoolClass);
+        if (result == Result.Ok)
+            model.addAttribute("completed", "Учитель: " + teacher.getName() + " привязан к классу!");
+        else model.addAttribute("error", result.getError());
         return addClassForTeacherPage;
     }
 }

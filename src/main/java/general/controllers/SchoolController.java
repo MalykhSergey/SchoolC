@@ -1,6 +1,6 @@
 package general.controllers;
 
-import general.controllers.forms.SchoolForm;
+import general.controllers.dto.SchoolDTO;
 import general.services.SchoolService;
 import general.utils.Result;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,11 +27,11 @@ public class SchoolController {
 
     @PostMapping(value = "/addSchool")
     public String addSchoolPost(
-            @ModelAttribute("schoolForm") SchoolForm schoolForm,
+            @ModelAttribute("schoolDTO") SchoolDTO schoolDTO,
             Model model) {
-        Result result = schoolService.checkSchoolName(schoolForm.getSchoolName());
+        Result result = schoolService.checkSchoolName(schoolDTO.getSchoolName());
         if (result == Result.Ok) {
-            schoolService.createSchool(schoolForm.getSchoolName());
+            schoolService.createSchool(schoolDTO.getSchoolName());
             model.addAttribute("completed", "Школа успешно добавлена");
         } else
             model.addAttribute("error", result.getError());

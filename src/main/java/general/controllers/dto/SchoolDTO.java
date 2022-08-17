@@ -1,7 +1,14 @@
-package general.controllers.forms;
+package general.controllers.dto;
 
-public class SchoolForm {
+public class SchoolDTO {
     private String schoolName;
+
+    public SchoolDTO() {
+    }
+
+    public SchoolDTO(String name) {
+        this.schoolName = name;
+    }
 
     public String getSchoolName() {
         return schoolName;

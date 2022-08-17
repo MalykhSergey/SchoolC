@@ -1,9 +1,18 @@
-package general.controllers.forms;
+package general.controllers.dto;
 
-public class ClassForm {
+public class ClassDTO {
     private String className;
     private Integer classNumber;
     private Long classId;
+
+    public ClassDTO() {
+    }
+
+    public ClassDTO(String className, Integer classNumber, Long classId) {
+        this.className = className;
+        this.classNumber = classNumber;
+        this.classId = classId;
+    }
 
     public String getClassName() {
         return className;

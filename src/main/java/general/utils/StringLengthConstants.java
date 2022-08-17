@@ -1,6 +1,8 @@
 package general.utils;
 
 public enum StringLengthConstants {
+    ClassName(1,10),
+    SchoolName(10,55),
     Name(5, 55),
     Password(5, 20),
     TaskName(5, 50),
