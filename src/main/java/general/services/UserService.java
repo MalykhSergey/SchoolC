@@ -83,7 +83,7 @@ public class UserService {
         userRepos.save(user);
     }
 
-    public Result validateUserNameAndPassword(String userName, String password) {
+    private Result validateUserNameAndPassword(String userName, String password) {
         if (password == null) {
             return Result.PasswordIsNull;
         }
