@@ -36,7 +36,6 @@ public class TaskService {
             Task task = new Task(name, body, schoolClass, teacher, timestamp);
             Result result = validateTask(task);
             if (result != Result.Ok) return result;
-            if (taskRepos.findTaskBySchoolClassAndName(schoolClass,name)!=null) return Result.TaskIsExists;
             taskRepos.save(task);
         } catch (ParseException e) {
             return Result.InvalidDate;
@@ -56,7 +55,7 @@ public class TaskService {
         return taskRepos.findAllByTeacherAndSchoolClassOrderByTimeStamp(teacher, schoolClass);
     }
 
-    public Result validateTask(Task task) {
+    private Result validateTask(Task task) {
         if (task.getSchoolClass() != null && isClassInTeacherSet(task)) {
             if (task.getName().length() < StringLengthConstants.TaskName.getMinLength()) return Result.TooShortTaskName;
             if (task.getName().length() > StringLengthConstants.TaskName.getMaxLength()) return Result.TooLongTaskName;
@@ -64,6 +63,7 @@ public class TaskService {
             if (task.getBody().length() > StringLengthConstants.TaskBody.getMaxLength()) return Result.TooLongTaskBody;
             if (task.getTimeStamp().getTime() < (System.currentTimeMillis() + TimeUnit.DAYS.toMillis(1)))
                 return Result.InvalidDate;
+            if (taskRepos.findTaskBySchoolClassAndName(task.getSchoolClass(),task.getName())!=null) return Result.TaskIsExists;
             return Result.Ok;
         } else return Result.InvalidClassName;
     }
