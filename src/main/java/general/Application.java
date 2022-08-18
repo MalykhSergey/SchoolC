@@ -1,13 +1,13 @@
 package general;
 
-import general.entities.*;
-import general.reposes.SchoolClassRepos;
-import general.reposes.SchoolRepos;
-import general.reposes.UserRepos;
-import general.services.SchoolClassService;
-import general.services.SchoolService;
-import general.services.TaskService;
-import general.services.UserService;
+import general.entity.*;
+import general.repository.SchoolClassRepository;
+import general.repository.SchoolRepository;
+import general.repository.UserRepository;
+import general.service.SchoolClassService;
+import general.service.SchoolService;
+import general.service.TaskService;
+import general.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -28,13 +28,13 @@ public class Application {
     @Autowired
     SchoolClassService schoolClassService;
     @Autowired
-    private UserRepos userRepos;
+    private UserRepository userRepository;
     @Autowired
-    private SchoolRepos schoolRepos;
+    private SchoolRepository schoolRepository;
     @Autowired
     private TaskService taskService;
     @Autowired
-    private SchoolClassRepos schoolClassRepos;
+    private SchoolClassRepository schoolClassRepository;
     @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
@@ -46,13 +46,13 @@ public class Application {
     @EventListener(ApplicationReadyEvent.class)
     public void init() {
         String generalDirector = "GeneralDirector";
-        if (userRepos.findUserByName(generalDirector) == null) {
+        if (userRepository.findUserByName(generalDirector) == null) {
             User admin = new User(generalDirector, bCryptPasswordEncoder.encode("144"),
                     null, Role.Admin);
             userService.saveUser(admin);
             String schoolName = "Омская БОУ СОШ №1";
             School school = new School(schoolName);
-            schoolRepos.save(school);
+            schoolRepository.save(school);
             User operator = new User("Operator", bCryptPasswordEncoder.encode("12345"),
                     school, Role.Operator);
             userService.saveUser(operator);
