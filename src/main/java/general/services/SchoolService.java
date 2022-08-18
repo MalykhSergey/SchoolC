@@ -6,6 +6,7 @@ import general.reposes.SchoolClassRepos;
 import general.reposes.SchoolRepos;
 import general.reposes.UserRepos;
 import general.utils.Result;
+import general.utils.StringLengthConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,19 +27,19 @@ public class SchoolService {
     }
 
     @Transactional
-    public void createSchool(String name) {
+    public Result createSchool(String name) {
+        Result result = checkSchoolName(name);
+        if (result != Result.Ok) return result;
         School school = new School(name);
         school.setName(name);
         schoolRepos.save(school);
+        return Result.Ok;
     }
 
     public School getSchoolByName(String name) {
         return schoolRepos.findSchoolByName(name);
     }
 
-    public School getSchoolById(Long id) {
-        return schoolRepos.findSchoolById(id);
-    }
 
     public List<Teacher> getTeachersBySchool(School school) {
         return userRepos.findTeachersBySchoolId(school.getId());
@@ -50,16 +51,11 @@ public class SchoolService {
         schoolClassRepos.incrementClassNumbersBySchoolId(schoolId);
     }
 
-    public Result checkSchoolName(String name) {
-        if (name == null) {
-            return Result.NameIsNull;
-        }
-        if (schoolRepos.findSchoolByName(name) != null) {
-            return Result.SchoolIsExists;
-        }
-        if (name.length() < 6) {
-            return Result.RequiredFullName;
-        }
+    private Result checkSchoolName(String name) {
+        if (name == null) return Result.NameIsNull;
+        if (name.length() < StringLengthConstants.SchoolName.getMinLength()) return Result.TooShortSchoolName;
+        if (name.length() > StringLengthConstants.SchoolName.getMaxLength()) return Result.TooLongSchoolName;
+        if (schoolRepos.findSchoolByName(name) != null) return Result.SchoolIsExists;
         return Result.Ok;
     }
 }

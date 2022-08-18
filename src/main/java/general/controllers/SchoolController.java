@@ -29,9 +29,8 @@ public class SchoolController {
     public String addSchoolPost(
             @ModelAttribute("schoolDTO") SchoolDTO schoolDTO,
             Model model) {
-        Result result = schoolService.checkSchoolName(schoolDTO.getSchoolName());
+        Result result = schoolService.createSchool(schoolDTO.getSchoolName());
         if (result == Result.Ok) {
-            schoolService.createSchool(schoolDTO.getSchoolName());
             model.addAttribute("completed", "Школа успешно добавлена");
         } else
             model.addAttribute("error", result.getError());
