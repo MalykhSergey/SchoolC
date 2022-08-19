@@ -1,7 +1,7 @@
 package general.controller;
 
+import general.controller.dto.StudentsTasksAndAnswers;
 import general.entity.*;
-import general.service.AnswerService;
 import general.service.TaskService;
 import general.service.UserService;
 import general.util.UserDetailsExtended;
@@ -10,13 +10,13 @@ import org.mockito.Mockito;
 import org.springframework.ui.Model;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
 
 class HomeControllerTester {
     UserService userService = Mockito.mock(UserService.class);
-    AnswerService answerService = Mockito.mock(AnswerService.class);
     TaskService taskService = Mockito.mock(TaskService.class);
     Model model = Mockito.mock(Model.class);
-    HomeController homeController = new HomeController(userService, answerService, taskService);
+    HomeController homeController = new HomeController(userService, taskService);
     User user;
     UserDetailsExtended userDetailsExtended;
 
@@ -38,6 +38,7 @@ class HomeControllerTester {
     public void homeForStudent() {
         user = new Student("Student", "password", null, Mockito.mock(SchoolClass.class));
         userDetailsExtended = new UserDetailsExtended(user);
-        assertEquals(homeController.home(null,userDetailsExtended, model), "StudentHome");
+        Mockito.when(taskService.getTasksAndAnswersByStudent(any())).thenReturn(Mockito.mock(StudentsTasksAndAnswers.class));
+        assertEquals(homeController.home(null, userDetailsExtended, model), "StudentHome");
     }
 }

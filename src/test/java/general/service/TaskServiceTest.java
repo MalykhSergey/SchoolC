@@ -15,7 +15,7 @@ import static org.mockito.ArgumentMatchers.any;
 
 class TaskServiceTest {
     TaskRepository taskRepository = Mockito.mock(TaskRepository.class);
-    TaskService taskService = new TaskService(taskRepository);
+    TaskService taskService = new TaskService(taskRepository, Mockito.mock(AnswerService.class));
 
     School school = new School("school");
 

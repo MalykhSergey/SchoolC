@@ -1,7 +1,10 @@
 package general.controller;
 
-import general.entity.*;
-import general.service.AnswerService;
+import general.controller.dto.StudentsTasksAndAnswers;
+import general.entity.Role;
+import general.entity.Student;
+import general.entity.Teacher;
+import general.entity.User;
 import general.service.TaskService;
 import general.service.UserService;
 import general.util.UserDetailsExtended;
@@ -12,21 +15,15 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.List;
-
 @Controller
 public class HomeController {
 
     private final UserService userService;
-    private final AnswerService answerService;
     private final TaskService taskService;
 
     @Autowired
-    public HomeController(UserService userService, AnswerService answerService, TaskService taskService) {
+    public HomeController(UserService userService, TaskService taskService) {
         this.userService = userService;
-        this.answerService = answerService;
         this.taskService = taskService;
     }
 
@@ -37,28 +34,15 @@ public class HomeController {
         User authenticatedUser = userDetailsExtended.getUser();
         if (authenticatedUser.getRole() == Role.Student) {
             Student student = (Student) authenticatedUser;
-            List<Task> newTasks = new ArrayList<>();
-            List<Task> tasks;
-            List<Answer> answers;
+            StudentsTasksAndAnswers tasksAndAnswersByStudent;
             if (teacherName != null) {
-                tasks = taskService.getTasksByClassAndTeacher(student.getSchoolClass(), (Teacher) userService.getUserByName(teacherName));
-                answers = answerService.getAnswersByStudentAndTeacher(student, (Teacher) userService.getUserByName(teacherName));
+                Teacher teacher = userService.getTeacherByName(teacherName);
+                tasksAndAnswersByStudent = taskService.getTasksAndAnswersByStudentAndTeacher(student, teacher);
                 model.addAttribute("teacherName", teacherName);
-            } else {
-                tasks = taskService.getTasksByClass(student.getSchoolClass());
-                answers = answerService.getAnswersByStudent(student);
-            }
-            Timestamp now = new Timestamp(System.currentTimeMillis());
-            for (Task task : tasks) {
-                if (now.before(task.getTimeStamp())) {
-                    newTasks.add(task);
-                }
-            }
-            for (Answer answer : answers) {
-                newTasks.remove(answer.getTask());
-            }
-            model.addAttribute("answers", answers);
-            model.addAttribute("newtasks", newTasks);
+            } else tasksAndAnswersByStudent = taskService.getTasksAndAnswersByStudent(student);
+            model.addAttribute("answers", tasksAndAnswersByStudent.getAnswerDTOS());
+            model.addAttribute("actualTasks", tasksAndAnswersByStudent.getActualTaskDTOS());
+            model.addAttribute("oldTasks", tasksAndAnswersByStudent.getOldTaskDTOS());
             model.addAttribute("teacherNames", userService.getNamesOfTeachersByClassId(student.getSchoolClass().getId()));
             return "StudentHome";
         }

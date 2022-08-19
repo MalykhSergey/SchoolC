@@ -15,14 +15,14 @@
             <option th:if="${teacherName!=name}" th:value="${name}" th:text="${name}"></option>
         </tr>
     </select>
-    <tr th:each="task : ${newtasks}">
-        <div class="container mt-2 mb-2">
+    <tr th:each="task : ${actualTasks}">
+        <div class="container mb-3">
             <div class="card">
                 <div class="card-header">
                     <h5>Не решено!</h5>
-                    <h6 th:text="'От: '+${task.getTeacher().getName()}"></h6>
+                    <h6 th:text="'От: '+${task.getTeacherName()}"></h6>
                     <h6>Выполнить до:</h6>
-                    <h6 th:text="${task.getDateTemplate()}"></h6>
+                    <h6 th:text="${task.getDateString()}"></h6>
                 </div>
                 <div class="card-body">
                     <h5 th:text="${task.getName()}" class="card-title"></h5>
@@ -32,22 +32,21 @@
                 </div>
             </div>
         </div>
-
     </tr>
-    <h1>Выполненные</h1>
+    <h1>Выполненные и просроченные</h1>
     <tr th:each="answer : ${answers}">
-        <div class="container mt-2 mb-2">
+        <div class="container mb-3">
             <div class="card">
                 <div class="card-header">
                     <h5>Решено</h5>
-                    <h6 th:text="'От: '+${answer.getTeacher().getName()}"></h6>
+                    <h6 th:text="'От: '+${answer.getTaskDTO().getTeacherName()}"></h6>
                     <h6 th:text="'Оценка: '+${answer.getRating()}"></h6>
                     <h6>Выполнить до:</h6>
-                    <h6 th:text="${answer.getTask().getDateTemplate()}"></h6>
+                    <h6 th:text="${answer.getTaskDTO().getDateString()}"></h6>
                 </div>
                 <div class="card-body">
-                    <h5 th:text="${answer.getTask().getName()}" class="card-title"></h5>
-                    <p th:text="${answer.getTask().getBody()}" class="card-text"></p>
+                    <h5 th:text="${answer.getTaskDTO().getName()}" class="card-title"></h5>
+                    <p th:text="${answer.getTaskDTO().getBody()}" class="card-text"></p>
                     <h5>Решение:</h5>
                     <p th:text="${answer.getBody()}" class="card-text"></p>
                     <h5>Комментарий:</h5>
@@ -55,7 +54,22 @@
                 </div>
             </div>
         </div>
-
+    </tr>
+    <tr th:each="task : ${oldTasks}">
+        <div class="container mb-3">
+            <div class="card">
+                <div class="card-header">
+                    <h5>Просрочено!</h5>
+                    <h6 th:text="'От: '+${task.getTeacherName()}"></h6>
+                    <h6>Выполнить до:</h6>
+                    <h6 th:text="${task.getDateString()}"></h6>
+                </div>
+                <div class="card-body">
+                    <h5 th:text="${task.getName()}" class="card-title"></h5>
+                    <p th:text="${task.getBody()}" class="card-text"></p>
+                </div>
+            </div>
+        </div>
     </tr>
 </div>
 <div th:replace="fragments/fragments :: scripts"></div>
