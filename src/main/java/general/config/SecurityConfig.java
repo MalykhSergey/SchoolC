@@ -1,12 +1,11 @@
 package general.config;
 
-import general.service.AuthorizeService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
@@ -20,9 +19,6 @@ import java.util.Collections;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
-    @Autowired
-    AuthorizeService authorizeService;
-
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         final CorsConfiguration configuration = new CorsConfiguration();
@@ -61,13 +57,13 @@ public class SecurityConfig {
 
     @Bean
     @Order(1)
-    public SecurityFilterChain configureApi(HttpSecurity http) throws Exception {
+    public SecurityFilterChain configureApiLogin(HttpSecurity http) throws Exception {
         http.antMatcher("/api/**").cors()
                 .and().csrf().disable()
                 .authorizeHttpRequests((authz) -> authz
                         .anyRequest().authenticated()
-                )
-                .httpBasic();
+                ).httpBasic()
+                .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         return http.build();
     }
 }
