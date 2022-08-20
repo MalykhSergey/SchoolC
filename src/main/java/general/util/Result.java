@@ -1,5 +1,8 @@
 package general.util;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
+@JsonFormat(shape = JsonFormat.Shape.OBJECT )
 public enum Result {
     AnswerIsExists("Ответ уже есть!"),
     AnswerIsNotExists("Ответ не существует!"),
@@ -10,8 +13,6 @@ public enum Result {
     SchoolIsExists("Такая школа уже существует!"),
     NameIsNull("Введите имя!"),
     PasswordIsNull("Введите пароль!"),
-    RequiredFullName("Введите полное название!"),
-    AllValuesRequired("Введите все значения!"),
     InvalidDate("Неправильная дата"),
     InvalidName("Неверное имя!"),
     InvalidRating("Неверная оценка!"),
