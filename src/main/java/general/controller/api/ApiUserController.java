@@ -27,7 +27,7 @@ public class ApiUserController {
         return userDetailsExtended.getUser().getRole();
     }
 
-    @GetMapping("/teacherNames")
+    @GetMapping("/student/teacherNames")
     public List<String> getTeacherNames(@AuthenticationPrincipal UserDetailsExtended userDetailsExtended) {
         Student student = (Student) userDetailsExtended.getUser();
         return userService.getNamesOfTeachersByClassId(student.getSchoolClass().getId());

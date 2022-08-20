@@ -61,6 +61,9 @@ public class SecurityConfig {
         http.antMatcher("/api/**").cors()
                 .and().csrf().disable()
                 .authorizeHttpRequests((authz) -> authz
+                        .antMatchers("/student/**").hasRole("ROLE_STUDENT")
+                        .antMatchers("/teacher/**").hasRole("ROLE_TEACHER")
+                        .antMatchers("/operator/**").hasAnyRole("ROLE_OPERATOR", "ROLE_ADMIN")
                         .anyRequest().authenticated()
                 ).httpBasic()
                 .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);

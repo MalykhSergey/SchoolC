@@ -27,7 +27,7 @@ public class ApiTaskAndAnswerController {
         this.userService = userService;
     }
 
-    @GetMapping("/studentsTasksAndAnswers")
+    @GetMapping("/student/tasksAndAnswers")
     public StudentsTasksAndAnswers getStudentsTasksAndAnswers(@RequestParam(name = "teacherName", required = false) String teacherName, @AuthenticationPrincipal UserDetailsExtended userDetailsExtended) {
         if (teacherName == null)
             return taskService.getTasksAndAnswersByStudent((Student) userDetailsExtended.getUser());
@@ -37,7 +37,7 @@ public class ApiTaskAndAnswerController {
         }
     }
 
-    @PostMapping("/addAnswer/")
+    @PostMapping("/student/addAnswer")
     public Result addAnswer(@AuthenticationPrincipal UserDetailsExtended userDetailsExtended, @RequestParam("taskId") Long taskId, @RequestBody String body) {
         Task task = taskService.getTaskById(taskId);
         return answerService.createAnswer(body, task, (Student) userDetailsExtended.getUser());
