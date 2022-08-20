@@ -1,5 +1,6 @@
 package general.config;
 
+import general.entity.Role;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
@@ -42,11 +43,11 @@ public class SecurityConfig {
                 .cors()
                 .and()
                 .authorizeRequests(authz -> authz
-                        .antMatchers("/addSchool").access("hasRole('ROLE_ADMIN')")
-                        .antMatchers("/adduser", "/addClass", "/setClassForStudent", "/addClassForTeacher").access("hasAnyRole('ROLE_ADMIN', 'ROLE_OPERATOR')")
-                        .antMatchers("/aboutSchool").access("hasRole('ROLE_OPERATOR')")
-                        .antMatchers("/addTask/**", "/checkAnswer/**", "/files", "/tasksOfClass/**").access("hasRole('ROLE_TEACHER')")
-                        .antMatchers("/addAnswer").access("hasRole('ROLE_STUDENT')")
+                        .antMatchers("/addSchool").hasAuthority(Role.Admin.getName())
+                        .antMatchers("/adduser", "/addClass", "/setClassForStudent", "/addClassForTeacher").hasAnyAuthority(Role.Admin.getName(), Role.Operator.getName())
+                        .antMatchers("/aboutSchool").hasAuthority(Role.Operator.getName())
+                        .antMatchers("/addTask/**", "/checkAnswer/**", "/files", "/tasksOfClass/**").hasAuthority(Role.Teacher.getName())
+                        .antMatchers("/addAnswer").hasAuthority(Role.Student.getName())
                         .antMatchers("/js/**", "/css/**").permitAll()
                         .antMatchers("/").authenticated()
                 ).formLogin().loginPage("/login")
@@ -61,9 +62,9 @@ public class SecurityConfig {
         http.antMatcher("/api/**").cors()
                 .and().csrf().disable()
                 .authorizeHttpRequests((authz) -> authz
-                        .antMatchers("/student/**").hasRole("ROLE_STUDENT")
-                        .antMatchers("/teacher/**").hasRole("ROLE_TEACHER")
-                        .antMatchers("/operator/**").hasAnyRole("ROLE_OPERATOR", "ROLE_ADMIN")
+                        .antMatchers("/student/**").hasAuthority(Role.Student.getName())
+                        .antMatchers("/teacher/**").hasAuthority(Role.Teacher.getName())
+                        .antMatchers("/operator/**").hasAnyAuthority(Role.Admin.getName(), Role.Operator.getName())
                         .anyRequest().authenticated()
                 ).httpBasic()
                 .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
