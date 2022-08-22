@@ -10,6 +10,9 @@ public class TaskDTO {
 
     private String dateString;
 
+    public TaskDTO() {
+    }
+
     public TaskDTO(Task task) {
         id = task.getId();
         teacherName = task.getTeacher().getName();

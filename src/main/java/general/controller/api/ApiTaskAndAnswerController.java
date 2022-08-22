@@ -56,4 +56,12 @@ public class ApiTaskAndAnswerController {
         return taskService.getTasksByClassAndTeacher(schoolClassService.getClassById(classId), teacher).stream().map(TaskDTO::new).toList();
     }
 
+    @PostMapping("/teacher/addTask")
+    public Result addTask(@AuthenticationPrincipal UserDetailsExtended userDetailsExtended, @RequestBody TaskDTO taskDTO, @RequestParam("classId") Long classID) {
+        return taskService.createTask(taskDTO.getName(),
+                taskDTO.getBody(),
+                taskDTO.getDateString(),
+                schoolClassService.getClassById(classID),
+                (Teacher) userDetailsExtended.getUser());
+    }
 }
