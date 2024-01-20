@@ -24,14 +24,14 @@
 ### Страница входа
 ![Страница входа](./screens/login.jpg)
 ### Задачи класса (мобильная версия)
-![Задачи класса](./screens/tasksOfClass.png)
+<img src="./screens/tasksOfClass.png" width="400px" alt= "Задачи класса"></img>
 ### Добавить задачу (мобильная версия)
-![Добавить задачу](./screens/addTask.jpg)
+<img src="./screens/addTask.jpg" width="400px" alt= "Добавить задачу"></img>
 ### Задачи ученика (мобильная версия)
-![Задачи ученика](./screens/studentHome.jpg)
+<img src="./screens/studentHome.jpg" width="400px" alt= "Задачи ученика"></img>
 ### Создать пользователя (мобильная версия)
-![Создать пользователя](./screens/addUser.jpg)
-### Создать класс
-![Создать класс](./screens/addClass.jpg)
+<img src="./screens/addUser.jpg" width="400px" alt= "Создать пользователя"></img>
+### Создать класс (мобильная версия)
+<img src="./screens/addClass.jpg" width="400px" alt= "Создать класс"></img>
 ### О классе (мобильная версия)
-![О классе](./screens/aboutClass.png)
+<img src="./screens/aboutClass.png" width="400px" alt= "О классе"></img>
